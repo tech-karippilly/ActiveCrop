@@ -7,7 +7,7 @@ yarn-error.log*
 .env
 
 # OS-specific files
-.DS_Store/
+.DS_Store
 
 # Uploaded files
 src/uploads/

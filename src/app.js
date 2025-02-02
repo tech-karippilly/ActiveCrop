@@ -45,4 +45,9 @@ app.set('views', 'views')
 app.use('/public', express.static('public'));
 app.use('/uploads', express.static('uploads'))
 
+app.get("/",(req,res)=>{
+    console.log('working')
+    res.status(200).send('working')
+})
+
 export default app
