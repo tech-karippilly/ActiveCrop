@@ -27,8 +27,6 @@ const userSchema = mongoose.Schema({
     isVerifyed:{type:Boolean,default:false},
     role: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
     profileImage:{type:String,required:false}
-},{
-    timestamps:true
 })
 
 userSchema.method.getFullName= function(){
