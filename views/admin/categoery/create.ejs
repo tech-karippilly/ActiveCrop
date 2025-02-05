@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Catagoery</title>
+    <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
+
+    <link href="/public/styles/dashboard.css" rel="stylesheet" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="alert-box" id="alert-box">
+        <% if (alertMessage) { %>
+            <div class="alert alert-<%= alertType %>" id="alert">
+                <%= alertMessage %>
+            </div>
+            <% } %>
+    </div>
+
+    <div class="main-container">
+        <section class="side-bar">
+            <div class="side-bar-heading">
+                <h1>ADMIN</h1>
+            </div>
+            <div class="side-bar-menu" id="menuId">
+                <div class="link-container">
+                    <a href="/admin/dashboard" class="link-text">Dashboard</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/catagoery" class="link-text-active">Categoery</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/products" class="link-text">Products</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/customers" class="link-text">Customers</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Orders</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Coupons</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Banner</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Transactions</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="button-link">Logout</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container-section p-5  w-100">
+
+            <div class="container-fluid  w-100">
+                <div>
+                    <h1>Create Catagoery</h1>
+                </div>
+
+                <div class="catagoery-form">
+                    <form id="create-catagoery-form" method="post" action="/admin/catagoery/createCategoery" enctype="multipart/form-data">
+                        <div class="img-container" id="preview-image">
+                            <img  alt="Image" id="image" style="width: 100%;height: 100%;" id="image">
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoery_image" class="form-label">Select Catagoery Image</label>
+                            <input class="form-control" type="file" name="categoery_image" id="formFile" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cataName" class="form-label lable-text">Catagoery Name</label>
+                            <input type="text" class="form-control" name="cataName" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" required>
+
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave description" name="description"
+                                    id="floatingTextarea2" style="height: 100px" required></textarea>
+                                <label for="floatingTextarea2">Description</label>
+                            </div>
+
+                        </div>
+                        <div class="btn-contianer">
+                            <button type="submit" class="btn button-style">Create Catagoery</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+
+    <script>
+        const previewImage = document.getElementById('preview-image')
+        previewImage.style.display='none'
+
+        document.getElementById("create-catagoery-form").addEventListener('change',(event)=>{
+            const file = event.target.files[0];
+            if (file) {
+                 previewImage.style.display='block'
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                document.getElementById('image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            }
+        })
+        
+        const alertBox = document.getElementById('alert-box')
+        setTimeout(() => {
+            alertBox.classList = '';
+            alertBox.innerHTML = '';
+        }, 3000);
+
+        const redirectUrl = "<%= redirectUrl %>";
+        if (redirectUrl && redirectUrl.trim() !== "") {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000)
+
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+export const ADMIN_LOGIN_PAGE = 'admin/auth/loginPage'
+export const ADMIN_SIGNUP_PAGE ='admin/auth/signupPage'
+
+export const ADMIN_CATAGOERY_LIST_PAGE = 'admin/categoery/index'
+export const ADMIN_CATAGOERY_CREATE_PAGE = 'admin/categoery/create'
+export const ADMIN_CATAGOERY_EDIT_PAGE = 'admin/categoery/update'
+
+export const ADMIN_PRODUCT_LIST_PAGE = 'admin/products/index'
+export const ADMIN_PRODUCT_CREATE_PAGE = 'admin/products/create'
+export const ADMIN_PRODUCT_EDIT_PAGE = 'admin/products/update'
+
+export const ADMIN_CUSTOMER_LIST_PAGE = 'admin/customers/index'
+export const ADMIN_CUSTOMER_CREATE_PAGE = 'admin/customers/create'
+export const ADMIN_CUSTOMER_UPDATE_PAGE = 'admin/customers/update'
+
+export const USER_LOGIN_PAGE = 'user/auth/loginPage'
+export const USER_SIGNUP_PAGE ='user/auth/signup'
+export const USER_FORGOT_EMAIL_SEND_PAGE = 'user/auth/forgotEmail'
+export const USER_REST_EMAIL_PAGE = 'user/auth/forogtPassword'
+export const USER_OTP_VERIFY_PAGE='user/auth/otpVerify'
+
+export const USER_HOME_PAGE = 'user/home/homePage'
+export const USER_PRODUCT_PAGE = 'user/products/products'
+export const USER_PRODUCT_DETAILS_PAGE = 'user/products/productDetails'
