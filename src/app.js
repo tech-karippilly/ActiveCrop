@@ -92,7 +92,7 @@ app.get('/admin',(req,res)=>{
 })
 
 app.get('/user',(req,res)=>{
-    res.status(200).render('user/profile/address/edit')
+    res.status(200).render('user/profile/address/create')
 })
 
 export default app

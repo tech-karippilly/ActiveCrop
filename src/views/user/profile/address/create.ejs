@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Address Page</title>
+    <title>Active Crop | Address Create Page</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
     <link rel="stylesheet" href="../../../public/styles/profile.css">
@@ -145,26 +145,26 @@
                         <div class="form-group">
                             <label for="address1">Address 1</label>
                             <input type="text" class="form-control" id="address1" name="address1"
-                                value="Address one value">
+                                >
                             <small class="text-danger" id="error-address1"></small>
                         </div>
 
                         <div class="form-group mt-2">
                             <label for="address2">Address 2</label>
-                            <input type="text" class="form-control" id="address2" name="address2" value="Address value">
+                            <input type="text" class="form-control" id="address2" name="address2" >
                             <small class="text-danger" id="error-address2"></small>
                         </div>
 
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" id="state" name="state" value="State value">
+                                <input type="text" class="form-control" id="state" name="state" >
                                 <small class="text-danger" id="error-state"></small>
                             </div>
                             <div class="col">
                                 <label for="district">District</label>
                                 <input type="text" class="form-control" id="district" name="district"
-                                    value="District value">
+                                    >
                                 <small class="text-danger" id="error-district"></small>
                             </div>
                         </div>
@@ -172,25 +172,25 @@
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" value="City value">
+                                <input type="text" class="form-control" id="city" name="city" >
                                 <small class="text-danger" id="error-city"></small>
                             </div>
                             <div class="col">
                                 <label for="pincode">PinCode</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode"
-                                    value="PinCode value">
+                                    >
                                 <small class="text-danger" id="error-pincode"></small>
                             </div>
                         </div>
 
                         <div class="form-group  mt-2">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="Phone value">
+                            <input type="text" class="form-control" id="phone" name="phone" >
                             <small class="text-danger" id="error-phone"></small>
                         </div>
 
                         <div class="d-flex mt-2">
-                            <button type="button" class="btn btn-danger" onclick="deleteAddress()">
+                            <button type="button" class="btn btn-danger" onclick="cancel()">
                                 <i class="fa-solid fa-trash"></i> Cancel
                             </button>
                             <button type="submit" class="btn btn-success me-2 ms-2">
@@ -272,7 +272,7 @@
         const pincode =document.getElementById('pincode').value.trim()
         const phoneNumber =document.getElementById('phone').value.trim()
 
-        const addressRules =  /^[A-Za-z0-9\s:,-/]+$/
+        const addressRules = /^[A-Za-z0-9\s:,-/]+$/
         const pinCodeRule = /^\d{6}$/
         const phoneRule = /^\d{10}$/
         const normalRule =/^[A-Za-z\s]+$/
@@ -324,7 +324,7 @@
         function setError(field, message) {
             document.getElementById(`error-${field}`).textContent = message;
         }
-        function deleteAddress() {
+        function cancel() {
             // Here you can reset the form or do something else when the cancel button is clicked
             if (confirm('Are you sure you want to cancel?')) {
                 // Reset form fields
