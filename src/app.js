@@ -91,5 +91,8 @@ app.get('/admin',(req,res)=>{
     res.status(200).redirect(ADMIN_AUTH_BASE)
 })
 
+app.get('/user',(req,res)=>{
+    res.status(200).render('user/profile/index')
+})
 
 export default app
