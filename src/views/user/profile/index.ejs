@@ -21,13 +21,13 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 </head>
 
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert">
 
             </div>
         </div>
@@ -116,7 +116,7 @@
             </div>
         </section>
 
-        <section class="container mt-5">
+        <section class="container mt-5 ">
             <div class="row gap-2">
                 <div class="col-3 side-menu-section">
                     <div class="header">
@@ -143,24 +143,33 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-8 content-section">
+                <div class="col-8 content-section ">
                     <div class="display-container ">
                         <div class="profile-image-container">
-                            <img id="profileImg" src="../../public/asstes/images/logo.jpg" class="profile-image"
-                                alt="profile-image">
-                            <label for="imageUpload" class="edit-icon" id="edit-icon">
-                                <i class="fa-solid fa-pen"></i>
-                            </label>
-                            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                            <% if (currentUser.profileImage) { %>
+                                <img id="profileImg" src="<%= currentUser.profileImage %>" class="profile-image"
+                                    alt="profile-image">
+                                <% } else { %>
+                                    <img id="profileImg" src="../../public/asstes/images/logo.jpg" class="profile-image"
+                                        alt="profile-image">
+                                    <% } %>
+
+                                        <label for="imageUpload" class="edit-icon" id="edit-icon">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </label>
+                                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
                         </div>
-                        <div class="contianer mt-3">
+                        <div class="contianer mt-3 ">
                             <div class="row mb-3">
                                 <div class="col">
                                     <p>First Name</p>
                                 </div>
                                 <div class="col">
-                                    <p id="first-name">First Name value</p>
-                                    <input type="text" class="form-control" name="firstName" id="firstName" style="display: none;" />
+                                    <p id="first-name">
+                                        <%= currentUser.firstName %>
+                                    </p>
+                                    <input type="text" class="form-control" name="firstName"
+                                        value="<%= currentUser.firstName %>" id="firstName" style="display: none;" />
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -168,8 +177,11 @@
                                     <p>Last Name</p>
                                 </div>
                                 <div class="col">
-                                    <p id="last-name">Lat Name value</p>
-                                    <input type="text" class="form-control"  name="lastName" id="lastName" style="display: none;" />
+                                    <p id="last-name">
+                                        <%= currentUser.lastName %>
+                                    </p>
+                                    <input type="text" class="form-control" value="<%= currentUser.lastName %>"
+                                        name="lastName" id="lastName" style="display: none;" />
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -177,8 +189,11 @@
                                     <p>User Name</p>
                                 </div>
                                 <div class="col">
-                                    <p id="user-name">User Name value</p>
-                                    <input type="text" class="form-control" name="userName" id="userName" style="display: none;" />
+                                    <p id="user-name">
+                                        <%= currentUser.userName %>
+                                    </p>
+                                    <input type="text" class="form-control" value="<%= currentUser.userName %>"
+                                        name="userName" id="userName" style="display: none;" />
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -186,8 +201,11 @@
                                     <p>Email </p>
                                 </div>
                                 <div class="col">
-                                    <p id="email">Email value</p>
-                                    <input type="email" class="form-control" name="email" id="useremail" style="display: none;" />
+                                    <p id="email">
+                                        <%= currentUser.email %>
+                                    </p>
+                                    <input type="email" class="form-control" value="<%= currentUser.email %>"
+                                        name="email" id="useremail" style="display: none;" />
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -195,8 +213,11 @@
                                     <p>Phone </p>
                                 </div>
                                 <div class="col">
-                                    <p id="user-phone">Phone value</p>
-                                    <input type="tel" class="form-control" name="phone" id="userPhone" style="display: none;" />
+                                    <p id="user-phone">
+                                        <%= currentUser.phone %>
+                                    </p>
+                                    <input type="tel" class="form-control" name="phone" value="<%= currentUser.phone %>"
+                                        id="userPhone" style="display: none;" />
                                 </div>
                             </div>
                         </div>
@@ -278,10 +299,12 @@
     </mian>
 
     <script>
+        let cropper;
         const alertBox = document.getElementById('alert-box')
-
+        const alertMessage = document.getElementById('alert')
         const imageEditIcon = document.getElementById('edit-icon')
 
+        const progileImage = document.getElementById('profileImg')
 
         const editButton = document.getElementById('edit-button')
         const editButtonContainer = document.getElementById('edit-contianer')
@@ -304,7 +327,19 @@
         const userPhoneInput = document.getElementById('userPhone')
         const userImageInput = document.getElementById('imageUpload')
 
+        const reader = new FileReader();
 
+        userImageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        progileImage.src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        })
 
         editButton.addEventListener('click', () => {
             imageEditIcon.style.display = 'flex'
@@ -354,21 +389,38 @@
             formData.append("email", userEmailInput.value);
             formData.append("phone", userPhoneInput.value);
 
+
             if (file) {
-                formData.append("profileImage", file);
+                formData.append("profile_image", file);
             }
 
-            // fetch('/upload-endpoint', {
-            //     method: 'POST',
-            //     body: formData
-            // })
-            //     .then(response => response.json())
-            //     .then(data => console.log("Upload success:", data))
-            //     .catch(error => console.error("Upload error:", error));
+            fetch('/user/profile/edit', {
+                method: 'PUT',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alertMessage.classList.add('alert-success')
+                    } else {
+                        alertMessage.classList.add('alert-danger')
+                    }
+                    return response.json()
+                })
+                .then(data => {  
+                    alertMessage.innerText = data.message
+                    setTimeout(() => {
+                        alertMessage.classList.remove('alert-success')
+                        window.location.reload()
+                    }, 3000)
+                })
+                .catch(error => {
+                    setTimeout(() => {
+                        alertMessage.classList.remove('alert-danger')
+                    }, 3000)
+                });
 
             editButton.style.display = 'block';
         });
-
 
     </script>
 

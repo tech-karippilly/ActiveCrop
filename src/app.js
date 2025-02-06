@@ -20,8 +20,9 @@ import pageRoute from './routes/page/index.js'
 import customerRoute from './routes/customer/index.js'
 import userProductsRoute from './routes/app/products/index.js'
 import homeRoute from './routes/app/home/index.js'
+import profileRoute from './routes/app/profile/index.js'
 
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE } from "./constans/endpoints.js";
 
 const app = express()
 
@@ -79,6 +80,7 @@ app.use(USER_LOGIN_BASE, userRoute)
 app.use(USER_OTP_BASE, otpRoute)
 app.use('/api/auth/token', tokenRoute)
 app.use(USER_PRODUCTS,userProductsRoute)
+app.use(USER_PROFILE,profileRoute)
 
 
 

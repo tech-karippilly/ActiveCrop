@@ -4,6 +4,11 @@ export const ADMIN_LOGIN_POST= '/login'
 export const ADMIN_CREATE ='/create-admin'
 export const ADMIN_LOGOUT ='/logout'
 
+export const BASE_URL = '/'
+export const DYNAMIC_ID = '/:id'
+export const LOGOUT = '/logout'
+
+
 
 export const ADMIN_DASHBOARD_BASE = '/admin/dashboard'
 
@@ -50,7 +55,8 @@ export const USER_OTP_BASE = '/otp'
 export const USER_OTP_VERIFY = '/verifyotp'
 
 export const USER_PROFILE= '/user/profile'
-export const USER_ADDRESS_BASE = `${USER_PROFILE}/address`
+export const USER_PROFILE_EDIT= '/edit'
+export const USER_ADDRESS_BASE = `/address`
 
 export const USER_ADDRESS_CREATE = `${USER_ADDRESS_BASE}/create`
 export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
@@ -61,9 +67,6 @@ export const USER_DYNAMIC = `${USER_ORDER_BASE}${DYNAMIC_ID}`
 export const USER_REST_PASSWORD = '/user/password'
 
 
-
-export const DYNAMIC_ID = '/:id'
-export const LOGOUT = '/logout'
 
 
 
