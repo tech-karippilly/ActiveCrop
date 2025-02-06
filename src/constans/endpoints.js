@@ -49,7 +49,20 @@ export const USER_RESET_PASSWORD = '/reset-password'
 export const USER_OTP_BASE = '/otp'
 export const USER_OTP_VERIFY = '/verifyotp'
 
+export const USER_PROFILE= '/user/profile'
+export const USER_ADDRESS_BASE = `${USER_PROFILE}/address`
 
+export const USER_ADDRESS_CREATE = `${USER_ADDRESS_BASE}/create`
+export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
+
+export const USER_ORDER_BASE = '/user/orders'
+export const USER_DYNAMIC = `${USER_ORDER_BASE}${DYNAMIC_ID}`
+
+export const USER_REST_PASSWORD = '/user/password'
+
+
+
+export const DYNAMIC_ID = '/:id'
 export const LOGOUT = '/logout'
 
 
