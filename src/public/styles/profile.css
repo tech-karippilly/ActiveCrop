@@ -205,3 +205,62 @@ body {
     position: relative;
     bottom: 0;
 }
+
+.timeline-step {
+
+    position: relative;
+    flex: 1;
+    padding: 10px 0;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 18px;
+}
+
+.step-label {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.timeline-step:not(:last-child)::after {
+    content: '';
+    top: 90%;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+    transform: translateY(-100%);
+}
+
+/* Highlight completed steps */
+.timeline-step.completed .step-circle {
+    background-color: #28a745; /* Green */
+}
+
+.timeline-step.completed .step-label {
+    color: #28a745;
+}
+
+.timeline-step.in-progress .step-circle {
+    background-color: #ffc107; /* Yellow */
+}
+
+.timeline-step.in-progress .step-label {
+    color: #ffc107;
+}
+
+.timeline-step.completed + .timeline-step .step-circle {
+    background-color: #6c757d; 
+}
+
+/* Optionally, hide the line when steps are completed */
+.timeline-step.completed + .timeline-step::after {
+    background-color: #28a745;
+}
