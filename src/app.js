@@ -92,7 +92,7 @@ app.get('/admin',(req,res)=>{
 })
 
 app.get('/user',(req,res)=>{
-    res.status(200).render('user/profile/password')
+    res.status(200).render('user/profile/orders/index')
 })
 
 export default app
