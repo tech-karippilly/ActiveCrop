@@ -13,9 +13,7 @@ export async function renderProfilePage(req, res) {
 
         // }
         const currentUser = await User.findById('67930bdbd933b5aa5b33d335')
-
-
-        // console.log(access_token)
+        
         res.status(HTTP_SUCCESS).render(USER_PROFILE_PAGE, { currentUser })
     } catch (error) {
         res.status(HTTP_SERVER_ERROR).render(USER_PROFILE_PAGE)

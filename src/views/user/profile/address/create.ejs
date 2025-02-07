@@ -367,7 +367,6 @@
             event.preventDefault();
             clearErrors();
             const isFormValid = validateForm();
-            console.log('working', isFormValid)
             if (isFormValid) {
 
                 const addressOne = document.getElementById('address1').value.trim()
@@ -398,7 +397,6 @@
                 }).then((response) => {
                     return response.json()
                 }).then((data) => {
-                    console.log("data", data)
                     alertMessage.classList.add(data.alertype)
                     alertMessage.innerHTML = data.message
                     setTimeout(() => {

@@ -407,7 +407,6 @@
                 }).then((response) => {
                     return response.json()
                 }).then((data) => {
-                    console.log("data", data)
                     alertMessage.classList.add(data.alertType)
                     alertMessage.innerHTML = data.message
                     setTimeout(() => {

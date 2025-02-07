@@ -98,7 +98,6 @@ export async function renderEditAddressPage(req, res) {
 
         const address = await Address.findById(id)
 
-        console.log(address)
         if (address) {
             return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address })
         }
@@ -133,7 +132,6 @@ async function editAddress(req, res) {
 
         return res.status(HTTP_NOT_FOUND).json({ message: 'Address not found', alertType: 'alert-danger', })
     } catch (error) {
-        console.log(error.message)
         return res.status(HTTP_SERVER_ERROR).json({ message: 'Internal Server Error' })
     }
 }

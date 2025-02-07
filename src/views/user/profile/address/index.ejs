@@ -289,7 +289,6 @@
         const alertMessage = document.getElementById('alert-message')
 
         function setDefaultAddress(addressId) {
-            console.log('Setting default address:', addressId);
             fetch(`/user/profile/address/${addressId}`, {
                 method: 'PATCH',
                 headers: {
@@ -321,8 +320,6 @@
 
         function deleteAddress(addressId) {
             if (confirm('Are you sure you want to delete this address?')) {
-                console.log('Deleting address:', addressId);
-
                 fetch(`/user/profile/address/${addressId}`, {
                     method: 'DELETE'
                 })
