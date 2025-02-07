@@ -2,29 +2,66 @@ import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus
 import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
 import { Address, User } from "../../../../models/index.js";
 
-export async function renderAddressPage(req,res){
-    try{
+export async function renderAddressPage(req, res) {
+    try {
         const user = await User.findById('67930bdbd933b5aa5b33d335')
-        const addressList = await Address.find({user_id:user})
+        const addressList = await Address.find({ user_id: user })
 
-        res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE,{addressList})
-    }catch(errr){
+        res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { addressList })
+    } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_PAGE)
     }
 }
 
-export async function renderCreateAddressPage(req,res){
-    try{
+export async function renderCreateAddressPage(req, res) {
+    try {
         res.status(HTTP_SUCCESS).render(USER_ADDRESS_CREATE_PAGE)
-    }catch(errr){
+    } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
     }
 }
 
-export async function renderEditAddressPage(req,res){
-    try{
+async function createAddress(req, res) {
+    try {
+        const { landmark, address_line_1, address_line_2, pincode, state, district, city, nickname, phone } = req.body
+
+        const currentUser = await User.findById('67930bdbd933b5aa5b33d335')
+        const address = await Address.findOne({ nickname, address_line_1, address_line_2 })
+
+        if (address) {
+            return res.status(409).json({ message: 'Address already exist', alertype: 'alert-warning' })
+        }
+
+        const adderssDetails = {
+            address_line_1,
+            address_line_2,
+            pincode,
+            phone,
+            state,
+            district,
+            city,
+            landmark,
+            nickname,
+            user_id: currentUser._id
+        }
+
+        const newAddress = new Address(adderssDetails)
+
+        await newAddress.save()
+
+        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
+
+    } catch (err) {
+        res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
+    }
+}
+
+export async function renderEditAddressPage(req, res) {
+    try {
         res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE)
-    }catch(errr){
+    } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_EDIT_PAGE)
     }
 }
+
+export { createAddress }

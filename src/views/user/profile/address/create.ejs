@@ -27,10 +27,11 @@
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert-message">
 
             </div>
         </div>
+        
         <section class="header-section">
             <div class="container-fluid d-flex justify-content-end">
                 <div class="row">
@@ -145,6 +146,7 @@
                     </div>
                 </div>
                 <div class="col-8 content-section  p-1">
+
                     <form id="editAddressForm" onsubmit="event.preventDefault(); return validateForm();">
                         <div class="form-group">
                             <label for="address1">Address 1</label>
@@ -278,16 +280,7 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
-
-        const addressOne = document.getElementById('address1').value.trim()
-        const addressTwo = document.getElementById('address2').value.trim()
-        const state = document.getElementById('state').value.trim()
-        const district = document.getElementById('district').value.trim()
-        const city = document.getElementById('city').value.trim()
-        const pincode = document.getElementById('pincode').value.trim()
-        const phoneNumber = document.getElementById('phone').value.trim()
-        const landMark = document.getElementById('land-mark').value.trim()
-        const nickName = document.getElementById('nick-name').value.trim()
+        const alertMessage = document.getElementById('alert-message')
 
         const addressRules = /^[A-Za-z0-9\s:,\-\/]+$/;
         const pinCodeRule = /^\d{6}$/
@@ -376,10 +369,46 @@
             const isFormValid = validateForm();
             console.log('working', isFormValid)
             if (isFormValid) {
-                if (confirm('Form Submitted')) {
-                    
-                    clearErrors();
-                }
+
+                const addressOne = document.getElementById('address1').value.trim()
+                const addressTwo = document.getElementById('address2').value.trim()
+                const state = document.getElementById('state').value.trim()
+                const district = document.getElementById('district').value.trim()
+                const city = document.getElementById('city').value.trim()
+                const pincode = document.getElementById('pincode').value.trim()
+                const phoneNumber = document.getElementById('phone').value.trim()
+                const landMark = document.getElementById('land-mark').value.trim()
+                const nickName = document.getElementById('nick-name').value.trim()
+
+                const formData = new FormData()
+
+                formData.append('address_line_1', addressOne)
+                formData.append('address_line_2', addressTwo)
+                formData.append('pincode', pincode)
+                formData.append('state', state)
+                formData.append('district', district)
+                formData.append('city', city)
+                formData.append('nickname', nickName)
+                formData.append('landmark', landMark)
+                formData.append('phone', phoneNumber)
+
+                fetch('/user/profile/address/create', {
+                    method: 'POST',
+                    body: formData
+                }).then((response) => {
+                    return response.json()
+                }).then((data) => {
+                    console.log("data", data)
+                    alertMessage.classList.add(data.alertype)
+                    alertMessage.innerHTML = data.message
+                    setTimeout(() => {
+                        alertMessage.classList.remove(data.alertype)
+                        alertMessage.innerHTML = ''
+                        if (data.redirect) {
+                            window.location.href = redirect
+                        }
+                    }, 3000)
+                })
             }
         });
     </script>

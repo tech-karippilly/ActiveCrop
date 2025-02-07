@@ -18,8 +18,12 @@ const addressSchema = mongoose.Schema({
         type:String,
         required:false
     },
+    phone:{
+        type:String,
+        required:true
+    },
     pincode:{
-        type:Number,
+        type:String,
         required:true,
     },
     state:{
@@ -40,7 +44,8 @@ const addressSchema = mongoose.Schema({
     },
     nickname:{
         type:String,
-        required:true
+        required:true,
+        unique: true 
     }
 })
 
