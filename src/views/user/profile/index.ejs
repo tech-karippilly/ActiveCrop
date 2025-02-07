@@ -109,9 +109,13 @@
                     <div class="col h-100">
                         <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
+
                     <div class="col h-100 logo-text-container">
-                        <h5>ACTIVE CROP</h5>
+                        <a href="/"  class="logo-text-container" style="text-decoration: none;">
+                            <h5>ACTIVE CROP</h5>
+                        </a>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -124,17 +128,19 @@
                     </div>
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
-                            <button type="button" onclick='window.location.href="/user/profile"' class="list-group-item list-group-item-action active"
-                                aria-current="true">
+                            <button type="button" onclick='window.location.href="/user/profile"'
+                                class="list-group-item list-group-item-action active" aria-current="true">
                                 User Details
                             </button>
-                            <button onclick='window.location.href="/user/profile/address"' type="button" class="list-group-item list-group-item-action">
+                            <button onclick='window.location.href="/user/profile/address"' type="button"
+                                class="list-group-item list-group-item-action">
                                 Address Management
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/password'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -406,7 +412,7 @@
                     }
                     return response.json()
                 })
-                .then(data => {  
+                .then(data => {
                     alertMessage.innerText = data.message
                     setTimeout(() => {
                         alertMessage.classList.remove('alert-success')
