@@ -404,8 +404,9 @@
                     setTimeout(() => {
                         alertMessage.classList.remove(data.alertype)
                         alertMessage.innerHTML = ''
+                        
                         if (data.redirect) {
-                            window.location.href = redirect
+                            window.location.href = data.redirect
                         }
                     }, 3000)
                 })

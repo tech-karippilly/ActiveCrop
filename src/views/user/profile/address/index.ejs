@@ -27,7 +27,7 @@
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert-message">
 
             </div>
         </div>
@@ -143,58 +143,75 @@
                 </div>
                 <div class="col-8 content-section">
                     <div class="text-end">
-                        <button class="btn btn-success" onclick="window.location.href='/user/profile/address/create'">Add Address</button>
+                        <button class="btn btn-success"
+                            onclick="window.location.href='/user/profile/address/create'">Add Address</button>
                     </div>
                     <% if(addressList.length>0){%>
                         <ul class="list-group border-0">
-                            <% addressList.forEach((address,index) =>{ %>
-                            <li class="list-group-item border-0 border-bottom">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                    id="flexRadioDefault1" <%= address.is_default ? 'checked' : '' %> onclick="setDefaultAddress('<%= address._id %>')">
-                                <label class="form-check-label  w-100 p-1" for="firstCheckbox">
-                                    <div>
-                                        <label>Address 1</label>
-                                        <p> <%= address.address_line_1 %></p>
-                                    </div>
-                                    <div>
-                                        <label>Address 2</label>
-                                        <p> <%= address.address_line_2 %></p>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col">
-                                            <label>State</label>
-                                            <p> <%= address.state %></p>
+                            <% addressList.forEach((address,index)=>{ %>
+                                <li class="list-group-item border-0 border-bottom">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                        id="flexRadioDefault1" <%=address.is_default ? 'checked' : '' %>
+                                    onclick="setDefaultAddress('<%= address._id %>')">
+                                        <label class="form-check-label  w-100 p-1" for="firstCheckbox">
+                                            <div>
+                                                <label>Address 1</label>
+                                                <p>
+                                                    <%= address.address_line_1 %>
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label>Address 2</label>
+                                                <p>
+                                                    <%= address.address_line_2 %>
+                                                </p>
+                                            </div>
+                                            <div class="row ">
+                                                <div class="col">
+                                                    <label>State</label>
+                                                    <p>
+                                                        <%= address.state %>
+                                                    </p>
+                                                </div>
+                                                <div class="col">
+                                                    <label>District</label>
+                                                    <p>
+                                                        <%= address.district %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="row ">
+                                                <div class="col">
+                                                    <label>City</label>
+                                                    <p>
+                                                        <%= address.city %>
+                                                    </p>
+                                                </div>
+                                                <div class="col">
+                                                    <label>PinCode</label>
+                                                    <p>
+                                                        <%= address.pincode %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label>Phone</label>
+                                                <p>
+                                                    <%= address.phone %>
+                                                </p>
+                                            </div>
+                                        </label>
+                                        <div class="d-flex ">
+                                            <button class="btn btn-warning" onclick="editAddress('<%= address._id %>')">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </button>
+                                            <button class="btn btn-danger ms-2"
+                                                onclick="deleteAddress('<%= address._id %>')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
                                         </div>
-                                        <div class="col">
-                                            <label>District</label>
-                                            <p> <%= address.district %></p>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col">
-                                            <label>City</label>
-                                            <p> <%= address.city %></p>
-                                        </div>
-                                        <div class="col">
-                                            <label>PinCode</label>
-                                            <p> <%= address.pincode %></p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label>Phone</label>
-                                        <p> <%= address.phone %></p>
-                                    </div>
-                                </label>
-                                <div class="d-flex ">
-                                    <button class="btn btn-warning" onclick="editAddress('<%= address._id %>')">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-                                    <button class="btn btn-danger ms-2" onclick="deleteAddress('<%= address._id %>')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            <% })%>
+                                </li>
+                                <% })%>
                         </ul>
                         <%}else{%>
                             <div class="container mt-5">
@@ -269,44 +286,67 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
+        const alertMessage = document.getElementById('alert-message')
 
         function setDefaultAddress(addressId) {
             console.log('Setting default address:', addressId);
-            fetch('/set-default-address', {
-                method: 'POST',
+            fetch(`/user/profile/address/${addressId}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: addressId })
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        alert('Default address updated successfully!');
-                    } else {
-                        alert('Failed to update default address.');
-                    }
+                    alertMessage.classList.add(data.alertType)
+                    alertMessage.innerHTML = data.message
+
+                    setTimeout(() => {
+                        alertMessage.classList.remove(data.alertType)
+                        alertMessage.innerHTML = ''
+                        window.location.reload()
+                    }, 3000)
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    alertMessage.classList.add(data.alertType)
+                    alertMessage.innerHTML = data.message
+
+                    setTimeout(() => {
+                        alertMessage.classList.remove(data.alertType)
+                        alertMessage.innerHTML = ''
+
+                    }, 3000)
+                });
         }
 
         function deleteAddress(addressId) {
             if (confirm('Are you sure you want to delete this address?')) {
                 console.log('Deleting address:', addressId);
 
-                fetch(`/delete-address/${addressId}`, {
+                fetch(`/user/profile/address/${addressId}`, {
                     method: 'DELETE'
                 })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
-                            document.querySelector(`[data-id='${addressId}']`).remove();
-                            alert('Address deleted successfully!');
-                        } else {
-                            alert('Failed to delete address.');
-                        }
+                        alertMessage.classList.add(data.alertType)
+                        alertMessage.innerHTML = data.message
+
+                        setTimeout(() => {
+                            alertMessage.classList.remove(data.alertType)
+                            alertMessage.innerHTML = ''
+                            window.location.reload()
+                        }, 3000)
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        alertMessage.classList.add(data.alertType)
+                        alertMessage.innerHTML = data.message
+
+                        setTimeout(() => {
+                            alertMessage.classList.remove(data.alertType)
+                            alertMessage.innerHTML = ''
+
+                        }, 3000)
+                    });
             }
             function editAddress(addressId) {
                 // Redirect to edit page or open modal

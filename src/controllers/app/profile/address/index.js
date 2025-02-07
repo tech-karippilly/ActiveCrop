@@ -1,6 +1,7 @@
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus.js";
 import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
 import { Address, User } from "../../../../models/index.js";
+import { ALERT_SUCCESS } from "../../../../utils/alert.js";
 
 export async function renderAddressPage(req, res) {
     try {
@@ -49,10 +50,45 @@ async function createAddress(req, res) {
 
         await newAddress.save()
 
-        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
+        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect:'/user/profile/address' })
 
     } catch (err) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
+    }
+}
+
+async function defaultAddress(req, res) {
+    try {
+        const { id } = req.params
+
+        const address = await Address.findById(id)
+
+        if (address) {
+            address.is_default = !address.is_default
+            await address.save()
+            return res.status(200).json({ message: "Default adderess Updated", alertType: 'alert-success',redirect:'/user/profile/address' })
+        }
+
+        return res.status(404).json({ message: "Address Not fount", alertType: 'alert-danger' })
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error", alertType: 'alert-danger' })
+    }
+}
+
+async function deleteAddress(req, res) {
+    try {
+        const { id } = req.params
+        const address = await Address.findById(id)
+
+        if (address) {
+            const deleteStatus = await Address.deleteOne({ _id: id });
+            if (deleteStatus.deletedCount) {
+                return res.status(200).json({ message: "Address Deleted Successfully", alertType: 'alert-success' })
+            }
+        }
+        return res.status(404).json({ message: "Address not found", alertType: 'alert-danger' })
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error", alertType: 'alert-danger' })
     }
 }
 
@@ -64,4 +100,4 @@ export async function renderEditAddressPage(req, res) {
     }
 }
 
-export { createAddress }
+export { createAddress, defaultAddress, deleteAddress }
