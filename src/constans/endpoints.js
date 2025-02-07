@@ -64,7 +64,7 @@ export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
 export const USER_ORDER_BASE = '/user/orders'
 export const USER_DYNAMIC = `${USER_ORDER_BASE}${DYNAMIC_ID}`
 
-export const USER_REST_PASSWORD = '/user/password'
+export const USER_REST_PASSWORD = '/password'
 
 
 

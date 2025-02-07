@@ -2,9 +2,10 @@ import express from "express";
 import multer from "multer";
 import fs from 'fs';
 
-import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_PROFILE_EDIT } from "../../../constans/endpoints.js";
+import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_PROFILE_EDIT, USER_REST_PASSWORD } from "../../../constans/endpoints.js";
 import { renderProfilePage, updateProfileDetails } from "../../../controllers/app/profile/index.js";
 import { createAddress, defaultAddress, deleteAddress, editAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage } from "../../../controllers/app/profile/address/index.js";
+import { resetPassword, resetPasswordPage } from "../../../controllers/app/profile/password/index.js";
 
 const route = express.Router()
 
@@ -28,11 +29,17 @@ route.get(BASE_URL,renderProfilePage)
 route.put(USER_PROFILE_EDIT,upload.single('profile_image'),updateProfileDetails)
 
 route.get(USER_ADDRESS_BASE,renderAddressPage)
+
 route.get(USER_ADDRESS_CREATE,renderCreateAddressPage)
 route.post(USER_ADDRESS_CREATE,upload.none(),createAddress)
+
 route.patch(USER_ADDRESS_DYNAMIC,defaultAddress)
 route.delete(USER_ADDRESS_DYNAMIC,deleteAddress)
+
 route.get(USER_ADDRESS_DYNAMIC,renderEditAddressPage)
 route.put(USER_ADDRESS_DYNAMIC,upload.none(),editAddress)
+
+route.get(USER_REST_PASSWORD,resetPasswordPage)
+route.patch(USER_REST_PASSWORD,upload.none(),resetPassword)
 
 export default route
