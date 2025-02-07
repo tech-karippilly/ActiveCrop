@@ -353,13 +353,10 @@
             document.getElementById(`error-${field}`).textContent = message;
         }
         function cancel() {
-            // Here you can reset the form or do something else when the cancel button is clicked
             if (confirm('Are you sure you want to cancel?')) {
-                // Reset form fields
                 document.getElementById('editAddressForm').reset();
-
-                // Clear error messages
                 clearErrors();
+                window.location.href = '/user/profile/address'
             }
         }
 
