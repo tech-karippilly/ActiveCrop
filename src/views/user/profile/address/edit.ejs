@@ -27,7 +27,7 @@
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert-message">
 
             </div>
         </div>
@@ -107,7 +107,7 @@
             <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
                 <div class="row w-25 h-100 ">
                     <div class="col h-100">
-                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
+                        <img src="../../../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
                         <h5>ACTIVE CROP</h5>
@@ -124,10 +124,12 @@
                     </div>
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
-                            <button type="button" class="list-group-item list-group-item-action " aria-current="true">
+                            <button type="button" onclick='window.location.href="/user/profile"'
+                                class="list-group-item list-group-item-action " aria-current="true">
                                 User Details
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active">
+                            <button type="button" onclick='window.location.href="/user/profile/address"'
+                                class="list-group-item list-group-item-action active">
                                 Address Management
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -148,26 +150,28 @@
                         <div class="form-group">
                             <label for="address1">Address 1</label>
                             <input type="text" class="form-control" id="address1" name="address1"
-                                value="Address one value">
+                                value="<%= address.address_line_1 %>">
                             <small class="text-danger" id="error-address1"></small>
                         </div>
 
                         <div class="form-group mt-2">
                             <label for="address2">Address 2</label>
-                            <input type="text" class="form-control" id="address2" name="address2" value="Address value">
+                            <input type="text" class="form-control" id="address2" name="address2"
+                                value="<%= address.address_line_2 %>">
                             <small class="text-danger" id="error-address2"></small>
                         </div>
 
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" id="state" name="state" value="State value">
+                                <input type="text" class="form-control" id="state" name="state"
+                                    value="<%= address.state %>">
                                 <small class="text-danger" id="error-state"></small>
                             </div>
                             <div class="col">
                                 <label for="district">District</label>
                                 <input type="text" class="form-control" id="district" name="district"
-                                    value="District value">
+                                    value="<%= address.district %>">
                                 <small class="text-danger" id="error-district"></small>
                             </div>
                         </div>
@@ -175,25 +179,41 @@
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" value="City value">
+                                <input type="text" class="form-control" id="city" name="city"
+                                    value="<%= address.city %>">
                                 <small class="text-danger" id="error-city"></small>
                             </div>
                             <div class="col">
                                 <label for="pincode">PinCode</label>
                                 <input type="text" class="form-control" id="pincode" name="pincode"
-                                    value="PinCode value">
+                                    value="<%= address.pincode %>">
                                 <small class="text-danger" id="error-pincode"></small>
                             </div>
                         </div>
 
                         <div class="form-group  mt-2">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="Phone value">
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                value="<%= address.phone %>">
                             <small class="text-danger" id="error-phone"></small>
                         </div>
 
+                        <div class="form-group  mt-2">
+                            <label for="land-mark">Land Mark</label>
+                            <input type="text" class="form-control" id="land-mark" name="land-mark"
+                                value="<%= address.landmark %>">
+                            <small class="text-danger" id="error-land-mark"></small>
+                        </div>
+
+                        <div class="form-group  mt-2">
+                            <label for="nick-name">Nick Name</label>
+                            <input type="text" class="form-control" id="nick-name" name="nick-name"
+                                value="<%= address.nickname %>">
+                            <small class="text-danger" id="error-nick-name"></small>
+                        </div>
+
                         <div class="d-flex mt-2">
-                            <button type="button" class="btn btn-danger" onclick="deleteAddress()">
+                            <button type="button" class="btn btn-danger" onclick="cancel()">
                                 <i class="fa-solid fa-trash"></i> Cancel
                             </button>
                             <button type="submit" class="btn btn-success me-2 ms-2">
@@ -266,24 +286,30 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
+        const alertMessage = document.getElementById('alert-message')
 
-        const addressOne = document.getElementById('address1').value.trim()
-        const addressTwo = document.getElementById('address2').value.trim()
-        const state = document.getElementById('state').value.trim() 
-        const district = document.getElementById('district').value.trim()
-        const city =document.getElementById('city').value.trim()
-        const pincode =document.getElementById('pincode').value.trim()
-        const phoneNumber =document.getElementById('phone').value.trim()
 
-        const addressRules =  /^[A-Za-z0-9\s:,-/]+$/
+
+        const addressRules = /^[A-Za-z0-9\s:,-/]+$/
         const pinCodeRule = /^\d{6}$/
         const phoneRule = /^\d{10}$/
-        const normalRule =/^[A-Za-z\s]+$/
+        const normalRule = /^[A-Za-z\s]+$/
 
         function validateForm() {
             let isValid = true;
 
             clearErrors();
+
+
+            const addressOne = document.getElementById('address1').value.trim()
+            const addressTwo = document.getElementById('address2').value.trim()
+            const state = document.getElementById('state').value.trim()
+            const district = document.getElementById('district').value.trim()
+            const city = document.getElementById('city').value.trim()
+            const pincode = document.getElementById('pincode').value.trim()
+            const phoneNumber = document.getElementById('phone').value.trim()
+            const landMark = document.getElementById('land-mark').value.trim()
+            const nickName = document.getElementById('nick-name').value.trim()
 
             if (!addressRules.test(addressOne)) {
 
@@ -315,6 +341,15 @@
                 isValid = false;
             }
 
+            if (!normalRule.test(nickName)) {
+                setError('nick-name', 'NickName required to add address');
+                isValid = false;
+            }
+            if (!normalRule.test(landMark)) {
+                setError('land-mark', 'Land mark required to add address');
+                isValid = false;
+            }
+
 
             return isValid;
         }
@@ -327,20 +362,65 @@
         function setError(field, message) {
             document.getElementById(`error-${field}`).textContent = message;
         }
-        function deleteAddress() {
+        function cancel() {
             // Here you can reset the form or do something else when the cancel button is clicked
             if (confirm('Are you sure you want to cancel?')) {
                 // Reset form fields
                 document.getElementById('editAddressForm').reset();
 
-                // Clear error messages
                 clearErrors();
+
+                window.location.href='/user/profile/address'
             }
         }
 
         document.getElementById('editAddressForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            validateForm();
+            const isFormValid = validateForm();
+
+            if(isFormValid){
+                const addressOne = document.getElementById('address1').value.trim()
+                const addressTwo = document.getElementById('address2').value.trim()
+                const state = document.getElementById('state').value.trim()
+                const district = document.getElementById('district').value.trim()
+                const city = document.getElementById('city').value.trim()
+                const pincode = document.getElementById('pincode').value.trim()
+                const phoneNumber = document.getElementById('phone').value.trim()
+                const landMark = document.getElementById('land-mark').value.trim()
+                const nickName = document.getElementById('nick-name').value.trim()
+
+                const formData = new FormData()
+
+                formData.append('address_line_1', addressOne)
+                formData.append('address_line_2', addressTwo)
+                formData.append('pincode', pincode)
+                formData.append('state', state)
+                formData.append('district', district)
+                formData.append('city', city)
+                formData.append('nickname', nickName)
+                formData.append('landmark', landMark)
+                formData.append('phone', phoneNumber)
+
+                fetch(`/user/profile/address/<%= address._id%>`, {
+                    method: 'PUT',
+                    body: formData
+                }).then((response) => {
+                    return response.json()
+                }).then((data) => {
+                    console.log("data", data)
+                    alertMessage.classList.add(data.alertType)
+                    alertMessage.innerHTML = data.message
+                    setTimeout(() => {
+                        alertMessage.classList.remove(data.alertType)
+                        alertMessage.innerHTML = ''
+                        
+                        if (data.redirect) {
+                            window.location.href = data.redirect
+                        }
+                    }, 3000)
+                })
+            }
+
         });
     </script>
 

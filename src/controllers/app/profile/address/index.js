@@ -1,4 +1,4 @@
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus.js";
+import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus.js";
 import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
 import { Address, User } from "../../../../models/index.js";
 import { ALERT_SUCCESS } from "../../../../utils/alert.js";
@@ -50,7 +50,7 @@ async function createAddress(req, res) {
 
         await newAddress.save()
 
-        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect:'/user/profile/address' })
+        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
 
     } catch (err) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
@@ -66,7 +66,7 @@ async function defaultAddress(req, res) {
         if (address) {
             address.is_default = !address.is_default
             await address.save()
-            return res.status(200).json({ message: "Default adderess Updated", alertType: 'alert-success',redirect:'/user/profile/address' })
+            return res.status(200).json({ message: "Default adderess Updated", alertType: 'alert-success', redirect: '/user/profile/address' })
         }
 
         return res.status(404).json({ message: "Address Not fount", alertType: 'alert-danger' })
@@ -94,10 +94,48 @@ async function deleteAddress(req, res) {
 
 export async function renderEditAddressPage(req, res) {
     try {
-        res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE)
+        const { id } = req.params
+
+        const address = await Address.findById(id)
+
+        console.log(address)
+        if (address) {
+            return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address })
+        }
+
+        res.status(HTTP_NOT_FOUND).render(USER_ADDRESS_EDIT_PAGE)
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_EDIT_PAGE)
     }
 }
 
-export { createAddress, defaultAddress, deleteAddress }
+
+async function editAddress(req, res) {
+    try {
+        const { id } = req.params
+        const { landmark, address_line_1, address_line_2, pincode, state, district, city, nickname, phone } = req.body
+        const address = await Address.findById(id)
+
+        if (address) {
+            address.landmark = landmark
+            address.address_line_1 = address_line_1
+            address.address_line_2 = address_line_2
+            address.pincode = pincode
+            address.state = state
+            address.district = district
+            address.city = city
+            address.nickname = nickname
+            address.phone = phone
+
+            await address.save()
+            return res.status(HTTP_SUCCESS).json({ message: 'Updated Successfully ', alertType: 'alert-success', redirect: '/user/profile/address' })
+        }
+
+        return res.status(HTTP_NOT_FOUND).json({ message: 'Address not found', alertType: 'alert-danger', })
+    } catch (error) {
+        console.log(error.message)
+        return res.status(HTTP_SERVER_ERROR).json({ message: 'Internal Server Error' })
+    }
+}
+
+export { createAddress, defaultAddress, deleteAddress, editAddress }

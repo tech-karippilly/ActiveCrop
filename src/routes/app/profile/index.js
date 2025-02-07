@@ -4,7 +4,7 @@ import fs from 'fs';
 
 import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_PROFILE_EDIT } from "../../../constans/endpoints.js";
 import { renderProfilePage, updateProfileDetails } from "../../../controllers/app/profile/index.js";
-import { createAddress, defaultAddress, deleteAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage } from "../../../controllers/app/profile/address/index.js";
+import { createAddress, defaultAddress, deleteAddress, editAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage } from "../../../controllers/app/profile/address/index.js";
 
 const route = express.Router()
 
@@ -33,5 +33,6 @@ route.post(USER_ADDRESS_CREATE,upload.none(),createAddress)
 route.patch(USER_ADDRESS_DYNAMIC,defaultAddress)
 route.delete(USER_ADDRESS_DYNAMIC,deleteAddress)
 route.get(USER_ADDRESS_DYNAMIC,renderEditAddressPage)
+route.put(USER_ADDRESS_DYNAMIC,upload.none(),editAddress)
 
 export default route
