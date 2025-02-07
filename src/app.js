@@ -5,6 +5,7 @@ import session from "express-session";
 import { fileURLToPath } from 'url';
 import path from 'path';
 import passport from 'passport'
+import cors from 'cors'
 
 dotenv.config();
 
@@ -20,8 +21,9 @@ import pageRoute from './routes/page/index.js'
 import customerRoute from './routes/customer/index.js'
 import userProductsRoute from './routes/app/products/index.js'
 import homeRoute from './routes/app/home/index.js'
+import profileRoute from './routes/app/profile/index.js'
 
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE } from "./constans/endpoints.js";
 
 const app = express()
 
@@ -29,9 +31,10 @@ const app = express()
 ConnectDb()
 
 //MIDDLEWARES
-// app.use(cors())
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extends: true }))
+
 app.use(function (req, res, next) {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     next();
@@ -79,6 +82,7 @@ app.use(USER_LOGIN_BASE, userRoute)
 app.use(USER_OTP_BASE, otpRoute)
 app.use('/api/auth/token', tokenRoute)
 app.use(USER_PRODUCTS,userProductsRoute)
+app.use(USER_PROFILE,profileRoute)
 
 
 
@@ -91,5 +95,8 @@ app.get('/admin',(req,res)=>{
     res.status(200).redirect(ADMIN_AUTH_BASE)
 })
 
+app.get('/user',(req,res)=>{
+    res.status(200).render('user/profile/orders/details')
+})
 
 export default app

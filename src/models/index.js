@@ -6,6 +6,7 @@ import tokenSchema from "../schemas/tokenSchema.js";
 import { categoerySchema } from "../schemas/categoerySchema.js";
 import productSchema from "../schemas/productShcema.js";
 import reviewSchema from "../schemas/reviewSchema.js";
+import addressSchema from "../schemas/addressSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -14,6 +15,7 @@ const Token =mongoose.model('Token',tokenSchema)
 const Categoery = mongoose.model('Categoery',categoerySchema)
 const Product =  mongoose.model('Products',productSchema)
 const Review = mongoose.model('Reviews',reviewSchema)
+const Address = mongoose.model('Address',addressSchema)
 export {
     Role,
     User,
@@ -21,5 +23,6 @@ export {
     Token,
     Categoery,
     Product,
-    Review
+    Review,
+    Address
 }
