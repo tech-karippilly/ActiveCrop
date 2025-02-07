@@ -100,14 +100,14 @@
                     </div>
                 </div>
             </div>
-            </div>
+
         </section>
 
         <section class="logo-section">
             <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
                 <div class="row w-25 h-100 ">
                     <div class="col h-100">
-                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
+                        <img src="../../../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
                         <h5>ACTIVE CROP</h5>
@@ -124,10 +124,12 @@
                     </div>
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
-                            <button type="button" class="list-group-item list-group-item-action " aria-current="true">
+                            <button type="button" onclick='window.location.href="/user/profile"'
+                                class="list-group-item list-group-item-action " aria-current="true">
                                 User Details
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active">
+                            <button type="button" onclick='window.location.href="/user/profile/address"'
+                                class="list-group-item list-group-item-action active">
                                 Address Management
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -142,32 +144,29 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-8 content-section">
-
+                <div class="col-8 content-section  p-1">
                     <form id="editAddressForm" onsubmit="event.preventDefault(); return validateForm();">
                         <div class="form-group">
                             <label for="address1">Address 1</label>
-                            <input type="text" class="form-control" id="address1" name="address1"
-                                >
+                            <input type="text" class="form-control" id="address1" name="address1">
                             <small class="text-danger" id="error-address1"></small>
                         </div>
 
                         <div class="form-group mt-2">
                             <label for="address2">Address 2</label>
-                            <input type="text" class="form-control" id="address2" name="address2" >
+                            <input type="text" class="form-control" id="address2" name="address2">
                             <small class="text-danger" id="error-address2"></small>
                         </div>
 
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" id="state" name="state" >
+                                <input type="text" class="form-control" id="state" name="state">
                                 <small class="text-danger" id="error-state"></small>
                             </div>
                             <div class="col">
                                 <label for="district">District</label>
-                                <input type="text" class="form-control" id="district" name="district"
-                                    >
+                                <input type="text" class="form-control" id="district" name="district">
                                 <small class="text-danger" id="error-district"></small>
                             </div>
                         </div>
@@ -175,21 +174,33 @@
                         <div class="row gap-3  mt-2">
                             <div class="col">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" >
+                                <input type="text" class="form-control" id="city" name="city">
                                 <small class="text-danger" id="error-city"></small>
                             </div>
+
                             <div class="col">
                                 <label for="pincode">PinCode</label>
-                                <input type="text" class="form-control" id="pincode" name="pincode"
-                                    >
+                                <input type="text" class="form-control" id="pincode" name="pincode" maxlength="6">
                                 <small class="text-danger" id="error-pincode"></small>
                             </div>
                         </div>
 
                         <div class="form-group  mt-2">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" >
+                            <input type="text" class="form-control" id="phone" name="phone" maxlength="10">
                             <small class="text-danger" id="error-phone"></small>
+                        </div>
+
+                        <div class="form-group  mt-2">
+                            <label for="land-mark">Land Mark</label>
+                            <input type="text" class="form-control" id="land-mark" name="land-mark">
+                            <small class="text-danger" id="error-land-mark"></small>
+                        </div>
+
+                        <div class="form-group  mt-2">
+                            <label for="nick-name">Nick Name</label>
+                            <input type="text" class="form-control" id="nick-name" name="nick-name">
+                            <small class="text-danger" id="error-nick-name"></small>
                         </div>
 
                         <div class="d-flex mt-2">
@@ -200,6 +211,7 @@
                                 <i class="fa-solid fa-save"></i> Save
                             </button>
                         </div>
+
                     </form>
                 </div>
 
@@ -269,20 +281,32 @@
 
         const addressOne = document.getElementById('address1').value.trim()
         const addressTwo = document.getElementById('address2').value.trim()
-        const state = document.getElementById('state').value.trim() 
+        const state = document.getElementById('state').value.trim()
         const district = document.getElementById('district').value.trim()
-        const city =document.getElementById('city').value.trim()
-        const pincode =document.getElementById('pincode').value.trim()
-        const phoneNumber =document.getElementById('phone').value.trim()
+        const city = document.getElementById('city').value.trim()
+        const pincode = document.getElementById('pincode').value.trim()
+        const phoneNumber = document.getElementById('phone').value.trim()
+        const landMark = document.getElementById('land-mark').value.trim()
+        const nickName = document.getElementById('nick-name').value.trim()
 
-        const addressRules = /^[A-Za-z0-9\s:,-/]+$/
+        const addressRules = /^[A-Za-z0-9\s:,\-\/]+$/;
         const pinCodeRule = /^\d{6}$/
         const phoneRule = /^\d{10}$/
-        const normalRule =/^[A-Za-z\s]+$/
+        const normalRule = /^[A-Za-z\s.'-]+$/;
+
 
         function validateForm() {
             let isValid = true;
 
+            const addressOne = document.getElementById('address1').value.trim()
+            const addressTwo = document.getElementById('address2').value.trim()
+            const state = document.getElementById('state').value.trim()
+            const district = document.getElementById('district').value.trim()
+            const city = document.getElementById('city').value.trim()
+            const pincode = document.getElementById('pincode').value.trim()
+            const phoneNumber = document.getElementById('phone').value.trim()
+            const landMark = document.getElementById('land-mark').value.trim()
+            const nickName = document.getElementById('nick-name').value.trim()
             clearErrors();
 
             if (!addressRules.test(addressOne)) {
@@ -314,6 +338,14 @@
                 setError('phone', 'Phone is required. Must have 10 digits');
                 isValid = false;
             }
+            if (!normalRule.test(nickName)) {
+                setError('nick-name', 'NickName required to add address');
+                isValid = false;
+            }
+            if (!normalRule.test(landMark)) {
+                setError('land-mark', 'Land mark required to add address');
+                isValid = false;
+            }
 
 
             return isValid;
@@ -340,7 +372,15 @@
 
         document.getElementById('editAddressForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            validateForm();
+            clearErrors();
+            const isFormValid = validateForm();
+            console.log('working', isFormValid)
+            if (isFormValid) {
+                if (confirm('Form Submitted')) {
+                    
+                    clearErrors();
+                }
+            }
         });
     </script>
 
