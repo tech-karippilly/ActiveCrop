@@ -2,13 +2,20 @@ import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../con
 import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
 import { Address, User } from "../../../../models/index.js";
 import { ALERT_SUCCESS } from "../../../../utils/alert.js";
+import jwt from 'jsonwebtoken'
 
 export async function renderAddressPage(req, res) {
     try {
-        const user = await User.findById('67930bdbd933b5aa5b33d335')
-        const addressList = await Address.find({ user_id: user })
+        const access_token = req.session.accessToken
+        if (access_token) {
+            const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+            const userId = jwtDecode.userId
+            const user = await User.findById(userId)
+            const addressList = await Address.find({ user_id: user })
+    
+            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { addressList })
+        }
 
-        res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { addressList })
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_PAGE)
     }
@@ -26,31 +33,37 @@ async function createAddress(req, res) {
     try {
         const { landmark, address_line_1, address_line_2, pincode, state, district, city, nickname, phone } = req.body
 
-        const currentUser = await User.findById('67930bdbd933b5aa5b33d335')
-        const address = await Address.findOne({ nickname, address_line_1, address_line_2 })
-
-        if (address) {
-            return res.status(409).json({ message: 'Address already exist', alertype: 'alert-warning' })
+        const access_token = req.session.accessToken
+        if (access_token) {
+            const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+            const userId = jwtDecode.userId
+            const currentUser = await User.findById(userId)
+            const address = await Address.findOne({ nickname, address_line_1, address_line_2 })
+    
+            if (address) {
+                return res.status(409).json({ message: 'Address already exist', alertype: 'alert-warning' })
+            }
+    
+            const adderssDetails = {
+                address_line_1,
+                address_line_2,
+                pincode,
+                phone,
+                state,
+                district,
+                city,
+                landmark,
+                nickname,
+                user_id: currentUser._id
+            }
+    
+            const newAddress = new Address(adderssDetails)
+    
+            await newAddress.save()
+    
+            return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
         }
 
-        const adderssDetails = {
-            address_line_1,
-            address_line_2,
-            pincode,
-            phone,
-            state,
-            district,
-            city,
-            landmark,
-            nickname,
-            user_id: currentUser._id
-        }
-
-        const newAddress = new Address(adderssDetails)
-
-        await newAddress.save()
-
-        return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
 
     } catch (err) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
