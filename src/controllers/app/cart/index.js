@@ -2,6 +2,9 @@ import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../constans/httpStatus.js
 import { USER_CART_PAGE } from "../../../constans/page.js";
 import jwt from 'jsonwebtoken'
 import { Cart, Categoery, Product, User } from "../../../models/index.js";
+import mongoose from 'mongoose';
+
+const ObjectId = mongoose.Types.ObjectId;
 
 async function renderCartPage(req, res) {
     try {
@@ -42,11 +45,18 @@ async function addToCart(req, res) {
         if (quantity > product.stock_quantity) {
             return res.status(400).json({ message: 'Not enough stock available' });
         }
+
         let cart = await Cart.findOne({ user_id: user._id });
         if (!cart) {
             cart = new Cart({ user_id:user._id, items: [] });
         }
-        const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+
+        const itemIndex = cart.items.findIndex(item =>
+            item.product_id.equals(new ObjectId(productId))
+        );
+        console.log(itemIndex)
+        console.log( cart.items)
+
         if (itemIndex > -1) {
             const newQuantity = cart.items[itemIndex].quantity + quantity;
             if (newQuantity > product.stockQuantity) {
@@ -64,8 +74,42 @@ async function addToCart(req, res) {
     }
 }
 
+async function updateCart(req,res){
+    try{
+        const { productId, quantity } = req.body
+        const user = await User.findById('67930bdbd933b5aa5b33d335')
+        const cart = await Cart.findOne({ user_id: user._id});
+        const product = await Product.findById(productId);
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+          }
+          if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+          }
+
+          const item = cart.items.find(item => item.productId.toString() === productId);
+          if (!item) {
+            return res.status(404).json({ message: 'Product not in cart' });
+          }
+
+          if (quantity > product.stock_quantity) {
+            return res.status(400).json({ message: 'Not enough stock available' });
+        }
+        if (quantity <= 0) {
+            cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+          } else {
+            item.quantity = quantity;
+          }
+          await cart.save();
+          res.status(200).json({message:'quantity Updates',cart});
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+}
+
 export {
     renderCartPage,
     getCart,
-    addToCart
+    addToCart,
+    updateCart
 }
