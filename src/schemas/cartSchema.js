@@ -14,6 +14,14 @@ const cartItemSchema =new mongoose.Schema({
     priceAtPurchanse:{
         type:Number,
         required:true
+    },
+    product_stock:{
+        type: String,
+        required: true
+    },
+    product_image:{
+        type:String,
+        required:true
     }
 },
 {

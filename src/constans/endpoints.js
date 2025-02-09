@@ -75,4 +75,5 @@ export const USER_CART_BASE = '/user/cart'
 export const GET_CART='/get-cart'
 export const ADD_CART = '/add'
 export const UPDATE_CART = '/update'
+export const DELETE_ITEM = '/delete/:id'
 
