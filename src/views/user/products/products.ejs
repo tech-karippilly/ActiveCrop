@@ -231,7 +231,7 @@
 
                                         <div class="button-container mt-3">
                                             <button class="btn add-to-cart-btn text-white w-100"
-                                                onclick="addToCart(event)">Add
+                                                onclick="addToCart(event,'<%= items._id %>')">Add
                                                 to Cart</button>
                                         </div>
                                     </div>
@@ -327,11 +327,9 @@
                 const filterType = this.getAttribute('data-filter');
                 const sortBy = this.getAttribute('data-sort');
 
-                console.log("sortby",sortBy)
                 const sortInput = document.getElementById('sort-by');
                 sortInput.value = sortBy;
 
-                console.log(sortInput.value)
                 const changeEvent = new Event('change');
                 sortInput.dispatchEvent(changeEvent);
             });
@@ -394,17 +392,34 @@
         function handleCardClick(id) {
             window.location.href = `/products/details/${id}/<%= activeCata %>`
         }
-        function addToCart(event) {
+        function addToCart(event, productId) {
             event.stopPropagation();
             const buttonContainer = event.target.closest('.button-container');
 
-            buttonContainer.innerHTML = `
+
+            fetch('/user/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, quantity:1 })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cart) {
+                        buttonContainer.innerHTML = `
         <div class="quantity-container">
             <button class="quantity-btn" onclick="updateQuantity(event, -1)">-</button>
             <div class="quantity-number">1</div>
             <button class="quantity-btn" onclick="updateQuantity(event, 1)">+</button>
         </div>
     `;
+                    }
+
+                })
+                .catch(error => {
+                    console.log("error", error)
+                })
         }
 
         function updateQuantity(event, change) {
@@ -426,6 +441,24 @@
                 quantityNumber.textContent = quantity;
             }
         }
+
+        function sendAddToCart(productId, quantity) {
+            fetch('/user/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, quantity })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.log("error", error)
+                })
+        }
+
     </script>
 </body>
 
