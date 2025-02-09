@@ -6,7 +6,7 @@ import { ADMIN_CREATE_PRODUCTS, ADMIN_DELETE_PRODUCTS, ADMIN_PRODUCT_DETAILS, AD
 
 const route = express.Router()
 
-const uploadDir = './uploads/products';
+const uploadDir = './src/uploads/products';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true }); // Creates the directory and its parents if needed
 }

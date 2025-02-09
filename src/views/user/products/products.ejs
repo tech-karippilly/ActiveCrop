@@ -160,11 +160,16 @@
                             Sort by Price
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="priceFilter">
-                            <li><a class="dropdown-item" href="#" data-filter="price" data-sort="price-low-high">Price:
-                                    Low to High</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="price" data-sort="price-high-low">Price:
-                                    High to Low</a></li>
+                            <li>
+                                <p class="dropdown-item" data-sort="price-low-high">Price:
+                                    Low to High</p>
+                            </li>
+                            <li>
+                                <p class="dropdown-item" data-sort="price-high-low">Price:
+                                    High to Low</p>
+                            </li>
                         </ul>
+                        <input type="hidden" id="sort-by" value="">
                     </div>
 
 
@@ -174,9 +179,10 @@
                             Sort Alphabetically
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="alphaFilter">
-                            <li><a class="dropdown-item" href="#" data-filter="alphabet" data-sort="az">A - Z</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="alphabet" data-sort="za">Z - A</a></li>
+                            <li><a class="dropdown-item" data-filter="alphabet" data-sort="az">A - Z</a></li>
+                            <li><a class="dropdown-item" data-filter="alphabet" data-sort="za">Z - A</a></li>
                         </ul>
+                        <input type="hidden" id="sort-by" value="">
                     </div>
 
                     <div class="dropdown">
@@ -185,44 +191,59 @@
                             Sort by Features
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="extraFilter">
-                            <li><a class="dropdown-item" href="#" data-filter="feature" data-sort="new-arrivals">New
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="new-arrivals">New
                                     Arrivals</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="feature"
-                                    data-sort="popularity">Popularity</a></li>
-                            <li><a class="dropdown-item" href="#" data-filter="feature" data-sort="ratings">Average
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="popularity">Popularity</a>
+                            </li>
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="ratings">Average
                                     Ratings</a></li>
                         </ul>
                     </div>
+
                 </div>
             </div>
 
             <div class="product-display">
-                <div class="row justify-content-between">
+                <div class="row justify-content-center" id="product-container">
 
-                    <div class="col-md-4">
-                        <div class="card product-card text-center" onclick="handleCardClick()">
-                            <div class="image-container" style="height: 50%;">
-                                <img src="https://via.placeholder.com/200" class="card-img-top" alt="Product Image"
-                                    style="object-fit: cover; height: 100%;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">Organic Apples</h5>
-                                <p class="card-text description">
-                                    Fresh and juicy organic apples directly from the farm, rich in vitamins and fiber.
-                                </p>
+                    <% if (products.length>0) {%>
+                        <%products.forEach((items,index)=>{%>
+                            <div class="col-md-4">
+                                <div class="card product-card text-center"
+                                    onclick="handleCardClick('<%= items._id %>')">
+                                    <div class="image-container">
+                                        <img src="/<%= items.images[0] %>" class="card-img-top product-image"
+                                            alt="<%= items.product_name %>">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">
+                                            <%= items.product_name %>
+                                        </h5>
+                                        <p class="card-text description">
+                                            <%= items.description %>
+                                        </p>
 
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="fw-bold text-success">₹150</div>
-                                    <div class="text-muted">1kg / pack</div>
-                                </div>
-                                
-                                <div class="button-container mt-3">
-                                    <button class="btn add-to-cart-btn text-white w-100" onclick="addToCart(event)">Add
-                                        to Cart</button>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="fw-bold text-success">₹<%= items.price %>
+                                            </div>
+                                            <div class="text-muted">1kg / pack</div>
+                                        </div>
+
+                                        <div class="button-container mt-3">
+                                            <button class="btn add-to-cart-btn text-white w-100"
+                                                onclick="addToCart(event)">Add
+                                                to Cart</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                            <%})%>
+
+                                <%} else{%>
+                                    <div class="col text-center" id="noProductsMessage">
+                                        <h5 class="text-danger">Products Not Added</h5>
+                                    </div>
+                                    <%}%>
                 </div>
             </div>
         </section>
@@ -306,37 +327,77 @@
                 const filterType = this.getAttribute('data-filter');
                 const sortBy = this.getAttribute('data-sort');
 
-                fetchProducts(filterType, sortBy);
+                console.log("sortby",sortBy)
+                const sortInput = document.getElementById('sort-by');
+                sortInput.value = sortBy;
+
+                console.log(sortInput.value)
+                const changeEvent = new Event('change');
+                sortInput.dispatchEvent(changeEvent);
             });
         });
 
-        function fetchProducts(filterType, sortBy) {
-            const apiUrl = `https://api.example.com/products?filter=${filterType}&sort=${sortBy}`;
-
+        document.getElementById('sort-by').addEventListener('change', (event) => {
+            const apiUrl = `/products/filter/<%= activeCata %>?sort=${event.target.value}`;
             fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
+                .then((response) => response.json())
+                .then((data) => {
+                    const productContainer = document.getElementById('product-container');
+                    productContainer.innerHTML = '';
+                    console.log(data)
+                    data.products.forEach(product => {
+                        const productCard = `
+            <div class="col-md-4">
+                <div class="card product-card text-center" onclick="handleCardClick('${product._id}')">
+                    <div class="image-container">
+                        <img src="/${product.images[0]}" class="card-img-top product-image" alt="${product.product_name}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">${product.product_name}</h5>
+                        <p class="card-text description">${product.description}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="fw-bold text-success">₹${product.price}</div>
+                            <div class="text-muted">1kg / pack</div>
+                        </div>
+                        <div class="button-container mt-3">
+                            <button class="btn add-to-cart-btn text-white w-100" onclick="addToCart(event)">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+                        productContainer.innerHTML += productCard;
+                    })
                 })
-                .then(data => {
-                    console.log('Fetched Products:', data);
-                })
-                .catch(error => {
-                    console.error('API Error:', error);
-                });
-        }
+        })
 
-        function handleCardClick() {
-            console.log("Product Card Clicked!");
+        // item.addEventListener('click', function (event) {
+        //     event.preventDefault(); // Prevents default anchor behavior
+        //     document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('text-success'));
+        //     this.classList.add('text-success');
+
+        //     const filterType = this.getAttribute('data-filter');
+        //     const sortBy = this.getAttribute('data-sort');
+
+        //     fetchProducts(filterType, sortBy);
+        // });
+
+        // function fetchProducts(filterType, sortBy) {
+        //     console.log("filterType", filterType)
+        //     console.log("sortBy", sortBy)
+        //     const apiUrl = `/products/filter?filter=${filterType}&sort=${sortBy}`;
+        //     fetch(apiUrl).then((response) => response.json())
+        //         .then((data) => {
+        //             console.log(data)
+        //         })
+        // }
+
+        function handleCardClick(id) {
+            window.location.href = `/products/details/${id}/<%= activeCata %>`
         }
         function addToCart(event) {
-            event.stopPropagation(); // Prevent triggering card click
-
+            event.stopPropagation();
             const buttonContainer = event.target.closest('.button-container');
 
-            // Replace button with quantity container
             buttonContainer.innerHTML = `
         <div class="quantity-container">
             <button class="quantity-btn" onclick="updateQuantity(event, -1)">-</button>

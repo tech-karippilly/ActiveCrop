@@ -5,7 +5,7 @@ import { createCustomer, createCustomerPage, deleteCustomer, getCoustomers, sear
 import { ADMIN_CREATE_CUSTOMER, ADMIN_CUSTOMER_LIST, ADMIN_CUSTOMER_SEARCH, ADMIN_UPDATE_CUSTOMER } from "../../constans/endpoints.js";
 const route = express.Router()
 
-const uploadDir = './uploads/profile';
+const uploadDir = './src/uploads/profile';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true }); // Creates the directory and its parents if needed
 }

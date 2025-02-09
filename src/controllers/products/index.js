@@ -76,7 +76,8 @@ export const createProducts = async (req, res) => {
 
         let product_images = {}
         for (var i = 0; i < req.files.length; i++) {
-            product_images[i] = req.files[i].path
+            const filePath = req.files[i].path.replace('src/', '');
+            product_images[i] = filePath
         }
         const category = await Categoery.findById({ _id: catagoery_id });
 
@@ -131,7 +132,8 @@ export const updateProduct = async (req, res) => {
         let fileIndex = 0;
         for (let i = 0; i < 4; i++) {
             if (!product_images[i] && req.files[fileIndex]) {
-                product_images[i] = req.files[fileIndex].path;
+                const filePath = req.files[fileIndex].path.replace('src/', '');
+                product_images[i] = filePath;
                 fileIndex++;
             }
         }
