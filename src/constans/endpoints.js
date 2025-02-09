@@ -41,8 +41,7 @@ export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
 
 export const USER_HOME ='/'
 export const USER_CATAGOERY= '/catagoery'
-export const USER_PRODUCTS ='/products'
-export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
+
 
 export const USER_LOGIN_BASE = '/auth'
 export const USER_LOGIN = '/login'
@@ -65,6 +64,11 @@ export const USER_ORDER_BASE = '/user/orders'
 export const USER_DYNAMIC = `${USER_ORDER_BASE}${DYNAMIC_ID}`
 
 export const USER_REST_PASSWORD = '/password'
+
+export const USER_PRODUCTS ='/products'
+export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
+export const USER_PRODUCT = '/:id'
+export const USER_PRODUCT_FILTER = `/filter/:catagoery`
 
 
 

@@ -5,7 +5,7 @@ import fs from 'fs';
 import { ADMIN_CATAGOERY, ADMIN_CREATE_CATAGOERY, ADMIN_DELETE_CATAGOERY, ADMIN_SEARCH_CATAGOERY, ADMIN_UPDATE_CATAGOERY } from "../../constans/endpoints.js";
 const route = express.Router()
 
-const uploadDir = './uploads/catagoery';
+const uploadDir = './src/uploads/catagoery';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true }); // Creates the directory and its parents if needed
 }

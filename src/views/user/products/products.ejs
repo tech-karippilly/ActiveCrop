@@ -4,190 +4,429 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Cropt | Products</title>
+    <title>Active Crop | Product Page</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
+    <link rel="stylesheet" href="../../../public/styles/homePage.css">
     <link rel="stylesheet" href="../../../public/styles/productStyles.css">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="bg-light d-flex justify-content-end align-items-center" style="height: 2rem;">
-        <div class="d-flex gap-3 me-3">
-            <div class="d-flex align-items-center">
-                <i class="fa fa-whatsapp me-1"></i>
-                <span class="text-lowercase">8078599537</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <i class="fas fa-headset me-1"></i>
-                <span class="text-lowercase">8078599537</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <i class="fas fa-comment-alt me-1"></i>
-                <span class="text-capitalize">Chat</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <% if(isLogin) { %>
-                    <span style="cursor: pointer;" onclick="window.location.href='/auth/logout'">
-                        <%= currentUser.firstName %>
-                    </span>
-                    <%}else { %>
-                        <span class="text-capitalize" style="cursor: pointer;"
-                            onclick="window.location.href='/auth/login'">Login</span>
-                        <%}%>
+    <main>
+        <div class="alert-box" id="alert-box">
+            <div class="alert " id="alert">
+
             </div>
         </div>
-    </div>
-    <div class="header-section d-flex justify-content-center">
-        <div class="row   w-100 h-100  d-flex  justify-content-between">
-            <div class="col-4 d-flex justify-content-center align-items-center h-100 ">
-                <a href="/">
-                    <div class="image-container">
-                        <img src="../../../public/asstes/images/logo.jpg" class="image">
+
+        <section class="header-section">
+            <div class="container-fluid d-flex justify-content-end">
+                <div class="row">
+                    <div class="col d-flex align-items-center">
+                        <i class="fa fa-whatsapp  icon"></i>
+                        <span class="text-lowercase  ">8078599537</span>
                     </div>
-                </a>
-                <div class="logo-text-container">
-                    <h1>Active crop</h1>
-                </div>
-            </div>
-            <div class="col-5 p-3 d-flex align-items-center justify-content-between">
-
-                <form class="d-flex w-75">
-                    <input class="form-control me-2" type="search" placeholder="Search products..." aria-label="Search">
-                    <button class="btn btn-light" type="submit">Search</button>
-                </form>
-                <div class="position-relative">
-                    <button class="btn btn-light position-relative">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span>
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="categoery-container">
-        <ul class="categoery-list">
-            <% catagories.forEach((catagories)=>{ %>
-                <li><a href="/products/<%=catagories._id %>"
-                        class="btn  btn-hover-underline <%= catagories._id.toString() === activeCata.toString() ?'active-category'  : 'normal-catagoery' %>">
-                        <%= catagories.catagoery_name %>
-                    </a></li>
-                <% })%>
-        </ul>
-    </div>
-
-    <div class="condent-section">
-        <div class="container w-100 h-100 pt-5">
-            <% if (products.length===0) { %>
-                <div>
-                    <h1>Don't have products to display</h1>
-                </div>
-                <% } else { %>
-                    <div class="row">
-                        <% products.forEach(function(product) { %>
-                            <div class="col-md-3 mb-4">
-                                <a href="/products/details/<%= product._id %>/<%= activeCata %>"
-                                    class="text-decoration-none text-dark">
-                                    <div class="card">
-                                        <img src="/<%= product.images[0] %>" class="card-img-top"
-                                            alt="<%= product.product_name %>"
-                                            style="width: 100%; height: 200px; object-fit: contain;">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-center">
-                                                <%= product.product_name %>
-                                            </h5>
-                                            <div>
-                                                <p class="description-line-clamp">
-                                                    <%= product.description %>
-                                                </p>
-                                            </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-headset  icon"></i>
+                        <span class="text-lowercase">8078599537</span>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-comment-alt icon"></i>
+                        <span class="text-capitalize">Chat</span>
+                    </div>
+                    <div class="col profile-container">
+                        <% if(isLogin) { %>
+                            <div class="btn-group">
+                                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <%= currentUser.firstName %>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="/user/profile">
                                             <div class="row">
                                                 <div class="col">
-                                                    <p class="card-text">Price: $<%= product.price %>
-                                                    </p>
+                                                    <i class="fa-regular fa-user"></i>
                                                 </div>
                                                 <div class="col">
-                                                    <p class="card-text">Kg</p>
+                                                    Profile
                                                 </div>
                                             </div>
-
-                                            <div class="w-100 d-flex justify-content-center mt-3">
-                                                <button class="btn btn-primary">Add to Cart</button>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fa-solid fa-gear"></i>
+                                                </div>
+                                                <div class="col">
+                                                    Settings
+                                                </div>
                                             </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                                </div>
+                                                <div class="col">
+                                                    Logout
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                            <%}else { %>
+                                <span class="text-capitalize" style="cursor: pointer;"
+                                    onclick="window.location.href='/auth/login'">Login</span>
+                                <%}%>
+
+
+
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+
+        <section class="logo-section py-2 ">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+
+                <div class="d-flex align-items-center logo-text-container">
+                    <a href="/" class="d-flex align-items-center text-decoration-none w-100" style="color: #52BE80;">
+                        <img src="../../public/asstes/images/logo.jpg" class="logo-image me-2" style="height: 50px;"
+                            alt="Logo" />
+                        <h5 class="mb-0 fw-bold text-center">ACTIVE CROP</h5>
+                    </a>
+                </div>
+
+                <div class="d-flex align-items-center  text-white p-2 rounded w-50 justify-content-between">
+
+                    <form class="d-flex w-75" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+
+                    <div class="position-relative">
+                        <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            10
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="main-container">
+            <div class="catagoery-container">
+                <ul class="categoery-list">
+                    <% catagories.forEach((catagories)=>{ %>
+                        <li><a href="/products/<%=catagories._id %>" class="btn text-white btn-hover-underline">
+                                <%= catagories.catagoery_name %>
+                            </a></li>
+                        <% })%>
+                </ul>
+            </div>
+            <div class="filter-dorpdown-contianer">
+                <div class="d-flex gap-3">
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="priceFilter"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by Price
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="priceFilter">
+                            <li>
+                                <p class="dropdown-item" data-sort="price-low-high">Price:
+                                    Low to High</p>
+                            </li>
+                            <li>
+                                <p class="dropdown-item" data-sort="price-high-low">Price:
+                                    High to Low</p>
+                            </li>
+                        </ul>
+                        <input type="hidden" id="sort-by" value="">
+                    </div>
+
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="alphaFilter"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort Alphabetically
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="alphaFilter">
+                            <li><a class="dropdown-item" data-filter="alphabet" data-sort="az">A - Z</a></li>
+                            <li><a class="dropdown-item" data-filter="alphabet" data-sort="za">Z - A</a></li>
+                        </ul>
+                        <input type="hidden" id="sort-by" value="">
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="extraFilter"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by Features
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="extraFilter">
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="new-arrivals">New
+                                    Arrivals</a></li>
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="popularity">Popularity</a>
+                            </li>
+                            <li><a class="dropdown-item" data-filter="feature" data-sort="ratings">Average
+                                    Ratings</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="product-display">
+                <div class="row justify-content-center" id="product-container">
+
+                    <% if (products.length>0) {%>
+                        <%products.forEach((items,index)=>{%>
+                            <div class="col-md-4">
+                                <div class="card product-card text-center"
+                                    onclick="handleCardClick('<%= items._id %>')">
+                                    <div class="image-container">
+                                        <img src="/<%= items.images[0] %>" class="card-img-top product-image"
+                                            alt="<%= items.product_name %>">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">
+                                            <%= items.product_name %>
+                                        </h5>
+                                        <p class="card-text description">
+                                            <%= items.description %>
+                                        </p>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="fw-bold text-success">₹<%= items.price %>
+                                            </div>
+                                            <div class="text-muted">1kg / pack</div>
+                                        </div>
+
+                                        <div class="button-container mt-3">
+                                            <button class="btn add-to-cart-btn text-white w-100"
+                                                onclick="addToCart(event)">Add
+                                                to Cart</button>
                                         </div>
                                     </div>
-                                </a>
+                                </div>
                             </div>
-                            <% }) %>
+                            <%})%>
+
+                                <%} else{%>
+                                    <div class="col text-center" id="noProductsMessage">
+                                        <h5 class="text-danger">Products Not Added</h5>
+                                    </div>
+                                    <%}%>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="footer-section">
+            <div class="footer-container">
+                <div class="contianer">
+                    <div class="row">
+                        <div class="col aboutus-container">
+                            <p>
+                                Active Crop is an e-commerce platform designed to connect farmers directly with
+                                customers, enabling
+                                the sale of fresh vegetables and fruits. The core idea is to source produce directly
+                                from farmers,
+                                ensuring freshness and fair pricing. Customers can browse and purchase products online,
+                                while
+                                farmers earn 85% of each sale, with 15% retained by the platform as commission (plus
+                                delivery
+                                charges).
+                                The project emphasizes sustainability, farmer empowerment, and customer satisfaction,
+                                offering
+                                transparent pricing, fast delivery, and eco-friendly practices. With features like
+                                user-friendly
+                                dashboards for both farmers and customers, secure payment systems, and a reliable
+                                delivery network,
+                                Active Crop aims to revolutionize the way people access fresh produce while supporting
+                                the farming
+                                community.
+                            </p>
+                        </div>
+                        <div class="col col-items">
+                            <h5>Get To Know Us</h5>
+                            <ul>
+                                <li>About Us</li>
+                                <li>Our Farmers</li>
+                                <li>Gallery</li>
+                                <li>Media</li>
+                                <li>Blog</li>
+                            </ul>
+
+                        </div>
+                        <div class="col col-items ">
+                            <h5>Useful Links</h5>
+                            <ul>
+                                <li>Privacy Policy</li>
+                                <li>Refun & Refund Policy</li>
+                                <li>Ship and Delivery policy</li>
+                                <li>Terms & Condtitions</li>
+                                <li>Disclaimer</li>
+                                <li>Carrers</li>
+                            </ul>
+
+                        </div>
                     </div>
-                    <% } %>
-        </div>
-    </div>
-
-    <div class="footet-container">
-        <div class="row footer-condent">
-            <div class="col aboutus-container">
-                <p>
-                    Active Crop is an e-commerce platform designed to connect farmers directly with customers, enabling
-                    the sale of fresh vegetables and fruits. The core idea is to source produce directly from farmers,
-                    ensuring freshness and fair pricing. Customers can browse and purchase products online, while
-                    farmers earn 85% of each sale, with 15% retained by the platform as commission (plus delivery
-                    charges).
-                    The project emphasizes sustainability, farmer empowerment, and customer satisfaction, offering
-                    transparent pricing, fast delivery, and eco-friendly practices. With features like user-friendly
-                    dashboards for both farmers and customers, secure payment systems, and a reliable delivery network,
-                    Active Crop aims to revolutionize the way people access fresh produce while supporting the farming
-                    community.
-                </p>
+                </div>
             </div>
-            <div class="col col-items">
-                <h5>Get To Know Us</h5>
-                <ul>
-                    <li>About Us</li>
-                    <li>Our Farmers</li>
-                    <li>Gallery</li>
-                    <li>Media</li>
-                    <li>Blog</li>
-                </ul>
-
+            <div class="copy-right-contianer">
+                <h5 class="text-center text-white">Copyrights@activeCrop</h5>
             </div>
-            <div class="col col-items ">
-                <h5>Useful Links</h5>
-                <ul>
-                    <li>Privacy Policy</li>
-                    <li>Refun & Refund Policy</li>
-                    <li>Ship and Delivery policy</li>
-                    <li>Terms & Condtitions</li>
-                    <li>Disclaimer</li>
-                    <li>Carrers</li>
-                </ul>
+        </section>
 
-            </div>
-        </div>
-        <div class="row copyright-container">
-            <p>copyright@activecrop.com</p>
-        </div>
-    </div>
+    </main>
+
+
 
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
+    <script>
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function () {
+
+                document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('text-success'));
+
+                this.classList.add('text-success');
+
+                const filterType = this.getAttribute('data-filter');
+                const sortBy = this.getAttribute('data-sort');
+
+                console.log("sortby",sortBy)
+                const sortInput = document.getElementById('sort-by');
+                sortInput.value = sortBy;
+
+                console.log(sortInput.value)
+                const changeEvent = new Event('change');
+                sortInput.dispatchEvent(changeEvent);
+            });
+        });
+
+        document.getElementById('sort-by').addEventListener('change', (event) => {
+            const apiUrl = `/products/filter/<%= activeCata %>?sort=${event.target.value}`;
+            fetch(apiUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    const productContainer = document.getElementById('product-container');
+                    productContainer.innerHTML = '';
+                    console.log(data)
+                    data.products.forEach(product => {
+                        const productCard = `
+            <div class="col-md-4">
+                <div class="card product-card text-center" onclick="handleCardClick('${product._id}')">
+                    <div class="image-container">
+                        <img src="/${product.images[0]}" class="card-img-top product-image" alt="${product.product_name}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">${product.product_name}</h5>
+                        <p class="card-text description">${product.description}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="fw-bold text-success">₹${product.price}</div>
+                            <div class="text-muted">1kg / pack</div>
+                        </div>
+                        <div class="button-container mt-3">
+                            <button class="btn add-to-cart-btn text-white w-100" onclick="addToCart(event)">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+                        productContainer.innerHTML += productCard;
+                    })
+                })
+        })
+
+        // item.addEventListener('click', function (event) {
+        //     event.preventDefault(); // Prevents default anchor behavior
+        //     document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('text-success'));
+        //     this.classList.add('text-success');
+
+        //     const filterType = this.getAttribute('data-filter');
+        //     const sortBy = this.getAttribute('data-sort');
+
+        //     fetchProducts(filterType, sortBy);
+        // });
+
+        // function fetchProducts(filterType, sortBy) {
+        //     console.log("filterType", filterType)
+        //     console.log("sortBy", sortBy)
+        //     const apiUrl = `/products/filter?filter=${filterType}&sort=${sortBy}`;
+        //     fetch(apiUrl).then((response) => response.json())
+        //         .then((data) => {
+        //             console.log(data)
+        //         })
+        // }
+
+        function handleCardClick(id) {
+            window.location.href = `/products/details/${id}/<%= activeCata %>`
+        }
+        function addToCart(event) {
+            event.stopPropagation();
+            const buttonContainer = event.target.closest('.button-container');
+
+            buttonContainer.innerHTML = `
+        <div class="quantity-container">
+            <button class="quantity-btn" onclick="updateQuantity(event, -1)">-</button>
+            <div class="quantity-number">1</div>
+            <button class="quantity-btn" onclick="updateQuantity(event, 1)">+</button>
+        </div>
+    `;
+        }
+
+        function updateQuantity(event, change) {
+            event.stopPropagation(); // Prevent triggering card click
+
+            const quantityContainer = event.target.closest('.quantity-container');
+            const quantityNumber = quantityContainer.querySelector('.quantity-number');
+            let quantity = parseInt(quantityNumber.textContent);
+
+            quantity += change;
+
+            // Ensure quantity doesn't go below 1
+            if (quantity < 1) {
+                // Replace quantity container back with "Add to Cart" button
+                quantityContainer.parentElement.innerHTML = `
+            <button class="btn add-to-cart-btn text-white w-100" onclick="addToCart(event)">Add to Cart</button>
+        `;
+            } else {
+                quantityNumber.textContent = quantity;
+            }
+        }
+    </script>
 </body>
 
 </html>
