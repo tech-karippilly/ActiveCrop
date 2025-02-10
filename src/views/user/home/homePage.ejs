@@ -127,7 +127,7 @@
                     </form>
 
                     <div class="position-relative">
-                        <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
+                        <i class="fa fa-shopping-cart fa-2x text-secondary" onClick="onCartClick()"></i>
                         <% if(isLogin){ %>
                             <span
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -235,6 +235,17 @@
         </section>
 
     </main>
+
+    <script>
+        function onCartClick(){
+            const isLoggedIn = '<%= isLogin %>'
+            if (isLoggedIn){
+                window.location.href ='/user/cart'
+            }else{
+                 window.location.href ='/auth/login'
+            }
+        }
+    </script>
 
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
 
