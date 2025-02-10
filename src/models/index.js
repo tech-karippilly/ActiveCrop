@@ -8,6 +8,7 @@ import productSchema from "../schemas/productShcema.js";
 import reviewSchema from "../schemas/reviewSchema.js";
 import addressSchema from "../schemas/addressSchema.js";
 import cartSchema from "../schemas/cartSchema.js";
+import orderSchema from "../schemas/orderSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -18,6 +19,7 @@ const Product =  mongoose.model('Products',productSchema)
 const Review = mongoose.model('Reviews',reviewSchema)
 const Address = mongoose.model('Address',addressSchema)
 const Cart = mongoose.model('Cart',cartSchema)
+const Order = mongoose.model('Order',orderSchema)
 export {
     Role,
     User,
@@ -27,5 +29,6 @@ export {
     Product,
     Review,
     Address,
-    Cart
+    Cart,
+    Order
 }

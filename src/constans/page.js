@@ -32,3 +32,5 @@ export const USER_ADDRESS_CREATE_PAGE = 'user/profile/address/create'
 export const USER_ADDRESS_EDIT_PAGE = 'user/profile/address/edit'
 
 export const USER_CART_PAGE = 'user/cart/index'
+
+export const CHECKOUT_PAGE = 'checkout/index'

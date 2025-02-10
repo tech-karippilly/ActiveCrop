@@ -29,9 +29,9 @@ const userSchema = mongoose.Schema({
     profileImage:{type:String,required:false}
 })
 
-userSchema.method.getFullName= function(){
-    return `${this.firstName} ${this.lastName}`
-}
+userSchema.methods.getFullName = function () {
+  return `${this.firstName} ${this.lastName}`;
+};
 
 userSchema.methods.comparePassword = async function (plainPassword) {
     return await bcrypt.compare(plainPassword, this.password);
