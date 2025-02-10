@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
+  orderNumber:{
+    type: String,
+    required: true
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -8,28 +12,32 @@ const orderSchema = new mongoose.Schema({
   },
   items: [
     {
-        product_id:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Product",
-            require:true
-        },
-        quantity:{
-            type:Number,
-            required:true,
-            min:1
-        },
-        priceAtPurchanse:{
-            type:Number,
-            required:true
-        },
-        product_stock:{
-            type: String,
-            required: true
-        },
-        product_image:{
-            type:String,
-            required:true
-        }
+      product_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Product",
+        require:true
+    },
+    quantity:{
+        type:Number,
+        required:true,
+        min:1
+    },
+    priceAtPurchanse:{
+        type:Number,
+        required:true
+    },
+    product_stock:{
+        type: String,
+        required: true
+    },
+    product_image:{
+        type:String,
+        required:true
+    },
+    product_name:{
+        type:String,
+        required:true 
+    }
     }
   ],
   shippingAddress: {
@@ -39,7 +47,9 @@ const orderSchema = new mongoose.Schema({
     city: { type: String, required: true },
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
-    landmark:{ type: String, required: true }
+    landmark:{ type: String, required: true },
+    phone:{type: String, required: true},
+    state:{type: String, required: true}
   },
   paymentMethod: {
     type: String,
