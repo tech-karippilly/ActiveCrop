@@ -8,36 +8,24 @@ const ObjectId = mongoose.Types.ObjectId;
 
 async function renderCartPage(req, res) {
     try {
-        const catagories = await Categoery.find()
         const access_token = req.session.accessToken
         if (access_token) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
-            const cart = await Cart.findOne({ user_id: currentUser._id })
-            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, catagories, currentUser, cart })
+            const cart = await Cart.findOne({ user_id: currentUser._id ,status:'active' })
+            let cartLength = 0
+            if (cart && cart.items) {
+                 cartLength = cart.items.length;
+            }
+            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true,  currentUser, cart ,cartLength})
         }
-        const currentUser = await User.findById('67930bdbd933b5aa5b33d335')
-        const cart = await Cart.findOne({ user_id: currentUser._id })
-        const list = cart.items.length !== 0 ? cart : null
-        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, catagories, currentUser: {}, cart: list })
+        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false,  currentUser: {}, cart: {},cartLength:0 })
     } catch (error) {
-        console.log(error.message)
-        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, catagories:{}, currentUser: {}, cart: {} })
+        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false,  currentUser: {}, cart: {},cartLength:0 })
     }
 }
 
-async function getCart(req, res) {
-    try {
-        const user = await User.findById('67930bdbd933b5aa5b33d335')
-        const cart = await Cart.findOne({ user_id: user._id })
-
-        res.status(200).json({ message: 'data fetched Successfully', cart })
-
-    } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message })
-    }
-}
 
 async function addToCart(req, res) {
     try {
@@ -203,7 +191,6 @@ async function placeOreder(req, res) {
 
 export {
     renderCartPage,
-    getCart,
     addToCart,
     updateCart,
     removeItem,

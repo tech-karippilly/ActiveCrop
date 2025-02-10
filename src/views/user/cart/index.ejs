@@ -132,7 +132,7 @@
                     <div class="position-relative">
                         <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            10
+                            <%= cartLength%>
                             <span class="visually-hidden">unread messages</span>
                         </span>
                     </div>
@@ -141,15 +141,7 @@
         </section>
 
         <section class="main-container">
-            <div class="catagoery-container">
-                <ul class="categoery-list">
-                    <% catagories.forEach((catagories)=>{ %>
-                        <li><a href="/products/<%=catagories._id %>" class="btn text-white btn-hover-underline">
-                                <%= catagories.catagoery_name %>
-                            </a></li>
-                        <% })%>
-                </ul>
-            </div>
+
 
             <div class="cart-section">
                 <h2 class="text-start mb-4">🛒 Your Cart</h2>
