@@ -64,7 +64,10 @@ async function productDetailsPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
-            
+            let cartLength = 0
+            if (cart.length > 0 && cart[0].items) { 
+                cartLength = cart[0].items.length;
+            }
             return res.status(HTTP_SUCCESS).render(USER_PRODUCT_DETAILS_PAGE, {
                 isLogin: true,
                 products,
@@ -72,10 +75,10 @@ async function productDetailsPage(req, res) {
                 activeCata: cataid,
                 activeCataName: activeCata ? activeCata.catagoery_name : "Category",
                 reviews,
-                currentUser
+                currentUser,
+                cartLength
             })
         }
-        console.log(products)
         return res.status(HTTP_SUCCESS).render(USER_PRODUCT_DETAILS_PAGE, {
             isLogin: false,
             products,
