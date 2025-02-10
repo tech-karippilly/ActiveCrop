@@ -1,6 +1,6 @@
 import express from 'express'
-import { ADD_CART, BASE_URL, DELETE_ITEM, GET_CART, UPDATE_CART } from '../../../constans/endpoints.js'
-import { addToCart, getCart, removeItem, renderCartPage, updateCart } from '../../../controllers/app/cart/index.js'
+import { ADD_CART, BASE_URL, CHECKOUT, DELETE_ITEM, GET_CART, PLACE_ORDER, UPDATE_CART } from '../../../constans/endpoints.js'
+import { addToCart, getCart, placeOreder, removeItem, renderCartPage, renderCheckout, updateCart } from '../../../controllers/app/cart/index.js'
 
 const route = express.Router()
 
@@ -9,4 +9,8 @@ route.get(GET_CART,getCart)
 route.post(ADD_CART,addToCart)
 route.patch(UPDATE_CART,updateCart)
 route.delete(DELETE_ITEM,removeItem)
+
+route.get(CHECKOUT,renderCheckout)
+route.post(PLACE_ORDER,placeOreder)
+
 export default route
