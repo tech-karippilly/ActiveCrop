@@ -159,56 +159,14 @@ const removeItem = async (req, res) => {
     }
 };
 
-const renderCheckout = async (req, res) => {
-    const catagories = await Categoery.find()
-    const user = await User.findById('67930bdbd933b5aa5b33d335')
-    const addressList = await Address.find({ user_id: user })
-    const cart = await Cart.findOne({ user_id: user._id })
-    return res.status(200).render(CHECKOUT_PAGE, { isLogin: false, catagories, addressList, cart })
-}
-
-async function placeOreder(req, res) {
-    try {
-        const { addressId, cartId, paymentMethod } = req.body
-
-        const user = await User.findById('67930bdbd933b5aa5b33d335')
-        const cart = await Cart.findById(cartId)
-        const address = await Address.findById(addressId)
-
-        const newOrderDetals = {
-            user: user._id,
-            items: cart.items,
-            shippingAddress: {
-                fullName: user.getFullName(),
-                address_1: address.address_line_1,
-                address_2: address.address_line_2,
-                city: address.city,
-                postalCode: address.pincode,
-                landmark: address.landmark,
-                country: 'India'
-            },
-            paymentMethod,
-            paymentStatus: 'Paid',
-            totalAmount: cart.total_price
-        }
-
-        const newOrder = new Order(newOrderDetals)
-        await newOrder.save()
-        cart.status = 'ordered'
-        await cart.save()
-        res.status(200).json({ message: 'order Placed successfully ', alertType: 'alert-succcess', redirect: '/' })
-    } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', alertType: 'alert-info' })
-    }
 
 
-}
+
 
 export {
     renderCartPage,
     addToCart,
     updateCart,
     removeItem,
-    renderCheckout,
-    placeOreder
+
 }
