@@ -34,3 +34,5 @@ export const USER_ADDRESS_EDIT_PAGE = 'user/profile/address/edit'
 export const USER_CART_PAGE = 'user/cart/index'
 
 export const CHECKOUT_PAGE = 'checkout/index'
+
+export const ORDER_SUCCESS_PAGE = 'user/profile/orders/order-success'

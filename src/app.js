@@ -26,6 +26,7 @@ import cartRoute from './routes/app/cart/index.js'
 import orderRoute from './routes/app/order/index.js'
 
 import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, ORDERS_BASE, USER_CART_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE } from "./constans/endpoints.js";
+import { OrderSuccess } from "./controllers/app/order/index.js";
 
 const app = express()
 
@@ -93,6 +94,8 @@ app.use('/page',pageRoute)
 
 // INITIAL ROUTES
 app.get(USER_HOME,homeRoute)
+
+app.get('/order-success',OrderSuccess)
 
 app.get('/admin',(req,res)=>{
     res.status(200).redirect(ADMIN_AUTH_BASE)

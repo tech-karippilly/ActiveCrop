@@ -1,6 +1,7 @@
-import { CHECKOUT_PAGE } from "../../../constans/page.js"
+import { CHECKOUT_PAGE, ORDER_SUCCESS_PAGE } from "../../../constans/page.js"
 import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js"
 import jwt from 'jsonwebtoken'
+import { generateOrderNumber } from "../../../utils/order.js"
 const renderCheckout = async (req, res) => {
 
     const access_token = req.session.accessToken
@@ -33,6 +34,7 @@ async function placeOreder(req, res) {
             const address = await Address.findById(addressId);
 
             const newOrderDetails = {
+                orderNumber: generateOrderNumber(),
                 user: user._id,
                 items: cart.items,
                 shippingAddress: {
@@ -42,7 +44,9 @@ async function placeOreder(req, res) {
                     city: address.city,
                     postalCode: address.pincode,
                     landmark: address.landmark,
-                    country: 'India'
+                    country: 'India',
+                    phone:address.phone,
+                    state:address.state
                 },
                 paymentMethod,
                 paymentStatus: 'Paid',
@@ -66,17 +70,28 @@ async function placeOreder(req, res) {
             const newOrder = new Order(newOrderDetails);
             await newOrder.save();
 
-            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: '/' });
+            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${newOrder._id}` });
         } else {
             res.status(401).json({ message: 'Unauthorized', alertType: 'alert-danger' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error', alertType: 'alert-info' });
+        res.status(500).json({ message: 'Internal Server Error', alertType: 'alert-danger' });
+    }
+}
+
+async function OrderSuccess(req,res){
+    try{
+        const {id} =req.params
+        const order =await Order.findById(id)
+        return res.status(200).render(ORDER_SUCCESS_PAGE,{orderDetails:order})
+    }catch(error){
+        return res.status(500).render(ORDER_SUCCESS_PAGE,{orderDetails:{}})
     }
 }
 
 export {
     renderCheckout,
-    placeOreder
+    placeOreder,
+    OrderSuccess
 }
