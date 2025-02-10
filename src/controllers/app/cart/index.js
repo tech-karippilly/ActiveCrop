@@ -14,7 +14,7 @@ async function renderCartPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
-            const cart = await Cart.findOne({ user_id: user._id })
+            const cart = await Cart.findOne({ user_id: currentUser._id })
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, catagories, currentUser, cart })
         }
         const currentUser = await User.findById('67930bdbd933b5aa5b33d335')
@@ -22,7 +22,8 @@ async function renderCartPage(req, res) {
         const list = cart.items.length !== 0 ? cart : null
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, catagories, currentUser: {}, cart: list })
     } catch (error) {
-        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, catagories, currentUser: {}, cart: {} })
+        console.log(error.message)
+        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, catagories:{}, currentUser: {}, cart: {} })
     }
 }
 

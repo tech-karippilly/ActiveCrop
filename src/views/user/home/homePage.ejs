@@ -238,7 +238,7 @@
 
     <script>
         function onCartClick(){
-            const isLoggedIn = '<%= isLogin %>'
+            const isLoggedIn = '<%= isLogin %>' ==='true'
             if (isLoggedIn){
                 window.location.href ='/user/cart'
             }else{
