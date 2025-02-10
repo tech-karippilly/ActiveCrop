@@ -160,6 +160,11 @@
                                     onclick="setDefaultAddress('<%= address._id %>')">
                                         <label class="form-check-label  w-100 p-1" for="firstCheckbox">
                                             <div>
+                                                <p class="text-capitalize ">
+                                                    <%= address.nickname %>
+                                                </p>
+                                            </div>
+                                            <div>
                                                 <label>Address 1</label>
                                                 <p>
                                                     <%= address.address_line_1 %>
