@@ -15,8 +15,8 @@ const renderHomepage = async (req, res) => {
             const currentUser = await User.findById(userId)
             const cart = await Cart.find({ user_id: userId, status: 'active' })
             let cartLength = 0
-            if (cart && cart.items) {
-                 cartLength = cart.items.length;
+            if (cart.length > 0 && cart[0].items) { 
+                cartLength = cart[0].items.length;
             }
             return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: true, catagories, currentUser, cartLength })
         }

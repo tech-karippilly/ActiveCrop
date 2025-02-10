@@ -134,7 +134,7 @@
                     <div class="position-relative">
                         <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            <%= cartLength%>
+                            <%= cartLength %>
                                 <span class="visually-hidden">unread messages</span>
                         </span>
                     </div>
@@ -226,8 +226,7 @@
                                             <a href="#" class="btn btn-primary">Continue Shopping</a>
                                         </div>
                                         <% } %>
-
-                                            <% if(cart) { %>
+                                            <% if(cart && cart.items.length>0) { %>
                                                 <div class="col-md-4">
                                                     <div class="card p-4 shadow-sm">
                                                         <h4>Order Summary</h4>
@@ -321,7 +320,6 @@
 
         const alertMessage = document.getElementById('alert')
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('working')
             fetch('/user/cart/get-cart')
                 .then((response) => response.json())
                 .then((data) => {
@@ -349,7 +347,6 @@
                     if (data.cart) {
                         window.location.reload()
                     }
-                    console.log(data)
                 })
         }
 
@@ -359,7 +356,6 @@
                 quantity = Number(quantity) + 1
             }
             else if (action === 'subtract') {
-                console.log(quantity)
                 if (quantity == 1) {
                     removeItem(productId)
                 }
@@ -398,7 +394,6 @@
                         }
                     })
                     .catch(error => {
-                        console.log(error.message)
                     });
             }
 

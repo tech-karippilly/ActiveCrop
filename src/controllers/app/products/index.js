@@ -14,9 +14,12 @@ async function productsPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
-            const cart = await Cart.find({user_id:userId})
-            const cartLength = cart.items.length
-            console.log(cartLength)
+            const cart = await Cart.find({user_id:userId ,status:'active'})
+            
+            let cartLength = 0
+            if (cart.length > 0 && cart[0].items) { 
+                cartLength = cart[0].items.length;
+            }
             return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products, catagories, activeCata: id, currentUser,cartLength })
         }
        
