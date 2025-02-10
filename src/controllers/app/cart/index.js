@@ -62,7 +62,7 @@ async function addToCart(req, res) {
                 }
                 cart.items[itemIndex].quantity = newQuantity;
             } else {
-                cart.items.push({ product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity });
+                cart.items.push({product_name:product.product_name , product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity });
             }
 
             await cart.save();

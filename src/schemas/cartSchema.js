@@ -22,6 +22,10 @@ const cartItemSchema =new mongoose.Schema({
     product_image:{
         type:String,
         required:true
+    },
+    product_name:{
+        type:String,
+        required:true 
     }
 },
 {
