@@ -131,11 +131,14 @@
                     </form>
 
                     <div class="position-relative">
-                        <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            <%= cartLength %>
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
+                        <i class="fa fa-shopping-cart fa-2x text-secondary" onclick="onCartClick()"></i>
+                        <%if(isLogin){ %>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                <%= cartLength %>
+                                    <span class="visually-hidden">unread messages</span>
+                            </span>
+                       <% }%>
+
                     </div>
                 </div>
             </div>
@@ -321,6 +324,16 @@
 
         const cartButton = document.getElementById('cart-button')
         const alertMessage = document.getElementById('alert')
+
+        function onCartClick(){
+            const isLoggedIn = '<%= isLogin %>' ==='true'
+            if (isLoggedIn){
+                window.location.href ='/user/cart'
+            }else{
+                 window.location.href ='/auth/login'
+            }
+        }
+
         document.querySelectorAll('.dropdown-item').forEach(item => {
             item.addEventListener('click', function () {
 
@@ -346,7 +359,6 @@
                 .then((data) => {
                     const productContainer = document.getElementById('product-container');
                     productContainer.innerHTML = '';
-                    console.log(data)
                     data.products.forEach(product => {
                         const productCard = `
             <div class="col-md-4">
@@ -376,33 +388,45 @@
             window.location.href = `/products/details/${id}/<%= activeCata %>`
         }
         function addToCart(event, productId) {
+
             event.stopPropagation();
-            const buttonContainer = event.target.closest('.button-container');
 
+           const isLoggedIn = '<%= isLogin %>' ==='true'
 
-            fetch('/user/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, quantity: 1 })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.cart) {
-                        alertMessage.innerHTML='Added to Cart'
-                        alertMessage.classList.add('alert-success')
-                        setTimeout(()=>{
-                           alertMessage.innerHTML=''
-                           alertMessage.classList.remove('alert-success')
-                           window.location.reload()
-                        },5000)
-                    }
-
+            if (isLoggedIn) {
+                const buttonContainer = event.target.closest('.button-container');
+                fetch('/user/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId, quantity: 1 })
                 })
-                .catch(error => {
-                    console.log("error", error)
-                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.cart) {
+                            alertMessage.innerHTML = 'Added to Cart'
+                            alertMessage.classList.add('alert-success')
+                            setTimeout(() => {
+                                alertMessage.innerHTML = ''
+                                alertMessage.classList.remove('alert-success')
+                                window.location.reload()
+                            }, 5000)
+                        }
+
+                    })
+                    .catch(error => {
+                    })
+            } else {
+                alertMessage.innerHTML = 'Please Login '
+                alertMessage.classList.add('alert-warning')
+                setTimeout(() => {
+                    alertMessage.innerHTML = ''
+                    alertMessage.classList.remove('alert-warning')
+                }, 5000)
+            }
+
+
         }
 
 

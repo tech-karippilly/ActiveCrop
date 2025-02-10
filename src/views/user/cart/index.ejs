@@ -101,9 +101,6 @@
                                 <span class="text-capitalize" style="cursor: pointer;"
                                     onclick="window.location.href='/auth/login'">Login</span>
                                 <%}%>
-
-
-
                     </div>
                 </div>
             </div>
@@ -114,10 +111,12 @@
         <section class="logo-section py-2 ">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Logo Section -->
-                <div class="d-flex align-items-center logo-text-container">
+                <div class="d-flex align-items-center logo-text-container w-100">
                     <img src="../../public/asstes/images/logo.jpg" class="logo-image me-2" style="height: 50px;"
                         alt="Logo" />
-                    <h5 class="mb-0 fw-bold text-center ">ACTIVE CROP</h5>
+                    <a href="/" class="logo-text-container w-100" style="text-decoration: none;">
+                        <h5>ACTIVE CROP</h5>
+                    </a>
                 </div>
 
                 <!-- Search Bar & Cart Section -->
@@ -132,8 +131,8 @@
                     <div class="position-relative">
                         <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            10
-                            <span class="visually-hidden">unread messages</span>
+                            <%= cartLength %>
+                                <span class="visually-hidden">unread messages</span>
                         </span>
                     </div>
                 </div>
@@ -141,15 +140,7 @@
         </section>
 
         <section class="main-container">
-            <div class="catagoery-container">
-                <ul class="categoery-list">
-                    <% catagories.forEach((catagories)=>{ %>
-                        <li><a href="/products/<%=catagories._id %>" class="btn text-white btn-hover-underline">
-                                <%= catagories.catagoery_name %>
-                            </a></li>
-                        <% })%>
-                </ul>
-            </div>
+
 
             <div class="cart-section">
                 <h2 class="text-start mb-4">🛒 Your Cart</h2>
@@ -157,7 +148,7 @@
                 <div id="cart-content">
                     <div class="row" id="cart-items">
                         <% if(cart) { %>
-                            <% cart.items.forEach(function(items) { %>
+                            <% cart.items.forEach(function(items,index) { %>
 
                                 <div class="col-md-8">
                                     <div class="card mb-3 shadow-sm position-relative d-flex"
@@ -174,15 +165,14 @@
                                                         alt="Product Image">
                                                 </div>
                                                 <div class="col-md-6 d-flex flex-column justify-content-center">
-                                                    <h5 class="card-title text-muted mb-1">Product Name (Out of Stock)
+                                                    <h5 class="card-title text-muted mb-1"><%= items.product_name %> (Out of Stock)
                                                     </h5>
                                                     <p class="text-muted mb-1">Price: ₹<%= items.priceAtPurchanse %>
                                                     </p>
                                                     <div class="input-group w-75">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>-</button>
-                                                        <input type="text" class="form-control text-center"
-                                                            value="<%= items.quantity %>" disabled>
+                                                            <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>+</button>
                                                     </div>
@@ -201,14 +191,13 @@
                                                             alt="Product Image">
                                                     </div>
                                                     <div class="col-md-6 d-flex flex-column justify-content-center">
-                                                        <h5 class="card-title mb-1">Product Name</h5>
+                                                        <h5 class="card-title mb-1"><%= items.product_name %></h5>
                                                         <p class="text-muted mb-1">Price: ₹<%= items.priceAtPurchanse %>
                                                         </p>
                                                         <div class="input-group w-75">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('subtract','<%=items.product_id %>')">-</button>
-                                                            <input type="text" class="form-control text-center"
-                                                                id="quantity" value="<%= items.quantity %>">
+                                                                <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('add','<%=items.product_id %>')">+</button>
                                                         </div>
@@ -223,7 +212,7 @@
                                     </div>
                                 </div>
 
-                                <% }); %>
+                                <% }) %>
                                     <% } else { %>
                                         <div id="empty-cart" class="text-center py-5">
                                             <h4>Your Cart is Empty!</h4>
@@ -232,8 +221,7 @@
                                             <a href="#" class="btn btn-primary">Continue Shopping</a>
                                         </div>
                                         <% } %>
-
-                                            <% if(cart) { %>
+                                            <% if(cart && cart.items.length>0) { %>
                                                 <div class="col-md-4">
                                                     <div class="card p-4 shadow-sm">
                                                         <h4>Order Summary</h4>
@@ -251,7 +239,7 @@
                                                             <span>Total:</span>
                                                             <strong>₹<%= cart.total_price + 100 %></strong>
                                                         </div>
-                                                        <button class="btn btn-checkout w-100 mt-3">Proceed to
+                                                        <button class="btn btn-checkout w-100 mt-3" onclick="proceedToCheckout()">Proceed to
                                                             Checkout</button>
                                                     </div>
                                                 </div>
@@ -327,7 +315,6 @@
 
         const alertMessage = document.getElementById('alert')
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('working')
             fetch('/user/cart/get-cart')
                 .then((response) => response.json())
                 .then((data) => {
@@ -355,17 +342,15 @@
                     if (data.cart) {
                         window.location.reload()
                     }
-                    console.log(data)
                 })
         }
 
         function updateQuantity(action, productId) {
-            let quantity = document.getElementById('quantity').value
+            let quantity = document.getElementById(`quantity-${productId}`).value;
             if (action === 'add') {
                 quantity = Number(quantity) + 1
             }
             else if (action === 'subtract') {
-                console.log(quantity)
                 if (quantity == 1) {
                     removeItem(productId)
                 }
@@ -404,10 +389,13 @@
                         }
                     })
                     .catch(error => {
-                        console.log(error.message)
                     });
             }
 
+        }
+
+        function proceedToCheckout(){
+            window.location.href='/orders/checkout'
         }
     </script>
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>

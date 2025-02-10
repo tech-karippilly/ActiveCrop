@@ -1,7 +1,6 @@
 import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus.js";
 import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
 import { Address, User } from "../../../../models/index.js";
-import { ALERT_SUCCESS } from "../../../../utils/alert.js";
 import jwt from 'jsonwebtoken'
 
 export async function renderAddressPage(req, res) {

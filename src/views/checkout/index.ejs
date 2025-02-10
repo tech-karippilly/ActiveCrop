@@ -106,14 +106,15 @@
             </div>
         </section>
 
-
         <section class="logo-section py-2 ">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Logo Section -->
-                <div class="d-flex align-items-center logo-text-container">
+                <div class="d-flex align-items-center logo-text-container w-100">
                     <img src="../../public/asstes/images/logo.jpg" class="logo-image me-2" style="height: 50px;"
                         alt="Logo" />
-                    <h5 class="mb-0 fw-bold text-center ">ACTIVE CROP</h5>
+                    <a href="/" class="logo-text-container w-100" style="text-decoration: none;">
+                        <h5>ACTIVE CROP</h5>
+                    </a>
                 </div>
 
                 <!-- Search Bar & Cart Section -->
@@ -127,26 +128,20 @@
                     <!-- Cart Icon with Badge -->
                     <div class="position-relative">
                         <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            10
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
+                        <% if (isLogin){ %>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                <%= cartLength %>
+                                    <span class="visually-hidden">unread messages</span>
+                            </span>
+                            <%} %>
+
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="main-container">
-            <div class="catagoery-container">
-                <ul class="categoery-list">
-                    <% catagories.forEach((catagories)=>{ %>
-                        <li><a href="/products/<%=catagories._id %>" class="btn text-white btn-hover-underline">
-                                <%= catagories.catagoery_name %>
-                            </a></li>
-                        <% })%>
-                </ul>
-            </div>
-
             <div class="checkout-container">
                 <div class="container my-5">
                     <h2 class="text-center mb-4">Checkout</h2>
@@ -178,7 +173,9 @@
                                                     </div>
                                                     <% }%>
 
-                                                        <button class="btn btn-outline-primary w-100">Add New
+                                                        <button class="btn btn-outline-primary w-100"
+                                                            onclick="window.location.href='/user/profile/address/create'">Add
+                                                            New
                                                             Address</button>
                                     </div>
                             </div>
@@ -192,7 +189,9 @@
                                     <ul class="list-group mb-3">
                                         <% cart.items.forEach(function(item){ %>
                                             <li class="list-group-item d-flex justify-content-between">
-                                                <div>Product 1</div>
+                                                <div>
+                                                    <%= item.product_name %>
+                                                </div>
                                                 <span>
                                                     <%= item.priceAtPurchanse %>
                                                 </span>
@@ -243,7 +242,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
 
 
@@ -327,10 +325,8 @@
                 cartId,
                 paymentMethod
             };
-            console.log(orderData)
-
             // Send data to server
-            fetch('/user/cart/place-order', {
+            fetch('/orders/place-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
