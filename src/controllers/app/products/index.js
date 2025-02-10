@@ -64,6 +64,7 @@ async function productDetailsPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
+            
             return res.status(HTTP_SUCCESS).render(USER_PRODUCT_DETAILS_PAGE, {
                 isLogin: true,
                 products,
@@ -74,7 +75,7 @@ async function productDetailsPage(req, res) {
                 currentUser
             })
         }
-
+        console.log(products)
         return res.status(HTTP_SUCCESS).render(USER_PRODUCT_DETAILS_PAGE, {
             isLogin: false,
             products,
