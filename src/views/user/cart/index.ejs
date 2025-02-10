@@ -151,7 +151,7 @@
                 <div id="cart-content">
                     <div class="row" id="cart-items">
                         <% if(cart) { %>
-                            <% cart.items.forEach(function(items) { %>
+                            <% cart.items.forEach(function(items,index) { %>
 
                                 <div class="col-md-8">
                                     <div class="card mb-3 shadow-sm position-relative d-flex"
@@ -175,8 +175,7 @@
                                                     <div class="input-group w-75">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>-</button>
-                                                        <input type="text" class="form-control text-center"
-                                                            value="<%= items.quantity %>" disabled>
+                                                            <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>+</button>
                                                     </div>
@@ -201,8 +200,7 @@
                                                         <div class="input-group w-75">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('subtract','<%=items.product_id %>')">-</button>
-                                                            <input type="text" class="form-control text-center"
-                                                                id="quantity" value="<%= items.quantity %>">
+                                                                <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('add','<%=items.product_id %>')">+</button>
                                                         </div>
@@ -217,7 +215,7 @@
                                     </div>
                                 </div>
 
-                                <% }); %>
+                                <% }) %>
                                     <% } else { %>
                                         <div id="empty-cart" class="text-center py-5">
                                             <h4>Your Cart is Empty!</h4>
@@ -351,7 +349,7 @@
         }
 
         function updateQuantity(action, productId) {
-            let quantity = document.getElementById('quantity').value
+            let quantity = document.getElementById(`quantity-${productId}`).value;
             if (action === 'add') {
                 quantity = Number(quantity) + 1
             }

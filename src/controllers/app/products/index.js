@@ -28,6 +28,7 @@ async function productsPage(req, res) {
         res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products: [], catagories: [], activeCata: '', currentUser: {} ,cartLength:0})
     }
 }
+
 async function filterProducts(req, res) {
     try {
         const {catagoery}  = req.params
@@ -64,9 +65,10 @@ async function productDetailsPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
+            const cart = await Cart.findOne({user_id:userId ,status:'active'})
             let cartLength = 0
-            if (cart.length > 0 && cart[0].items) { 
-                cartLength = cart[0].items.length;
+            if (cart> 0 && cart.items) { 
+                cartLength = cart.items.length;
             }
             return res.status(HTTP_SUCCESS).render(USER_PRODUCT_DETAILS_PAGE, {
                 isLogin: true,
