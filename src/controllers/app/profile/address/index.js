@@ -1,6 +1,6 @@
 import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../../constans/httpStatus.js";
-import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE } from "../../../../constans/page.js";
-import { Address, User } from "../../../../models/index.js";
+import { USER_ADDRESS_CREATE_PAGE, USER_ADDRESS_EDIT_PAGE, USER_ADDRESS_PAGE, USER_ORDER_DETAILS_PAGE, USER_ORDER_PAGE } from "../../../../constans/page.js";
+import { Address, Order, User } from "../../../../models/index.js";
 import jwt from 'jsonwebtoken'
 
 export async function renderAddressPage(req, res) {
@@ -149,5 +149,29 @@ async function editAddress(req, res) {
 }
 
 
+async function renderOrders(req,res){
+    const access_token = req.session.accessToken
+    if (access_token) {
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId
+        const currentUser = await User.findById(userId)
+        const orders = await Order.find({user:userId})
 
-export { createAddress, defaultAddress, deleteAddress, editAddress }
+        res.status(200).render(USER_ORDER_PAGE,{currentUser,orders})
+    }
+}
+
+async function renderOrderDetails  (req,res){
+    const access_token = req.session.accessToken
+    if (access_token) {
+        const {id}  =req.params
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId
+        const currentUser = await User.findById(userId)
+        const orders = await Order.findById(id)
+        res.status(200).render(USER_ORDER_DETAILS_PAGE,{currentUser,orders})
+    }
+}
+
+
+export { createAddress, defaultAddress, deleteAddress, editAddress,renderOrders,renderOrderDetails }

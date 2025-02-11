@@ -2,9 +2,9 @@ import express from "express";
 import multer from "multer";
 import fs from 'fs';
 
-import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_PROFILE_EDIT, USER_REST_PASSWORD } from "../../../constans/endpoints.js";
+import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_ORDER_DETAILS, USER_ORDERS, USER_PROFILE_EDIT, USER_REST_PASSWORD } from "../../../constans/endpoints.js";
 import { renderProfilePage, updateProfileDetails } from "../../../controllers/app/profile/index.js";
-import { createAddress, defaultAddress, deleteAddress, editAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage } from "../../../controllers/app/profile/address/index.js";
+import { createAddress, defaultAddress, deleteAddress, editAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage, renderOrderDetails, renderOrders } from "../../../controllers/app/profile/address/index.js";
 import { resetPassword, resetPasswordPage } from "../../../controllers/app/profile/password/index.js";
 
 const route = express.Router()
@@ -38,6 +38,10 @@ route.delete(USER_ADDRESS_DYNAMIC,deleteAddress)
 
 route.get(USER_ADDRESS_DYNAMIC,renderEditAddressPage)
 route.put(USER_ADDRESS_DYNAMIC,upload.none(),editAddress)
+
+route.get(USER_ORDER_DETAILS,renderOrderDetails)
+route.get(USER_ORDERS,renderOrders)
+
 
 route.get(USER_REST_PASSWORD,resetPasswordPage)
 route.patch(USER_REST_PASSWORD,upload.none(),resetPassword)
