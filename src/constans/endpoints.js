@@ -34,6 +34,8 @@ export const ADMIN_CUSTOMER_LIST ='/'
 export const ADMIN_CREATE_CUSTOMER = '/create-customer'
 export const ADMIN_UPDATE_CUSTOMER = '/:id'
 
+export const ADMIN_ORDERS_BASE ='/admin/orders'
+export const ADMIN_ORDERS_STATUS ='/:id/status'
 
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
@@ -56,6 +58,8 @@ export const USER_OTP_VERIFY = '/verifyotp'
 export const USER_PROFILE= '/user/profile'
 export const USER_PROFILE_EDIT= '/edit'
 export const USER_ADDRESS_BASE = `/address`
+export const USER_ORDERS = '/order'
+export const USER_ORDER_DETAILS = `/order/:id`
 
 export const USER_ADDRESS_CREATE = `${USER_ADDRESS_BASE}/create`
 export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
@@ -82,3 +86,4 @@ export const CHECKOUT = '/checkout'
 export const PLACE_ORDER  ='/place-order'
 
 export const ORDER_SUCCESS = '/order-success/:id'
+export const ORDER_CANCEL = '/order-cancel/:id'

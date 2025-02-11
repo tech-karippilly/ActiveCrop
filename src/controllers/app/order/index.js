@@ -90,8 +90,22 @@ async function OrderSuccess(req,res){
     }
 }
 
+async function OrderCancel (req,res) {
+    try{
+        const {id} = req.params
+        const order = await Order.findById(id)
+        
+        order.deliveryStatus = 'Cancelled';
+        await  order.save()
+        res.status(200).json({message:"Order Cancled" ,alertType:'alert-success' })
+    }catch(error){
+        res.status(500).json({message:"Internal Server Error " ,alertType:'alert-danger' })
+    }
+}
+
 export {
     renderCheckout,
     placeOreder,
-    OrderSuccess
+    OrderSuccess,
+    OrderCancel
 }

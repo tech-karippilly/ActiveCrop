@@ -111,7 +111,7 @@
                         <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
-                        <a href="/"  class="logo-text-container" style="text-decoration: none;">
+                        <a href="/" class="logo-text-container" style="text-decoration: none;">
                             <h5>ACTIVE CROP</h5>
                         </a>
                     </div>
@@ -127,14 +127,13 @@
                     </div>
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
-                            <button type="button" class="list-group-item list-group-item-action "
-                                aria-current="true">
+                            <button type="button" class="list-group-item list-group-item-action " aria-current="true">
                                 User Details
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active">
+                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -153,12 +152,41 @@
                                 <th>Order ID</th>
                                 <th>Items Count</th>
                                 <th>Total Price</th>
+                                <th>Payamnet Status</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="orderTableBody">
-
+                            <% orders.forEach(order=> { %>
+                                <% let statusClass='' ; switch (order.deliveryStatus) { case 'Pending' :
+                                    statusClass='text-warning' ; break; case 'Shipped' : statusClass='text-info' ;
+                                    break; case 'Delivered' : statusClass='text-success' ; break; case 'Processing' :
+                                    statusClass='text-info' ; break; case 'Cancelled' : statusClass='text-danger' ;
+                                    break; default: statusClass='text-muted' ; } %>
+                                    <tr>
+                                        <td>
+                                            <%= order.orderNumber %>
+                                        </td>
+                                        <td>
+                                            <%= order.items.length %>
+                                        </td>
+                                        <td>$<%= order.totalAmount.toFixed(2) %>
+                                        </td>
+                                        <td>
+                                            <%= order.paymentStatus %>
+                                        </td>
+                                        <td class="<%= statusClass %>">
+                                            <%= order.deliveryStatus %>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-success btn-sm"
+                                                onclick="window.location.href='/user/profile/order/<%= order._id %>'">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
                         </tbody>
                     </table>
                 </div>
@@ -226,76 +254,6 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
-
-        const orders = [
-            { id: 'ORD001', itemsCount: 3, totalPrice: 150, status: 'Pending', details: 'Order details for ORD001' },
-            { id: 'ORD002', itemsCount: 5, totalPrice: 320, status: 'Shipped', details: 'Order details for ORD002' },
-            { id: 'ORD003', itemsCount: 2, totalPrice: 80, status: 'Delivered', details: 'Order details for ORD003' },
-            { id: 'ORD004', itemsCount: 4, totalPrice: 200, status: 'Processing', details: 'Order details for ORD004' }
-        ];
-
-        function loadOrders() {
-    const tableBody = document.getElementById('orderTableBody');
-    tableBody.innerHTML = '';
-
-    orders.forEach(order => {
-
-        let statusClass = '';
-        switch (order.status) {
-            case 'Pending':
-                statusClass = 'text-warning';  
-                break;
-            case 'Shipped':
-                statusClass = 'text-info';  
-                break;
-            case 'Delivered':
-                statusClass = 'text-success';  
-                break;
-            case 'Processing':
-                statusClass = 'text-info';  
-            case 'Cancelled':
-                statusClass = 'text-danger';  
-                break;
-            default:
-                statusClass = 'text-muted';  
-        }
-
-        const row = `
-            <tr>
-                <td>${order.id}</td>
-                <td>${order.itemsCount}</td>
-                <td>$${order.totalPrice.toFixed(2)}</td>
-                <td class="${statusClass}">${order.status}</td> <!-- Apply status class here -->
-                <td>
-                    <button class="btn btn-outline-success btn-sm" onclick="viewOrderDetails('${order.id}')">
-                        <i class="fa-regular fa-eye"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-        tableBody.insertAdjacentHTML('beforeend', row);
-    });
-
-    lucide.createIcons();
-}
-
-        function viewOrderDetails(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (order) {
-                document.getElementById('orderDetailsContent').innerHTML = `
-                    <p><strong>Order ID:</strong> ${order.id}</p>
-                    <p><strong>Items Count:</strong> ${order.itemsCount}</p>
-                    <p><strong>Total Price:</strong> $${order.totalPrice.toFixed(2)}</p>
-                    <p><strong>Status:</strong> ${order.status}</p>
-                    <p><strong>Details:</strong> ${order.details}</p>
-                `;
-                const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-                modal.show();
-            }
-        }
-
-        window.onload = loadOrders;
-
 
     </script>
 

@@ -27,7 +27,7 @@
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert">
 
             </div>
         </div>
@@ -53,7 +53,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                VISHNU
+                                <%= currentUser.firstName %>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
@@ -108,7 +108,7 @@
             <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
                 <div class="row w-25 h-100 ">
                     <div class="col h-100">
-                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
+                        <img src="../../../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
                         <h5>ACTIVE CROP</h5>
@@ -132,7 +132,7 @@
                             <button type="button" class="list-group-item list-group-item-action">
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active">
+                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -146,20 +146,34 @@
                 </div>
 
                 <div class="col-8 content-section">
-
                     <div id="orderDetailsContainer" class="container mt-5">
                         <!-- Order Information Section -->
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Order Details - <span id="orderId">ORD001</span></h3>
-                                <p><strong>Total Price:</strong> $<span id="orderTotalPrice">150.00</span></p>
-                                <p><strong>Status:</strong> <span id="orderStatus" class="text-warning">Pending</span>
-                                </p>
+                                <h3>Order Details - <span id="orderId" style="font-size: 0.85em;">
+                                    <%= orders.orderNumber %>
+                                </span></h3>
+                                <p><strong>Total Price:</strong> ₹<span id="orderTotalPrice">
+                                        <%= orders.totalAmount.toFixed(2) %>
+                                    </span></p>
+                                <p><strong>Status:</strong> <span id="orderStatus"
+                                        class="<%= orders.deliveryStatus === 'Pending' ? 'text-warning' : (orders.deliveryStatus === 'Delivered' ? 'text-success' : 'text-danger') %>">
+                                        <%= orders.deliveryStatus %>
+                                    </span></p>
 
                                 <!-- Product Details Section -->
                                 <h4>Product Details:</h4>
                                 <ul id="productList" class="list-group">
-                                    <!-- Product list items will be dynamically added here -->
+                                    <% orders.items.forEach(item=> { %>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <img src="/<%= item.product_image %>" alt="<%= item.product_name %>"
+                                                width="50" height="50" class="me-3">
+                                            <span>
+                                                <%= item.product_name %> - ₹<%= item.priceAtPurchanse %> x <%=
+                                                            item.quantity %>
+                                            </span>
+                                        </li>
+                                        <% }); %>
                                 </ul>
                             </div>
 
@@ -168,9 +182,18 @@
                                 <h4>Shipping Address:</h4>
                                 <div class="card">
                                     <div class="card-body">
-                                        <p id="shippingName">John Doe</p>
-                                        <p id="shippingAddress">123 Main St, Cityville, ST 12345</p>
-                                        <p id="shippingPhone">+1 234-567-890</p>
+                                        <p id="shippingName">
+                                            <%= orders.shippingAddress.fullName %>
+                                        </p>
+                                        <p id="shippingAddress">
+                                            <%= orders.shippingAddress.address_1 %>, <%=
+                                                    orders.shippingAddress.address_2 %>, <%= orders.shippingAddress.city
+                                                        %>, <%= orders.shippingAddress.state %>, <%=
+                                                                orders.shippingAddress.country %> - <%=
+                                                                    orders.shippingAddress.postalCode %>
+                                        </p>
+                                        <p id="shippingPhone">+91 <%= orders.shippingAddress.phone %>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +201,10 @@
 
                         <!-- Action Buttons -->
                         <div class="mt-3">
-                            <button id="cancelOrderButton" class="btn btn-danger">Cancel Order</button>
+                            <% if (orders.deliveryStatus==='Pending' ) { %>
+                                <button class="btn btn-danger" onclick="cancelOrder('<%= orders._id %>')">Cancel
+                                    Order</button>
+                                <% } %>
                         </div>
                     </div>
 
@@ -188,40 +214,50 @@
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-warning text-white">
+                                        <div class="step-circle bg-warning text-white ">
                                             <i class="fa fa-clock"></i>
                                         </div>
-                                        <div class="step-label">Order Placed</div>
+                                        <div
+                                            class="step-label <%= (orders.deliveryStatus === 'Pending' || orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                            Order Placed</div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-secondary text-white">
+                                        <div class="step-circle bg-secondary text-white ">
                                             <i class="fa fa-box"></i>
                                         </div>
-                                        <div class="step-label">Packaging</div>
+                                        <div
+                                            class="step-label <%= (orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                            Packaging
+                                        </div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-info text-white">
+                                        <div class="step-circle bg-info text-white ">
                                             <i class="fa fa-truck"></i>
                                         </div>
-                                        <div class="step-label">Shipped</div>
+                                        <div
+                                            class="step-label <%= (orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                            Shipped</div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-primary text-white">
+                                        <div class="step-circle bg-primary text-white ">
                                             <i class="fa fa-location-arrow"></i>
                                         </div>
-                                        <div class="step-label">Out for Delivery</div>
+                                        <div
+                                            class="step-label <%= (orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                            Out for Delivery</div>
                                     </div>
                                     <div class="timeline-step text-center">
                                         <div class="step-circle bg-success text-white">
                                             <i class="fa fa-check"></i>
                                         </div>
-                                        <div class="step-label">Delivered</div>
+                                        <div
+                                            class="step-label  <%= (orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %> ">
+                                            Delivered</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </section>
@@ -286,105 +322,37 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
+        const alertMessage = document.getElementById('alert')
+        function cancelOrder(orderId) {
+            if (confirm('Are you sure you want to cancel this order?')) {
+                fetch(`/orders/order-cancel/${orderId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alertMessage.innerText = data.message
+                        alertMessage.classList.add(data.alertType)
 
-        const orderDetails = {
-            id: 'ORD001',
-            totalPrice: 150.00,
-            status: 'Pending',
-            products: [
-                { name: 'Product A', quantity: 2 },
-                { name: 'Product B', quantity: 1 }
-            ],
-            shipping: {
-                name: 'John Doe',
-                address: '123 Main St, Cityville, ST 12345',
-                phone: '+1 234-567-890'
+                        setTimeout(()=>{
+                            alertMessage.innerText = ''
+                            alertMessage.classList.remove(data.alertType)
+                            window.location.reload()
+                        },2000)
+                    })
+                    .catch(error =>{
+                        alertMessage.innerText = data.message
+                        alertMessage.classList.add(data.alertType)
+
+                        setTimeout(()=>{
+                            alertMessage.innerText = ''
+                            alertMessage.classList.remove(data.alertType)
+                        },3000)
+                    });
             }
-        };
-
-        function loadOrderDetails() {
-            // Update order information
-            document.getElementById('orderId').textContent = orderDetails.id;
-            document.getElementById('orderTotalPrice').textContent = orderDetails.totalPrice.toFixed(2);
-            document.getElementById('orderStatus').textContent = orderDetails.status;
-
-            // Update product list
-            const productList = document.getElementById('productList');
-            productList.innerHTML = ''; // Clear existing list
-            orderDetails.products.forEach(product => {
-                const productItem = `
-                <li class="list-group-item">
-                    <strong>${product.name}</strong> - Quantity: ${product.quantity}
-                </li>
-            `;
-                productList.insertAdjacentHTML('beforeend', productItem);
-            });
-
-            // Update shipping address
-            document.getElementById('shippingName').textContent = orderDetails.shipping.name;
-            document.getElementById('shippingAddress').textContent = orderDetails.shipping.address;
-            document.getElementById('shippingPhone').textContent = orderDetails.shipping.phone;
         }
-
-
-        document.getElementById('cancelOrderButton').addEventListener('click', function () {
-            alert('Order canceled');
-        });
-
-        document.getElementById('trackOrderButton').addEventListener('click', function () {
-            alert('Tracking order...');
-        });
-
-        const currentStatus = "Shipped";  // This can be "Order Placed", "Packaging", "Shipped", etc.
-
-function updateOrderTracking(status) {
-    // Get all the timeline steps by ID
-    const steps = ['orderPlaced', 'packaging', 'shipped', 'outForDelivery', 'delivered'];
-
-    steps.forEach(step => {
-        const stepElement = document.getElementById(step);
-        const stepCircle = stepElement.querySelector('.step-circle');
-        const stepLabel = stepElement.querySelector('.step-label');
-
-        // Reset all steps to secondary color
-        stepCircle.classList.remove('bg-success', 'bg-warning', 'bg-info', 'bg-primary');
-        stepCircle.classList.add('bg-secondary');  // default to secondary
-        stepLabel.classList.remove('text-success', 'text-warning', 'text-info', 'text-primary');
-        stepLabel.classList.add('text-secondary');  // default to secondary text color
-    });
-
-    // Update the step based on current status
-    switch (status) {
-        case 'Order Placed':
-            document.getElementById('orderPlaced').querySelector('.step-circle').classList.add('bg-warning');
-            document.getElementById('orderPlaced').querySelector('.step-label').classList.add('text-warning');
-            break;
-        case 'Packaging':
-            document.getElementById('packaging').querySelector('.step-circle').classList.add('bg-secondary');
-            document.getElementById('packaging').querySelector('.step-label').classList.add('text-secondary');
-            break;
-        case 'Shipped':
-            document.getElementById('shipped').querySelector('.step-circle').classList.add('bg-success');
-            document.getElementById('shipped').querySelector('.step-label').classList.add('text-success');
-            break;
-        case 'Out for Delivery':
-            document.getElementById('outForDelivery').querySelector('.step-circle').classList.add('bg-primary');
-            document.getElementById('outForDelivery').querySelector('.step-label').classList.add('text-primary');
-            break;
-        case 'Delivered':
-            document.getElementById('delivered').querySelector('.step-circle').classList.add('bg-success');
-            document.getElementById('delivered').querySelector('.step-label').classList.add('text-success');
-            break;
-        default:
-            break;
-    }
-}
-
-// Call the function to update the tracking status
-updateOrderTracking(currentStatus);
-
-        // Load the order details when the page loads
-        window.onload = loadOrderDetails;
 
     </script>
 

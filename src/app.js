@@ -24,8 +24,9 @@ import homeRoute from './routes/app/home/index.js'
 import profileRoute from './routes/app/profile/index.js'
 import cartRoute from './routes/app/cart/index.js'
 import orderRoute from './routes/app/order/index.js'
+import adminOrderRoute from './routes/orders/index.js'
 
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_PRODUCTS_BASE, ORDERS_BASE, USER_CART_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ORDERS_BASE, USER_CART_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 
 const app = express()
@@ -79,6 +80,7 @@ app.use('/admin/dashboard',dashboardRoute)
 app.use(ADMIN_CATAGOERY_BASE, categoeryRoute)
 app.use(ADMIN_PRODUCTS_BASE, productRoute)
 app.use(ADMIN_CUSTOMER_BASE,customerRoute)
+app.use(ADMIN_ORDERS_BASE,adminOrderRoute)
 
 //USER ROUTES
 app.use(USER_LOGIN_BASE, userRoute)
