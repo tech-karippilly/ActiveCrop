@@ -254,28 +254,7 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
-        const orders = <% - JSON.stringify(orders) %>;
 
-        function viewOrderDetails(orderId) {
-            const order = orders.find(o => o._id === orderId);
-            if (order) {
-                document.getElementById('orderDetailsContent').innerHTML = `
-            <p><strong>Order Number:</strong> ${order.orderNumber}</p>
-            <p><strong>Items Count:</strong> ${order.items.length}</p>
-            <p><strong>Total Amount:</strong> $${order.totalAmount.toFixed(2)}</p>
-            <p><strong>Payment Status:</strong> ${order.paymentStatus}</p>
-            <p><strong>Delivery Status:</strong> ${order.deliveryStatus}</p>
-            <p><strong>Shipping Address:</strong><br>
-                ${order.shippingAddress.fullName}, ${order.shippingAddress.address_1}, ${order.shippingAddress.city},<br>
-                ${order.shippingAddress.state}, ${order.shippingAddress.country}, ${order.shippingAddress.postalCode}<br>
-                <strong>Phone:</strong> ${order.shippingAddress.phone}
-            </p>
-        `;
-
-                const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-                modal.show();
-            }
-        }
     </script>
 
 
