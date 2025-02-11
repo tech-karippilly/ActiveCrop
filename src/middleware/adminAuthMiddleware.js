@@ -38,6 +38,13 @@ export const preventLoggedInAccess = (req, res, next) => {
     }
     next();
 }
+export const protect = (req,res,next)=>{
+    if(req.session && req.session.accessToken){
+        next()
+    }else{
+        res.redirect('/auth/login')
+    }
+}
 
 function renderResponse(pageName, res, status, alertMessage, alertType, redirectUrl) {
     res.status(status).render(pageName, { alertMessage, alertType, redirectUrl });
