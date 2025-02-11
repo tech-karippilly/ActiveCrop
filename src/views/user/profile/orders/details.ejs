@@ -27,7 +27,7 @@
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert ">
+            <div class="alert " id="alert">
 
             </div>
         </div>
@@ -132,7 +132,7 @@
                             <button type="button" class="list-group-item list-group-item-action">
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active">
+                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -150,14 +150,14 @@
                         <!-- Order Information Section -->
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Order Details - <span id="orderId">
-                                        <%= orders.orderNumber %>
-                                    </span></h3>
+                                <h3>Order Details - <span id="orderId" style="font-size: 0.85em;">
+                                    <%= orders.orderNumber %>
+                                </span></h3>
                                 <p><strong>Total Price:</strong> ₹<span id="orderTotalPrice">
                                         <%= orders.totalAmount.toFixed(2) %>
                                     </span></p>
                                 <p><strong>Status:</strong> <span id="orderStatus"
-                                        class="<%= orders.deliveryStatus === 'Pending' ? 'text-warning' : (order.deliveryStatus === 'Delivered' ? 'text-success' : 'text-info') %>">
+                                        class="<%= orders.deliveryStatus === 'Pending' ? 'text-warning' : (orders.deliveryStatus === 'Delivered' ? 'text-success' : 'text-danger') %>">
                                         <%= orders.deliveryStatus %>
                                     </span></p>
 
@@ -322,26 +322,35 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
-
+        const alertMessage = document.getElementById('alert')
         function cancelOrder(orderId) {
             if (confirm('Are you sure you want to cancel this order?')) {
-                fetch(`/cancel-order/${orderId}`, {
-                    method: 'POST',
+                fetch(`/orders/order-cancel/${orderId}`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ orderId })
                 })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
-                            alert('Order canceled successfully');
-                            location.reload();
-                        } else {
-                            alert('Failed to cancel order. Please try again.');
-                        }
+                        alertMessage.innerText = data.message
+                        alertMessage.classList.add(data.alertType)
+
+                        setTimeout(()=>{
+                            alertMessage.innerText = ''
+                            alertMessage.classList.remove(data.alertType)
+                            window.location.reload()
+                        },2000)
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error =>{
+                        alertMessage.innerText = data.message
+                        alertMessage.classList.add(data.alertType)
+
+                        setTimeout(()=>{
+                            alertMessage.innerText = ''
+                            alertMessage.classList.remove(data.alertType)
+                        },3000)
+                    });
             }
         }
 

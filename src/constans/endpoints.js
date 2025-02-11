@@ -84,3 +84,4 @@ export const CHECKOUT = '/checkout'
 export const PLACE_ORDER  ='/place-order'
 
 export const ORDER_SUCCESS = '/order-success/:id'
+export const ORDER_CANCEL = '/order-cancel/:id'
