@@ -1,0 +1,108 @@
+.main-contianer{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.container-section{
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    padding: 1rem;
+}
+
+/* General Section Styling */
+.container-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+h2, h4 {
+    color: #343a40;
+    font-weight: bold;
+}
+
+/* Shipping Address */
+.mt-1, .mt-4 {
+    margin-top: 1rem;
+}
+
+.me-4 {
+    margin-right: 1.5rem;
+}
+
+p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #495057;
+}
+
+/* Table Styling */
+.table {
+    background-color: #fff;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.table thead {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Form Styling */
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-section {
+        padding: 15px;
+    }
+
+    .table th, .table td {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1.2rem;
+    }
+}

@@ -34,6 +34,8 @@ export const ADMIN_CUSTOMER_LIST ='/'
 export const ADMIN_CREATE_CUSTOMER = '/create-customer'
 export const ADMIN_UPDATE_CUSTOMER = '/:id'
 
+export const ADMIN_ORDERS_BASE ='/admin/orders'
+export const ADMIN_ORDERS_STATUS ='/:id/status'
 
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'

@@ -1,0 +1,91 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+.row {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.side-bar {
+    background-color: #343a40;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+}
+.side-bar h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+.link-container {
+    margin: 10px 0;
+}
+.link-text, .link-text-active, .button-link {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+.link-text-active, .link-text:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+.button-link {
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+}
+.button-link:hover {
+    background-color: #c82333;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Pagination Styles */
+.pagination {
+    text-align: center;
+}
+.pagination a {
+    padding: 10px 15px;
+    margin: 5px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    background: #f1f1f1;
+    color: #333;
+    border-radius: 5px;
+}
+.pagination a:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .side-bar {
+        display: none;
+    }
+    .container-section {
+        width: 100%;
+    }
+}
