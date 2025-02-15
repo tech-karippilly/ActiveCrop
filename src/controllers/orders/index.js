@@ -1,6 +1,6 @@
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js";
 import { ADMIN_ORDER_DETAILS_PAGE, ADMIN_ORDER_LIST_PAGE } from "../../constans/page.js";
-import { Order } from "../../models/index.js";
+import { Order, Product } from "../../models/index.js";
 
 
 async function renderOrderPage(req, res) {
@@ -62,6 +62,16 @@ async function orderStatus(req, res) {
 
         if (order.deliveryStatus === "Cancelled") {
             return res.status(400).json({ message: "Cannot update status of a cancelled order." });
+        }
+
+        if (status === "Cancelled") {
+            for (const item of order.items) {
+                const product = await Product.findById(item.product.product_id);
+                if (product) {
+                    product.stock_quantity += item.quantity; 
+                    await product.save();
+                }
+            }
         }
 
         order.deliveryStatus = status;

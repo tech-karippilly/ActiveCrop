@@ -96,6 +96,17 @@ async function OrderCancel (req,res) {
         const order = await Order.findById(id)
         
         order.deliveryStatus = 'Cancelled';
+
+     
+            for (const item of order.items) {
+                const product = await Product.findById(item.product_id);
+                if (product) {
+                    product.stock_quantity = Number(product.stock_quantity)+ Number(item.quantity); 
+                    await product.save();
+                }
+            }
+        
+
         await  order.save()
         res.status(200).json({message:"Order Cancled" ,alertType:'alert-success' })
     }catch(error){

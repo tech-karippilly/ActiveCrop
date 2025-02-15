@@ -124,7 +124,6 @@
                         <div class="mb-3">
                             <select name="status" class="form-select" required>
                                 <option value="Pending" <%= order.deliveryStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
-                                <option value="Processing" <%= order.deliveryStatus === 'Processing' ? 'selected' : '' %>>Processing</option>
                                 <option value="Shipped" <%= order.deliveryStatus === 'Shipped' ? 'selected' : '' %>>Shipped</option>
                                 <option value="Delivered" <%= order.deliveryStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                                 <option value="Cancelled" <%= order.deliveryStatus === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
