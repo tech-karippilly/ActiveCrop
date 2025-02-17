@@ -84,6 +84,7 @@ export const DELETE_ITEM = '/delete/:id'
 export const ORDERS_BASE = '/orders'
 export const CHECKOUT = '/checkout'
 export const PLACE_ORDER  ='/place-order'
+export const RAZORPAY_VERIFY = '/payment/verify'
 
 export const ORDER_SUCCESS = '/order-success/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'

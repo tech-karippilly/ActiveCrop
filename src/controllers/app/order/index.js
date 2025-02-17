@@ -2,6 +2,18 @@ import { CHECKOUT_PAGE, ORDER_SUCCESS_PAGE } from "../../../constans/page.js"
 import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js"
 import jwt from 'jsonwebtoken'
 import { generateOrderNumber } from "../../../utils/order.js"
+import { config } from "dotenv"
+import Razorpay from 'razorpay'
+import { generateReceiptNumber } from "../../../utils/helperfunction.js"
+config()
+
+const razorpay = new Razorpay({
+    key_id:process.env.KEY_ID,
+    key_secret:process.env.KEY_SECRETE
+})
+
+
+
 const renderCheckout = async (req, res) => {
 
     const access_token = req.session.accessToken
@@ -33,6 +45,42 @@ async function placeOreder(req, res) {
             const cart = await Cart.findById(cartId) 
             const address = await Address.findById(addressId);
 
+
+            if (paymentMethod ==='razorpay'){
+                const options = {
+                    amount: cart.total_price, 
+                    currency:'INR',
+                    receipt:generateReceiptNumber(),
+                  };
+                  const razorPayOrder = await razorpay.orders.create(options)
+
+                  const newOrderDetails = {
+                    orderNumber: razorPayOrder.id,
+                    user: user._id,
+                    items: cart.items,
+                    shippingAddress: {
+                        fullName: user.getFullName(),
+                        address_1: address.address_line_1,
+                        address_2: address.address_line_2,
+                        city: address.city,
+                        postalCode: address.pincode,
+                        landmark: address.landmark,
+                        country: 'India',
+                        phone:address.phone,
+                        state:address.state
+                    },
+                    paymentMethod,
+                    paymentStatus: 'Pending',
+                    totalAmount: cart.total_price,
+                    receipt:razorPayOrder.receipt
+                };
+                const newOrder = new Order(newOrderDetails);
+                await newOrder.save();
+                console.log(razorPayOrder)
+
+                return res.status(200).json({message:"Razor Pay Order Created",alertType: 'alert-success',user:user, orderDetails:razorPayOrder})
+
+            }
             const newOrderDetails = {
                 orderNumber: generateOrderNumber(),
                 user: user._id,
@@ -49,8 +97,9 @@ async function placeOreder(req, res) {
                     state:address.state
                 },
                 paymentMethod,
-                paymentStatus: 'Paid',
-                totalAmount: cart.total_price
+                paymentStatus: 'Pending',
+                totalAmount: cart.total_price,
+                receipt:generateReceiptNumber()
             };
 
 
@@ -77,6 +126,27 @@ async function placeOreder(req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error', alertType: 'alert-danger' });
+    }
+
+}
+
+async function verifyPayment(req,res){
+    try{
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+        hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+        const generatedSignature = hmac.digest("hex");
+
+        const order = await Order.findById(razorpay_order_id)
+
+        if (generatedSignature === razorpay_signature  && order) {
+            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
+        } else {
+            res.status(400).send("Payment Failed");
+        }
+
+    }catch(error){
+        res.status(500).json({message:'Internal Server Error',error:error.message})
     }
 }
 
@@ -118,5 +188,6 @@ export {
     renderCheckout,
     placeOreder,
     OrderSuccess,
-    OrderCancel
+    OrderCancel,
+    verifyPayment
 }
