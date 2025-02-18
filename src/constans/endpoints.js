@@ -37,6 +37,8 @@ export const ADMIN_UPDATE_CUSTOMER = '/:id'
 export const ADMIN_ORDERS_BASE ='/admin/orders'
 export const ADMIN_ORDERS_STATUS ='/:id/status'
 
+export const ADMIN_OFFERS_BASE ='/admin/offers'
+
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
