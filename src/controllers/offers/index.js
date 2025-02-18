@@ -9,7 +9,7 @@ async function renderOfferPage(req, res) {
         const products = await productOffer.find()
         console.log("catagoeryOffers", catagoeryOffers)
         console.log("products", products)
-        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE)
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products });
     } catch (error) {
         res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_PAGE)
     }
