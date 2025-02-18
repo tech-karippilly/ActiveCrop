@@ -1,8 +1,8 @@
 import express from "express";
-import { createProductPage, createProducts, deleteProduct, getProductDetails, getProducts, searchProduct, updateProduct, updateProductPage } from "../../controllers/products/index.js";
+import { createProductPage, createProducts, deleteProduct, getProductByCatagoery, getProductDetails, getProducts, searchProduct, updateProduct, updateProductPage } from "../../controllers/products/index.js";
 import multer from "multer";
 import fs from 'fs';
-import { ADMIN_CREATE_PRODUCTS, ADMIN_DELETE_PRODUCTS, ADMIN_PRODUCT_DETAILS, ADMIN_PRODUCT_LIST, ADMIN_PRODUCT_SEARCH, ADMIN_UPDATE_PRODUCTS } from "../../constans/endpoints.js";
+import { ADMIN_CREATE_PRODUCTS, ADMIN_DELETE_PRODUCTS, ADMIN_PRODUCT_DETAILS, ADMIN_PRODUCT_LIST, ADMIN_PRODUCT_SEARCH, ADMIN_UPDATE_PRODUCTS, PRODUCTS_BY_ID } from "../../constans/endpoints.js";
 
 const route = express.Router()
 
@@ -26,7 +26,7 @@ route.get(ADMIN_PRODUCT_LIST, getProducts)
 route.get(ADMIN_CREATE_PRODUCTS, createProductPage)
 route.get(ADMIN_UPDATE_PRODUCTS, updateProductPage)
 route.get(ADMIN_PRODUCT_DETAILS, getProductDetails)
-
+route.get(PRODUCTS_BY_ID,getProductByCatagoery)
 route.post(ADMIN_CREATE_PRODUCTS, upload.array('product_image', 4), createProducts)
 
 route.put(ADMIN_UPDATE_PRODUCTS, upload.array('product_image', 4), updateProduct)

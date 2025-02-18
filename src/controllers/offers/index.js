@@ -1,6 +1,6 @@
 import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
-import { ADMIN_OFFERS_PAGE } from "../../constans/page.js"
-import { catagoeryOffer, Product, productOffer } from "../../models/index.js"
+import { ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
+import { catagoeryOffer, Categoery, Product, productOffer } from "../../models/index.js"
 
 
 async function renderOfferPage(req, res) {
@@ -14,6 +14,20 @@ async function renderOfferPage(req, res) {
         res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_PAGE)
     }
 }
+
+async function renderCreatePage(req,res){
+    try{
+        const products = await Product.find({catagoery_id:'6793fd0029c4fd78c2423e98'})
+        const catagoery = await Categoery.find()
+        console.log("products",products)
+        const offerTypes = ['percentage', 'flat_discount'];
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_CREATE_PAGE, {catagoery,products ,offerTypes,});
+    }catch(error){
+        res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_CREATE_PAGE,{catagoery:[],products:[],offerTypes:[]});
+    }
+}
+
+
 
 async function createProductOffer(req, res) {
     try {
@@ -95,6 +109,7 @@ async function deleteProductOffer(req,res){
 
 export {
     renderOfferPage,
+    renderCreatePage,
     createProductOffer,
     editProductOffer,
     deleteProductOffer

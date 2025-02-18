@@ -9,7 +9,7 @@ const route = express.Router()
 
 route.get(USER_PRODUCT_FILTER,filterProducts)
 route.get(USER_PRODUCT,productsPage)
-
 route.get(USER_PRODUCT_DETAILS,productDetailsPage)
+
 
 export default route

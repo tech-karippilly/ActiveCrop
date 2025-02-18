@@ -38,7 +38,7 @@ export const ADMIN_ORDERS_BASE ='/admin/orders'
 export const ADMIN_ORDERS_STATUS ='/:id/status'
 
 export const ADMIN_OFFERS_BASE ='/admin/offers'
-export const ADMIN_OFFER_PRODUCT_CREATE = '/prodict-offer'
+export const ADMIN_OFFER_PRODUCT_CREATE = '/create-product-offer'
 export const ADMIN_OFFER_PRODUCT_UPDATE = '/prodict-update/:id'
 export const ADMIN_OFFER_PRODUCT_DELETE = '/prodict-delete/:id'
 
@@ -78,6 +78,7 @@ export const USER_PRODUCTS ='/products'
 export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
 export const USER_PRODUCT = '/:id'
 export const USER_PRODUCT_FILTER = `/filter/:catagoery`
+export const PRODUCTS_BY_ID = '/catagoery/:id/products'
 
 
 export const USER_CART_BASE = '/user/cart'
