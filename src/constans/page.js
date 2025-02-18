@@ -16,6 +16,8 @@ export const ADMIN_CUSTOMER_UPDATE_PAGE = 'admin/customers/update'
 export const ADMIN_ORDER_LIST_PAGE = 'admin/orders/index'
 export const ADMIN_ORDER_DETAILS_PAGE= 'admin/orders/orderdetails'
 
+export const ADMIN_OFFERS_PAGE = 'admin/offer/index'
+
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'
 export const USER_FORGOT_EMAIL_SEND_PAGE = 'user/auth/forgotEmail'
