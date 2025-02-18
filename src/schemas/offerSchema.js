@@ -1,10 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 
 const productOfferSchema = new Schema({
-    product_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true
+    product: {
+        product_name:{
+            type: String,
+            required: true
+        },
+        _id: {
+            type: Schema.Types.ObjectId,
+            required: true
+        }
     },
     offer_type: {
         type: String,
