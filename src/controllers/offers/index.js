@@ -26,7 +26,7 @@ async function createProductOffer(req, res) {
 
         const existingOffer = await productOffer.findOne({
             "product._id": productId,
-            valid_until: { $gte: new Date() } 
+            valid_until: { $gte: new Date() }
         });
 
         if (existingOffer) {
@@ -50,35 +50,52 @@ async function createProductOffer(req, res) {
 
         await offer.save();
 
-        res.status(HTTP_CREATE).json({ message: 'Offer created successfully', alertType: 'alert-success',redirect:'/admin/offers' });
+        res.status(HTTP_CREATE).json({ message: 'Offer created successfully', alertType: 'alert-success', redirect: '/admin/offers' });
     } catch (error) {
         res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", error: error.message });
     }
 }
 
-async function editProductOffer (req,res){
-try{
-    const {id} = req.params
-    const { offer_type, discountValue, min_quantity, max_discount } = req.body;
+async function editProductOffer(req, res) {
+    try {
+        const { id } = req.params
+        const { offer_type, discountValue, min_quantity, max_discount } = req.body;
 
-    const existingOffer = await productOffer.findById(id)
+        const existingOffer = await productOffer.findById(id)
 
-    existingOffer.offer_type = offer_type ?? existingOffer.offer_type;
-    existingOffer.discountValue = discountValue ?? existingOffer.discountValue;
-    existingOffer.min_quantity = min_quantity ?? existingOffer.min_quantity;
-    existingOffer.max_discount = max_discount ?? existingOffer.max_discount;
+        existingOffer.offer_type = offer_type ?? existingOffer.offer_type;
+        existingOffer.discountValue = discountValue ?? existingOffer.discountValue;
+        existingOffer.min_quantity = min_quantity ?? existingOffer.min_quantity;
+        existingOffer.max_discount = max_discount ?? existingOffer.max_discount;
 
-    await existingOffer.save();
-    res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success',redirect:'/admin/offers', offer: existingOffer ,});
+        await existingOffer.save();
+        res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success', redirect: '/admin/offers', offer: existingOffer, });
 
-}catch(error){
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
 }
+
+async function deleteProductOffer(req,res){
+    try{
+        const {id} = req.params
+        const existingOffer = await productOffer.findOneAndDelete({ _id: id });
+
+        if (!existingOffer) {
+            return res.status(404).json({ message: "Offer not found" });
+        }
+
+        res.status(HTTP_SUCCESS).json({ message: "Offer deleted successfully" });
+    }catch(error){
+        res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", error: error.message });
+    }
+
 }
 
 
 export {
     renderOfferPage,
     createProductOffer,
-    editProductOffer
+    editProductOffer,
+    deleteProductOffer
 }
