@@ -105,7 +105,7 @@
                                             <%= offer.discountType==='Percentage' ? '%' : '₹' %>
                                     </td>
                                     <td>
-                                        <a href="/admin/offers/edit/<%= offer._id %>"
+                                        <a href="/admin/offers/prodict-update/<%= offer._id %>"
                                             class="btn btn-warning btn-sm">Edit</a>
                                         <a href="/admin/offers/delete/<%= offer._id %>"
                                             class="btn btn-danger btn-sm">Delete</a>
@@ -130,7 +130,7 @@
                                                     + offer.discountValue %>
                                             </td>
                                             <td>
-                                                <a href="/admin/offers/edit/<%= offer._id %>"
+                                                <a href="/admin/offers/prodict-update/<%= offer._id %>"
                                                     class="btn btn-warning btn-sm">Edit</a>
                                                 <button onclick="deleteOffer('<%= offer._id %>')"
                                                     class="btn btn-danger btn-sm">Delete</button>

@@ -18,6 +18,7 @@ export const ADMIN_ORDER_DETAILS_PAGE= 'admin/orders/orderdetails'
 
 export const ADMIN_OFFERS_PAGE = 'admin/offer/index'
 export const ADMIN_OFFERS_CREATE_PAGE = 'admin/offer/create'
+export const ADMIN_OFFERS_EDIT_PAGE = 'admin/offer/edit'
 
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'

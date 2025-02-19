@@ -1,5 +1,5 @@
 import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
-import { ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
+import { ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
 import { catagoeryOffer, Categoery, Product, productOffer } from "../../models/index.js"
 
 
@@ -15,15 +15,15 @@ async function renderOfferPage(req, res) {
     }
 }
 
-async function renderCreatePage(req,res){
-    try{
-        const products = await Product.find({catagoery_id:'6793fd0029c4fd78c2423e98'})
+async function renderCreatePage(req, res) {
+    try {
+        const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
         const catagoery = await Categoery.find()
-        console.log("products",products)
+        console.log("products", products)
         const offerTypes = ['percentage', 'flat_discount'];
-        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_CREATE_PAGE, {catagoery,products ,offerTypes,});
-    }catch(error){
-        res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_CREATE_PAGE,{catagoery:[],products:[],offerTypes:[]});
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_CREATE_PAGE, { catagoery, products, offerTypes, });
+    } catch (error) {
+        res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_CREATE_PAGE, { catagoery: [], products: [], offerTypes: [] });
     }
 }
 
@@ -70,6 +70,20 @@ async function createProductOffer(req, res) {
     }
 }
 
+async function renderEditPage(req, res) {
+    try {
+        const { id } = req.params
+        const existingOffer = await productOffer.findById(id)
+        const catagoery = await Categoery.find()
+        const offerTypes = ['percentage', 'flat_discount'];
+        const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
+        console.log(catagoery)
+        res.status(200).render(ADMIN_OFFERS_EDIT_PAGE, { offerTypes,catagoery,products,existingOffer})
+    } catch (error) {
+        res.status(500).render(ADMIN_OFFERS_EDIT_PAGE, { existingOffers: {}, catagoery: [], products: [], offerTypes: [] })
+    }
+}
+
 async function editProductOffer(req, res) {
     try {
         const { id } = req.params
@@ -86,13 +100,14 @@ async function editProductOffer(req, res) {
         res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success', redirect: '/admin/offers', offer: existingOffer, });
 
     } catch (error) {
+        console.log(error.message)
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 }
 
-async function deleteProductOffer(req,res){
-    try{
-        const {id} = req.params
+async function deleteProductOffer(req, res) {
+    try {
+        const { id } = req.params
         const existingOffer = await productOffer.findOneAndDelete({ _id: id });
 
         if (!existingOffer) {
@@ -100,7 +115,7 @@ async function deleteProductOffer(req,res){
         }
 
         res.status(HTTP_SUCCESS).json({ message: "Offer deleted successfully" });
-    }catch(error){
+    } catch (error) {
         res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", error: error.message });
     }
 
@@ -111,6 +126,7 @@ export {
     renderOfferPage,
     renderCreatePage,
     createProductOffer,
+    renderEditPage,
     editProductOffer,
     deleteProductOffer
 }
