@@ -160,9 +160,9 @@ export const getProductByCatagoery = async (req,res) =>{
         const {id}  = req.params
 
         const products = await Product.find({ catagoery_id: id })
-        res.statu(200).json({message:'success',products})
+        res.status(200).json({message:'success',products})
     }catch(error){
-        res.statu(500).json({message:'Internal Server Error',error:error.message})
+        res.status(500).json({message:'Internal Server Error',error:error.message})
     }
 }
 

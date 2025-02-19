@@ -76,10 +76,11 @@
                                     </option>
                                     <% }); %>
                             </select>
+                            <div class="invalid-feedback">Please select an offer type.</div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="product" class="form-label">Catagoery</label>
+                            <label for="catagoery" class="form-label">Category</label>
                             <select class="form-select" id="catagoery" required>
                                 <% catagoery.forEach(function(catagoery) { %>
                                     <option value="<%= catagoery._id %>">
@@ -87,6 +88,7 @@
                                     </option>
                                     <% }); %>
                             </select>
+                            <div class="invalid-feedback">Please select a category.</div>
                         </div>
 
                         <!-- Product -->
@@ -99,13 +101,15 @@
                                     </option>
                                     <% }); %>
                             </select>
+                            <div class="invalid-feedback">Please select a product.</div>
                         </div>
 
                         <!-- Discount Value -->
                         <div class="mb-3">
                             <label for="discountValue" class="form-label">Discount Value</label>
                             <input type="number" class="form-control" id="discountValue" required min="0" max="100"
-                                placeholder="Enter discount value (in %)">
+                                placeholder="Enter discount value">
+                            <div class="invalid-feedback">Discount value must be between 0 and 20.</div>
                         </div>
 
                         <!-- Minimum Quantity -->
@@ -113,6 +117,7 @@
                             <label for="minQuantity" class="form-label">Minimum Quantity</label>
                             <input type="number" class="form-control" id="minQuantity" required min="1"
                                 placeholder="Enter minimum quantity">
+                            <div class="invalid-feedback">Minimum quantity must be less than 10.</div>
                         </div>
 
                         <!-- Maximum Discount -->
@@ -120,30 +125,39 @@
                             <label for="maxDiscount" class="form-label">Maximum Discount</label>
                             <input type="number" class="form-control" id="maxDiscount" required min="0"
                                 placeholder="Enter maximum discount">
+                            <div class="invalid-feedback">Please enter a valid maximum discount.</div>
                         </div>
 
                         <!-- Valid From Date -->
                         <div class="mb-3">
                             <label for="validFrom" class="form-label">Valid From</label>
                             <input type="date" class="form-control" id="validFrom" required>
+                            <div class="invalid-feedback">Please select a valid start date.</div>
                         </div>
 
                         <!-- Valid Until Date -->
                         <div class="mb-3">
                             <label for="validUntil" class="form-label">Valid Until</label>
-                            <input type="date" class="form-control" id="validFrom" required>
+                            <input type="date" class="form-control" id="validUntil" required>
+                            <div class="invalid-feedback">Please select a valid end date.</div>
                         </div>
 
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary">Create Offer</button>
+                        <div class="spinner-border text-primary" role="status" id="loading">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="button">Create Offer</button>
                     </form>
                 </div>
             </section>
         </div>
     </div>
-    <script>
-        // Initialize date pickers
 
+
+    <script>
+
+        const loading = document.getElementById('loading')
+        const button = document.getElementById('button')
+        loading.style.display = 'none'
         document.getElementById('catagoery').addEventListener('change', () => {
             getSelectedCategoryId()
         })
@@ -151,94 +165,146 @@
         function getSelectedCategoryId() {
             var selectElement = document.getElementById('catagoery');
             var selectedCategoryId = selectElement.value;
-            console.log("Selected Category ID:", selectedCategoryId);
             var url = '/admin/products/catagoery/' + selectedCategoryId + '/products';
-            return selectedCategoryId;
-
+            loading.style.display = 'flex'
+            button.style.display = 'none'
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.json();  // Parse the JSON response
+                    return response.json();
                 })
                 .then(data => {
-                    console.log('Fetched products:', data);
-                    // You can now use the 'data' object to display the products
+                    loading.style.display = 'none'
+                    button.style.display = 'flex'
                     displayProducts(data);
                 })
                 .catch(error => {
+                    loading.style.display = 'none'
+                    button.style.display = 'flex'
                     console.error('There was a problem with the fetch operation:', error);
                 });
         }
         function displayProducts(products) {
-            var productSelect = document.getElementById('product'); // Get the product select element
+            var productSelect = document.getElementById('product');
 
-            // Clear the existing options (but keep the placeholder if there is one)
-            productSelect.innerHTML = '<option value="">Select a product</option>';  // Optional placeholder option
+            productSelect.innerHTML = '<option value="">Select a product</option>';
 
-            // Loop through the products and add them to the select dropdown
-            products.forEach(function (product) {
+
+            products.products.forEach(function (product) {
                 var option = document.createElement('option');
-                option.value = product.id;  // Set the option value to the product ID
-                option.textContent = product.product_name;  // Set the option text to the product name
-                productSelect.appendChild(option);  // Append the option to the select dropdown
+                option.value = product.id;
+                option.textContent = product.product_name;
+                productSelect.appendChild(option);
             });
         }
+        document.getElementById('offerForm').addEventListener('submit', function (event) {
+            let isValid = true;
+            let offerType = document.getElementById('offerType').value;
+            let product = document.getElementById('product').value;
+            let discountValue = document.getElementById('discountValue').value;
+            let minQuantity = document.getElementById('minQuantity').value;
+            let maxDiscount = document.getElementById('maxDiscount').value;
+            let validFrom = document.getElementById('validFrom').value;
+            let validUntil = document.getElementById('validUntil').value;
 
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const validFrom = document.getElementById('validFrom');
-            const validUntil = document.getElementById('validUntil');
-
-            $(validFrom).datepicker({
-                format: 'mm/dd/yyyy',
-                startDate: new Date(),
-                todayHighlight: true
-            });
-            $(validUntil).datepicker({
-                format: 'mm/dd/yyyy',
-                startDate: new Date(),
-                todayHighlight: true
-            });
-
-            // Change discount value placeholder based on offer type selection
-            const offerTypeSelect = document.getElementById('offerType');
-            const discountValueInput = document.getElementById('discountValue');
-
-            offerTypeSelect.addEventListener('change', function () {
-                const offerType = offerTypeSelect.value;
-
-                if (offerType === 'percentage') {
-                    discountValueInput.placeholder = 'Enter discount value (in %)';
-                } else if (offerType === 'flat_discount') {
-                    discountValueInput.placeholder = 'Enter discount value (in currency)';
-                } else {
-                    discountValueInput.placeholder = 'Enter discount value';
-                }
-            });
-
-            // Initialize the placeholder on page load based on the default selection
-            if (offerTypeSelect.value === 'percentage') {
-                discountValueInput.placeholder = 'Enter discount value (in %)';
-            } else if (offerTypeSelect.value === 'flat_discount') {
-                discountValueInput.placeholder = 'Enter discount value (in currency)';
+            if (!['percentage', 'flat'].includes(offerType)) {
+                document.getElementById('offerType').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('offerType').classList.remove('is-invalid');
             }
 
-            // Form submission logic
-            const offerForm = document.getElementById('offerForm');
-            offerForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                if (offerForm.checkValidity() === false) {
-                    e.stopPropagation();
-                } else {
-                    alert('Offer Created Successfully!');
-                }
-                offerForm.classList.add('was-validated');
-            });
+            if (!product) {
+                document.getElementById('product').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('product').classList.remove('is-invalid');
+            }
+
+            if (!discountValue || isNaN(discountValue)) {
+                document.getElementById('discountValue').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('discountValue').classList.remove('is-invalid');
+            }
+
+            if (!minQuantity || minQuantity > 9) {
+                document.getElementById('minQuantity').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('minQuantity').classList.remove('is-invalid');
+            }
+
+            if (!maxDiscount || maxDiscount > 20) {
+                document.getElementById('maxDiscount').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('maxDiscount').classList.remove('is-invalid');
+            }
+
+            if (!validFrom) {
+                document.getElementById('validFrom').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('validFrom').classList.remove('is-invalid');
+            }
+
+            if (!validUntil || new Date(validUntil) < new Date(validFrom)) {
+                document.getElementById('validUntil').classList.add('is-invalid');
+                isValid = false;
+            } else {
+                document.getElementById('validUntil').classList.remove('is-invalid');
+            }
+            if (isValid) {
+                event.preventDefault()
+                event.stopPropagation()
+                const formData = {
+                    productId: product,
+                    offer_type: offerType,
+                    discountValue: discountValue,
+                    min_quantity: minQuantity,
+                    max_discount: maxDiscount,
+                    valid_from: validFrom,
+                    valid_until: validUntil
+                };
+
+                console.log("formData", formData)
+                loading.style.display = 'flex'
+                button.style.display = 'none'
+                fetch('/admin/offers/create-product-offer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        loading.style.display = 'none'
+                        button.style.display = 'flex'
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        }
+                        if (data.alertType === 'alert-success') {
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        loading.style.display = 'none'
+                        button.style.display = 'flex'
+                        console.error('Error creating offer:', error);
+                        alert('An error occurred while creating the offer. Please try again later.');
+                    });
+            }
         });
+
+
+
+
     </script>
 
     <script>
@@ -259,6 +325,7 @@
 
         function deleteOffer(offerId) {
             if (confirm("Are you sure you want to delete this offer?")) {
+
                 fetch(`/admin/offers/prodict-delete/${offerId}`, {
                     method: 'DELETE'
                 })
