@@ -76,6 +76,7 @@
 
                     <a href="/admin/offers/create-product-offer" class="btn btn-success mb-3">Create Product Offer</a>
                     <a href="/admin/offers/create-catagoery-offer" class="btn btn-success mb-3">Create Catagoery Offer</a>
+                    <a href="/admin/offers/referal-create" class="btn btn-success mb-3">Create Referal Offer</a>
 
                     <table class="table table-bordered table-hover">
                         <thead class="table-dark">
@@ -139,6 +140,48 @@
                                             </td>
                                         </tr>
                                         <% }) %>
+                        </tbody>
+                    </table>
+
+                    <h2 class="mb-4">Referal Offers Management</h2>
+
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>title</th>
+                                <th>Name</th>
+                                <th>Descripton</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% referal.forEach((offer, index)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <td>
+                                        <%= offer.title %>
+                                    </td>
+                                    <td>Referal</td>
+                                    <td>
+                                        <%= offer.description %>
+                                    </td>
+
+                                    <td>
+                                            <%=  '₹'+offer.rewardAmount %>
+                                    </td>
+
+                                    <td>
+                                        <a href="/admin/offers/referal-update/<%= offer._id %>"
+                                            class="btn btn-warning btn-sm">Edit</a>
+                                            <button onclick="deleteCataOffer('<%= offer._id %>')"
+                                                class="btn btn-danger btn-sm">Delete</button>
+                                    </td>
+                                </tr>
+                                <% }) %>
                         </tbody>
                     </table>
                 </div>

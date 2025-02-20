@@ -1,13 +1,14 @@
 import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
 import { ADMIN_OFFERS_CATAGOERY_CREATE, ADMIN_OFFERS_CATAGOERY_UPDATE, ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
-import { Categoery, CategoryOffer, Product, productOffer } from "../../models/index.js"
+import { Categoery, CategoryOffer, Product, productOffer, ReferralOffer } from "../../models/index.js"
 
 
 async function renderOfferPage(req, res) {
     try {
         const catagoeryOffers = await CategoryOffer.find()
         const products = await productOffer.find()
-        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products });
+        const referal = await ReferralOffer.find()
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products,referal });
     } catch (error) {
         res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_PAGE)
     }
