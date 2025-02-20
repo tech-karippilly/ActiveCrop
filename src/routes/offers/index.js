@@ -24,7 +24,7 @@ route.delete(ADMIN_OFFER_CATAGOERY_DELETE,deleteCategoryOffer)
 route.get(ADMIN_OFFER_REFERAL_CREATE,renderCreateReferalPage)
 route.post(ADMIN_OFFER_REFERAL_CREATE,createReferalOffer)
 route.get(ADMIN_OFFER_REFERAL_UPDATE,renderUpdateReferalPage)
-route.post(ADMIN_OFFER_REFERAL_UPDATE,updateReferal)
+route.put(ADMIN_OFFER_REFERAL_UPDATE,updateReferal)
 route.delete(ADMIN_OFFER_REFERAL_DELETE,deleteReferal)
 
 export default route

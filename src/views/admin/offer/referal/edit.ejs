@@ -64,72 +64,37 @@
             </section>
             <section class="col-md-9 col-lg-10 p-4 container-section">
                 <div class="container">
-                    <h2>Edit Product Offer</h2>
-                    <form id="offerForm">
+                    <h2>Edit Referral Offer</h2>
+                    <form id="editReferralOfferForm">
+                        <!-- Hidden field for Offer ID -->
+                        <input type="hidden" id="offerId" value="<%= exsitingOffer._id %>">
+            
+                        <!-- Title -->
                         <div class="mb-3">
-                            <label for="offerType" class="form-label">Offer Type</label>
-                            <select class="form-select" id="offerType" required>
-                                <% offerTypes.forEach(function(type) { %>
-                                    <option value="<%= type %>" id="<%= type %>">
-                                        <%= type==='percentage' ? 'Percentage' : 'Flat Discount' %>
-                                    </option>
-                                    <% }); %>
-                            </select>
-                            <div class="invalid-feedback">Please select an offer type.</div>
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" placeholder="Enter offer title" value="<%= exsitingOffer.title %>">
+                            <div class="invalid-feedback">Please enter a title.</div>
                         </div>
-
+            
+                        <!-- Description -->
                         <div class="mb-3">
-                            <label for="catagoery" class="form-label">Category</label>
-                            <select class="form-select" id="catagoery" disabled>
-                                <% catagoery.forEach(function(catagoery) { %>
-                                    <option value="<%= catagoery._id %>" id="<%= catagoery._id %>">
-                                        <%= catagoery.catagoery_name %>
-                                    </option>
-                                    <% }); %>
-                            </select>
-                            <div class="invalid-feedback">Please select a category.</div>
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter offer description"><%= exsitingOffer.description %></textarea>
+                            <div class="invalid-feedback">Please enter a description.</div>
                         </div>
-
-
+            
+                        <!-- Reward Amount -->
                         <div class="mb-3">
-                            <label for="discountValue" class="form-label">Discount Value</label>
-                            <input type="number" class="form-control" id="discountValue" required min="0" max="10"
-                                value="<%= existingOffer.discountValue %>" placeholder="Enter discount value">
-                            <div class="invalid-feedback">Discount value must be between 0 and 20.</div>
+                            <label for="rewardAmount" class="form-label">Reward Amount</label>
+                            <input type="number" class="form-control" id="rewardAmount" min="1" placeholder="Enter reward amount" value="<%= exsitingOffer.rewardAmount %>">
+                            <div class="invalid-feedback">Please enter a valid reward amount (greater than 0).</div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="minQuantity" class="form-label">Minimum Quantity</label>
-                            <input type="number" class="form-control" id="minQuantity" required min="1"
-                                placeholder="Enter minimum quantity" value="<%= existingOffer.min_quantity %>">
-                            <div class="invalid-feedback">Minimum quantity must be less than 10.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="maxDiscount" class="form-label">Maximum Discount</label>
-                            <input type="number" class="form-control" id="maxDiscount" required min="0"
-                                placeholder="Enter maximum discount" value="<%= existingOffer.max_discount %>">
-                            <div class="invalid-feedback">Please enter a valid maximum discount.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="validFrom" class="form-label">Valid From</label>
-                            <input type="date" class="form-control" id="validFrom"
-                                value="<%= new Date(existingOffer.valid_from).toISOString().split('T')[0] %>" required>
-                            <div class="invalid-feedback">Please select a valid start date.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="validUntil" class="form-label">Valid Until</label>
-                            <input type="date" class="form-control" id="validUntil"
-                                value="<%= new Date(existingOffer.valid_until).toISOString().split('T')[0] %>" required>
-                            <div class="invalid-feedback">Please select a valid end date.</div>
-                        </div>
-
+            
                         <div class="spinner-border text-primary" role="status" id="loading">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="button">Edit Offer</button>
+            
+                        <button type="submit" class="btn btn-primary" id="updateButton">Update Offer</button>
                     </form>
                 </div>
             </section>
@@ -137,166 +102,80 @@
     </div>
 
     <script>
-        const loading = document.getElementById('loading')
-        const button = document.getElementById('button')
-        loading.style.display = 'none'
-        document.getElementById('catagoery').addEventListener('change', () => {
-            getSelectedCategoryId()
-        })
-
-        function getSelectedCategoryId() {
-            var selectElement = document.getElementById('catagoery');
-            var selectedCategoryId = selectElement.value;
-            var url = '/admin/products/catagoery/' + selectedCategoryId + '/products';
-            loading.style.display = 'flex'
-            button.style.display = 'none'
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    loading.style.display = 'none'
-                    button.style.display = 'flex'
-                    displayProducts(data);
-                })
-                .catch(error => {
-                    loading.style.display = 'none'
-                    button.style.display = 'flex'
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        }
-
-        offerTypeActive()
-        activeCatagoery()
-        function offerTypeActive() {
-            const existingOffer = "<%= existingOffer.offer_type %>"
-            const activeOption = document.getElementById("<%= existingOffer.offer_type %>")
-            if (activeOption) {
-                activeOption.setAttribute("selected", "selected");
-            } else {
-                console.error("Element not found for ID:", existingOffer);
-            }
-        }
-
-        function activeCatagoery() {
-            const activeOption = document.getElementById("<%= existingOffer.category.id %>")
-            if (activeOption) {
-                activeOption.setAttribute("selected", "selected");
-            } else {
-                console.error("Element not found for ID:", existingOffer);
-            }
-        }
-
-        function displayProducts(products) {
-            var productSelect = document.getElementById('product');
-
-            productSelect.innerHTML = '<option value="">Select a product</option>';
-
-
-            products.products.forEach(function (product) {
-                var option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = product.product_name;
-                productSelect.appendChild(option);
-            });
-        }
-        document.getElementById('offerForm').addEventListener('submit', function (event) {
+        const loading = document.getElementById('loading');
+        const updateButton = document.getElementById('updateButton');
+        loading.style.display = 'none';
+    
+        document.getElementById('editReferralOfferForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+    
             let isValid = true;
-            let offerType = document.getElementById('offerType').value;
-            let discountValue = document.getElementById('discountValue').value;
-            let minQuantity = document.getElementById('minQuantity').value;
-            let maxDiscount = document.getElementById('maxDiscount').value;
-            let validFrom = document.getElementById('validFrom').value;
-            let validUntil = document.getElementById('validUntil').value;
-
-            if (!['percentage', 'flat_discount'].includes(offerType)) {
-                document.getElementById('offerType').classList.add('is-invalid');
+            const offerId = document.getElementById('offerId').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const rewardAmount = document.getElementById('rewardAmount').value.trim();
+    
+            // Validation
+            if (!title) {
+                document.getElementById('title').classList.add('is-invalid');
                 isValid = false;
             } else {
-                document.getElementById('offerType').classList.remove('is-invalid');
+                document.getElementById('title').classList.remove('is-invalid');
             }
-
-            if (!discountValue || isNaN(discountValue)) {
-                document.getElementById('discountValue').classList.add('is-invalid');
+    
+            if (!description) {
+                document.getElementById('description').classList.add('is-invalid');
                 isValid = false;
             } else {
-                document.getElementById('discountValue').classList.remove('is-invalid');
+                document.getElementById('description').classList.remove('is-invalid');
             }
-
-            if (!minQuantity || minQuantity > 9) {
-                document.getElementById('minQuantity').classList.add('is-invalid');
+    
+            if (!rewardAmount || isNaN(rewardAmount) || rewardAmount <= 0) {
+                document.getElementById('rewardAmount').classList.add('is-invalid');
                 isValid = false;
             } else {
-                document.getElementById('minQuantity').classList.remove('is-invalid');
+                document.getElementById('rewardAmount').classList.remove('is-invalid');
             }
-
-            if (!maxDiscount || maxDiscount > 20) {
-                document.getElementById('maxDiscount').classList.add('is-invalid');
-                isValid = false;
-            } else {
-                document.getElementById('maxDiscount').classList.remove('is-invalid');
-            }
-
-            if (!validFrom) {
-                document.getElementById('validFrom').classList.add('is-invalid');
-                isValid = false;
-            } else {
-                document.getElementById('validFrom').classList.remove('is-invalid');
-            }
-
-            if (!validUntil || new Date(validUntil) < new Date(validFrom)) {
-                document.getElementById('validUntil').classList.add('is-invalid');
-                isValid = false;
-            } else {
-                document.getElementById('validUntil').classList.remove('is-invalid');
-            }
+    
             if (isValid) {
-                event.preventDefault()
-                event.stopPropagation()
-                const formData = {
-                    offer_type: offerType,
-                    discountValue: discountValue,
-                    min_quantity: minQuantity,
-                    max_discount: maxDiscount,
-                    valid_from: validFrom,
-                    valid_until: validUntil
-                };
-
-                loading.style.display = 'flex'
-                button.style.display = 'none'
-                const url = window.location.href;
+                const formData = { title, description, rewardAmount };
+    
+                loading.style.display = 'flex';
+                updateButton.style.display = 'none';
+                const url = window.location.href; 
                 const id = url.split("/").pop();
-                fetch(`/admin/offers/update-catagoery-offer/${id}`, {
+                fetch(`/admin/offers/referal-update/${id}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData),
                 })
                     .then(response => response.json())
                     .then(data => {
-                        loading.style.display = 'none'
-                        button.style.display = 'flex'
+                        loading.style.display = 'none';
+                        updateButton.style.display = 'flex';
                         if (data.redirect) {
                             window.location.href = data.redirect;
-                        }
-                        if (data.alertType === 'alert-success') {
-                            alert(data.message);
                         } else {
                             alert(data.message);
                         }
                     })
                     .catch(error => {
-                        loading.style.display = 'none'
-                        button.style.display = 'flex'
-                        console.error('Error creating offer:', error);
-                        alert('An error occurred while creating the offer. Please try again later.');
+                        loading.style.display = 'none';
+                        updateButton.style.display = 'flex';
+                        console.error('Error updating referral offer:', error);
+                        alert('An error occurred. Please try again.');
                     });
             }
         });
+    
+        // Function to populate form with existing data
+        function loadOfferData(offer) {
+            document.getElementById('offerId').value = offer._id;
+            document.getElementById('title').value = offer.title;
+            document.getElementById('description').value = offer.description;
+            document.getElementById('rewardAmount').value = offer.rewardAmount;
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

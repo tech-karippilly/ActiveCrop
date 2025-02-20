@@ -33,10 +33,13 @@ async function createReferalOffer(req, res) {
 
 async function renderUpdateReferalPage(req, res) {
     try {
-        const { id } = req.body
+        
+        const { id } = req.params
         const exsitingOffer = await ReferralOffer.findById(id)
+        console.log(exsitingOffer)
         res.status(200).render(ADMIN_OFFERS_REFERAL_UPDATE, { exsitingOffer })
     } catch (error) {
+        console.log(error.message)
         res.status(500).render(ADMIN_OFFERS_REFERAL_UPDATE, { exsitingOffer: {} })
     }
 }
@@ -64,7 +67,7 @@ async function updateReferal(req, res) {
 
 async function deleteReferal(req, res) {
     try {
-        const { id } = req.body
+        const { id } = req.params
         const existingOffer = await ReferralOffer.findById(id)
 
         if (!existingOffer) {

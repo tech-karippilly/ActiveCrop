@@ -24,7 +24,7 @@ export const ADMIN_OFFERS_CATAGOERY_CREATE = 'admin/offer/catagoery/create'
 export const ADMIN_OFFERS_CATAGOERY_UPDATE ='admin/offer/catagoery/edit'
 
 export const ADMIN_OFFERS_REFERAL_CREATE = 'admin/offer/referal/create'
-export const ADMIN_OFFERS_REFERAL_UPDATE ='admin/offer/rereal/edit'
+export const ADMIN_OFFERS_REFERAL_UPDATE ='admin/offer/referal/edit'
 
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'
