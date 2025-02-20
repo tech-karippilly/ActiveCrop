@@ -43,7 +43,7 @@ export const ADMIN_OFFER_PRODUCT_UPDATE = '/prodict-update/:id'
 export const ADMIN_OFFER_PRODUCT_DELETE = '/prodict-delete/:id'
 
 export const ADMIN_OFFER_CATAGOERY_CREATE = '/create-catagoery-offer'
-export const ADMIN_OFFER_CATAGOERY_UPDATE = '/update-catagoery-offer/:id'
+export const ADMIN_OFFER_CATAGOERY_UPDATE = '/update-catagoery-offer/:offer_id'
 export const ADMIN_OFFER_CATAGOERY_DELETE = '/delete-catagoery-offer/:id'
 
 

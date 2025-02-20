@@ -168,13 +168,14 @@ async function createCategoryOffer(req, res) {
 
 async function renderupdateCategoryPage(req,res){
     try{
-        const {id} = req.params
+        const {offer_id} = req.params
         const offerTypes = ['percentage', 'flat_discount'];
         const catagoery = await Categoery.find()
-        const existingOffer = await CategoryOffer.findById(id)
+        const existingOffer = await CategoryOffer.findById(offer_id)
+        console.log(existingOffer)
         res.status(200).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes,catagoery,existingOffer})
     }catch(error){
-        res.status(500).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes:[],catagoery:[],existingOffer})
+        res.status(500).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes:[],catagoery:[],existingOffer:{}})
     }
 }
 
@@ -196,7 +197,7 @@ async function updateCategoryOffer(req, res) {
         existingOffer.max_discount = max_discount || existingOffer.max_discount;
 
         await existingOffer.save();
-        res.status(200).json({ message: "Category offer updated successfully", updatedOffer: existingOffer });
+        res.status(200).json({ message: "Category offer updated successfully", updatedOffer: existingOffer ,redirect: '/admin/offers'});
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
