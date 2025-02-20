@@ -42,6 +42,11 @@ export const ADMIN_OFFER_PRODUCT_CREATE = '/create-product-offer'
 export const ADMIN_OFFER_PRODUCT_UPDATE = '/prodict-update/:id'
 export const ADMIN_OFFER_PRODUCT_DELETE = '/prodict-delete/:id'
 
+export const ADMIN_OFFER_CATAGOERY_CREATE = '/create-catagoery-offer'
+export const ADMIN_OFFER_CATAGOERY_UPDATE = '/update-catagoery-offer/:id'
+export const ADMIN_OFFER_CATAGOERY_DELETE = '/delete-catagoery-offer/:id'
+
+
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'

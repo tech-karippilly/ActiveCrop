@@ -22,7 +22,7 @@ const Address = mongoose.model('Address',addressSchema)
 const Cart = mongoose.model('Cart',cartSchema)
 const Order = mongoose.model('Order',orderSchema)
 const productOffer = mongoose.model("ProductOffer",productOfferSchema)
-const catagoeryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
+const CategoryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
 export {
     Role,
     User,
@@ -35,5 +35,5 @@ export {
     Cart,
     Order,
     productOffer,
-    catagoeryOffer
+    CategoryOffer
 }

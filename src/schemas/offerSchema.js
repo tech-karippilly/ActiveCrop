@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const productOfferSchema = new Schema({
     product: {
-        product_name:{
+        product_name: {
             type: String,
             required: true
         },
@@ -16,8 +16,8 @@ const productOfferSchema = new Schema({
         enum: ['percentage', 'flat_discount'],
         required: true
     },
-    discountValue: {  
-        type: Number, 
+    discountValue: {
+        type: Number,
         required: true
     },
     valid_from: {
@@ -39,18 +39,24 @@ const productOfferSchema = new Schema({
 });
 
 const categoryOfferSchema = new Schema({
-    category_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category', 
+    category: {
+        _id: {type: Schema.Types.ObjectId,
+        ref: 'Category',
         required: true
+    },
+    catagoery_name:{
+        type:String,
+        required: true
+    }
+
     },
     offer_type: {
         type: String,
         enum: ['percentage', 'flat_discount'],
         required: true
     },
-    discountValue: {  
-        type: Number,  
+    discountValue: {
+        type: Number,
         required: true
     },
     valid_from: {
