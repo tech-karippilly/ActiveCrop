@@ -198,14 +198,14 @@ async function updateCategoryOffer(req, res) {
 
 async function deleteCategoryOffer(req, res) {
     try {
-        const { offer_id } = req.params; 
+        const { id } = req.params; 
 
-        const existingOffer = await CategoryOffer.findById(offer_id);
+        const existingOffer = await CategoryOffer.findById(id);
         if (!existingOffer) {
             return res.status(404).json({ message: "Category offer not found" });
         }
 
-        await CategoryOffer.findByIdAndDelete(offer_id);
+        await CategoryOffer.findByIdAndDelete(id);
 
         res.status(200).json({ message: "Category offer deleted successfully" });
     } catch (error) {
