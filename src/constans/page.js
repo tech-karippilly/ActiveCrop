@@ -20,6 +20,10 @@ export const ADMIN_OFFERS_PAGE = 'admin/offer/index'
 export const ADMIN_OFFERS_CREATE_PAGE = 'admin/offer/create'
 export const ADMIN_OFFERS_EDIT_PAGE = 'admin/offer/edit'
 
+export const ADMIN_OFFERS_CATAGOERY_CREATE = 'admin/offer/catagoery/create'
+export const ADMIN_OFFERS_CATAGOERY_UPDATE ='admin/offer/catagoery/edit'
+
+
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'
 export const USER_FORGOT_EMAIL_SEND_PAGE = 'user/auth/forgotEmail'
