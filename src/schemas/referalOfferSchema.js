@@ -5,7 +5,7 @@ const ReferalofferSchema = new mongoose.Schema({
         type:String,
         required: true
     },
-    descriptio:{
+    description:{
         type:String,
         required: true
     },
