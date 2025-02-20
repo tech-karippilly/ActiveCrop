@@ -84,8 +84,6 @@ async function updateCart(req, res) {
             const user = await User.findById(userId)
             const cart = await Cart.findOne({ user_id: user._id, status: 'active' });
             const product = await Product.findById(productId);
-            console.log(product)
-            console.log(quantity)
             if (!cart) {
                 return res.status(404).json({ message: 'Cart not found' });
             }

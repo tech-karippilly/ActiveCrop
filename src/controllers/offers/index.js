@@ -7,8 +7,6 @@ async function renderOfferPage(req, res) {
     try {
         const catagoeryOffers = await CategoryOffer.find()
         const products = await productOffer.find()
-        console.log("catagoeryOffers", catagoeryOffers)
-        console.log("products", products)
         res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products });
     } catch (error) {
         res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_PAGE)
@@ -19,7 +17,6 @@ async function renderCreatePage(req, res) {
     try {
         const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
         const catagoery = await Categoery.find()
-        console.log("products", products)
         const offerTypes = ['percentage', 'flat_discount'];
         res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_CREATE_PAGE, { catagoery, products, offerTypes, });
     } catch (error) {
@@ -34,7 +31,6 @@ async function renderEditPage(req, res) {
         const catagoery = await Categoery.find()
         const offerTypes = ['percentage', 'flat_discount'];
         const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
-        console.log(catagoery)
         res.status(200).render(ADMIN_OFFERS_EDIT_PAGE, { offerTypes, catagoery, products, existingOffer })
     } catch (error) {
         res.status(500).render(ADMIN_OFFERS_EDIT_PAGE, { existingOffers: {}, catagoery: [], products: [], offerTypes: [] })
@@ -57,7 +53,6 @@ async function editProductOffer(req, res) {
         res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success', redirect: '/admin/offers', offer: existingOffer, });
 
     } catch (error) {
-        console.log(error.message)
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 }
@@ -161,7 +156,6 @@ async function createCategoryOffer(req, res) {
         await newCategoryOffer.save();
         res.status(201).json({ message: "Category offer created", redirect: '/admin/offers' });
     } catch (error) {
-        console.log(error.message)
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     } 
 }
@@ -172,7 +166,6 @@ async function renderupdateCategoryPage(req,res){
         const offerTypes = ['percentage', 'flat_discount'];
         const catagoery = await Categoery.find()
         const existingOffer = await CategoryOffer.findById(offer_id)
-        console.log(existingOffer)
         res.status(200).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes,catagoery,existingOffer})
     }catch(error){
         res.status(500).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes:[],catagoery:[],existingOffer:{}})
