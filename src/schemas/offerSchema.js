@@ -40,15 +40,15 @@ const productOfferSchema = new Schema({
 
 const categoryOfferSchema = new Schema({
     category: {
-        _id: {type: Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
-    },
-    catagoery_name:{
-        type:String,
-        required: true
-    }
-
+        id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
+        },
+        category_name: {
+            type: String,
+            required: true
+        }
     },
     offer_type: {
         type: String,
@@ -76,5 +76,6 @@ const categoryOfferSchema = new Schema({
         default: 10
     }
 });
+
 
 export { categoryOfferSchema, productOfferSchema };

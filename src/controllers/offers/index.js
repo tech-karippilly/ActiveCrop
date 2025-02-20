@@ -1,5 +1,5 @@
 import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
-import { ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
+import { ADMIN_OFFERS_CATAGOERY_CREATE, ADMIN_OFFERS_CATAGOERY_UPDATE, ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
 import { Categoery, CategoryOffer, Product, productOffer } from "../../models/index.js"
 
 
@@ -119,12 +119,21 @@ async function createProductOffer(req, res) {
     }
 }
 
+
+async function rendercreateCategoryPage(req,res){
+try{
+    const offerTypes = ['percentage', 'flat_discount'];
+    const catagoery = await Categoery.find()
+    res.status(200).render(ADMIN_OFFERS_CATAGOERY_CREATE,{offerTypes,catagoery})
+}catch(error){
+    res.status(500).render(ADMIN_OFFERS_CATAGOERY_CREATE,{offerTypes:[],catagoery:[]})
+}
+}
 async function createCategoryOffer(req, res) {
     try {
         const { category_id, offer_type, discountValue, valid_from, valid_until, min_quantity, max_discount } = req.body;
 
-        const getCategory = await Category.findById(category_id);
-
+        const getCategory = await Categoery.findById(category_id);
         if (!getCategory) {
             return res.status(404).json({ message: "Category not found" });
         }
@@ -134,12 +143,13 @@ async function createCategoryOffer(req, res) {
         if (currentCategoryOffer.length > 0) {
             return res.status(400).json({ message: 'Offer already exists' });
         }
+        const category ={
+            id:category_id,
+            category_name:getCategory.catagoery_name
+        }
 
         const newCategoryOffer = new CategoryOffer({
-            category: {
-                _id: category_id,
-                category_name: getCategory.category_name
-            },
+            category,
             offer_type,
             discountValue,
             valid_from,
@@ -151,8 +161,21 @@ async function createCategoryOffer(req, res) {
         await newCategoryOffer.save();
         res.status(201).json({ message: "Category offer created", redirect: '/admin/offers' });
     } catch (error) {
+        console.log(error.message)
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     } 
+}
+
+async function renderupdateCategoryPage(req,res){
+    try{
+        const {id} = req.params
+        const offerTypes = ['percentage', 'flat_discount'];
+        const catagoery = await Categoery.find()
+        const existingOffer = await CategoryOffer.findById(id)
+        res.status(200).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes,catagoery,existingOffer})
+    }catch(error){
+        res.status(500).render(ADMIN_OFFERS_CATAGOERY_UPDATE,{offerTypes:[],catagoery:[],existingOffer})
+    }
 }
 
 async function updateCategoryOffer(req, res) {
@@ -205,7 +228,9 @@ export {
     renderEditPage,
     editProductOffer,
     deleteProductOffer,
+    rendercreateCategoryPage,
     createCategoryOffer,
+    renderupdateCategoryPage,
     updateCategoryOffer,
     deleteCategoryOffer
 }

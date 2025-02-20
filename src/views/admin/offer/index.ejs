@@ -75,7 +75,7 @@
                     </form>
 
                     <a href="/admin/offers/create-product-offer" class="btn btn-success mb-3">Create Product Offer</a>
-                    <a href="/admin/offers/create-product-offer" class="btn btn-success mb-3">Create Catagoery Offer</a>
+                    <a href="/admin/offers/create-catagoery-offer" class="btn btn-success mb-3">Create Catagoery Offer</a>
 
                     <table class="table table-bordered table-hover">
                         <thead class="table-dark">
@@ -95,18 +95,18 @@
                                         <%= index + 1 %>
                                     </td>
                                     <td>
-                                        <%= offer.categoryName %>
+                                        <%= offer.category.category_name %>
                                     </td>
                                     <td>Category</td>
                                     <td>
-                                        <%= offer.discountType %>
+                                        <%= offer.offer_type %>
                                     </td>
                                     <td>
                                         <%= offer.discount %>
-                                            <%= offer.discountType==='Percentage' ? '%' : '₹' %>
+                                            <%= offer.offer_type==='percentage' ?offer.discountValue + '% ' : '₹'+offer.discountValue %>
                                     </td>
                                     <td>
-                                        <a href="/admin/offers/prodict-update/<%= offer._id %>"
+                                        <a href="/admin/offers/update-catagoery-offer/<%= offer._id %>"
                                             class="btn btn-warning btn-sm">Edit</a>
                                         <a href="/admin/offers/delete/<%= offer._id %>"
                                             class="btn btn-danger btn-sm">Delete</a>

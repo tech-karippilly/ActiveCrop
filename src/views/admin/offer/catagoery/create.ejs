@@ -64,12 +64,12 @@
             </section>
             <section class="col-md-9 col-lg-10 p-4 container-section">
                 <div class="container">
-                    <h2>Create Product Offer</h2>
+                    <h2>Create Catagoery Offer</h2>
                     <form id="offerForm">
                         <!-- Offer Type -->
                         <div class="mb-3">
                             <label for="offerType" class="form-label">Offer Type</label>
-                            <select class="form-select" id="offerType" required>
+                            <select class="form-select" id="offerType" >
                                 <% offerTypes.forEach(function(type) { %>
                                     <option value="<%= type %>">
                                         <%= type==='percentage' ? 'Percentage' : 'Flat Discount' %>
@@ -81,7 +81,7 @@
 
                         <div class="mb-3">
                             <label for="catagoery" class="form-label">Category</label>
-                            <select class="form-select" id="catagoery" required>
+                            <select class="form-select" id="catagoery" >
                                 <% catagoery.forEach(function(catagoery) { %>
                                     <option value="<%= catagoery._id %>">
                                         <%= catagoery.catagoery_name %>
@@ -91,23 +91,11 @@
                             <div class="invalid-feedback">Please select a category.</div>
                         </div>
 
-                        <!-- Product -->
-                        <div class="mb-3">
-                            <label for="product" class="form-label">Product</label>
-                            <select class="form-select" id="product" required>
-                                <% products.forEach(function(product) { %>
-                                    <option value="<%= product.id %>">
-                                        <%= product.product_name %>
-                                    </option>
-                                    <% }); %>
-                            </select>
-                            <div class="invalid-feedback">Please select a product.</div>
-                        </div>
 
                         <!-- Discount Value -->
                         <div class="mb-3">
                             <label for="discountValue" class="form-label">Discount Value</label>
-                            <input type="number" class="form-control" id="discountValue" required min="0" max="100"
+                            <input type="number" class="form-control" id="discountValue"  min="0" max="100"
                                 placeholder="Enter discount value">
                             <div class="invalid-feedback">Discount value must be between 0 and 20.</div>
                         </div>
@@ -115,7 +103,7 @@
                         <!-- Minimum Quantity -->
                         <div class="mb-3">
                             <label for="minQuantity" class="form-label">Minimum Quantity</label>
-                            <input type="number" class="form-control" id="minQuantity" required min="1"
+                            <input type="number" class="form-control" id="minQuantity"  min="1"
                                 placeholder="Enter minimum quantity">
                             <div class="invalid-feedback">Minimum quantity must be less than 10.</div>
                         </div>
@@ -123,7 +111,7 @@
                         <!-- Maximum Discount -->
                         <div class="mb-3">
                             <label for="maxDiscount" class="form-label">Maximum Discount</label>
-                            <input type="number" class="form-control" id="maxDiscount" required min="0"
+                            <input type="number" class="form-control" id="maxDiscount"  min="0"
                                 placeholder="Enter maximum discount">
                             <div class="invalid-feedback">Please enter a valid maximum discount.</div>
                         </div>
@@ -131,14 +119,14 @@
                         <!-- Valid From Date -->
                         <div class="mb-3">
                             <label for="validFrom" class="form-label">Valid From</label>
-                            <input type="date" class="form-control" id="validFrom" required>
+                            <input type="date" class="form-control" id="validFrom" >
                             <div class="invalid-feedback">Please select a valid start date.</div>
                         </div>
 
                         <!-- Valid Until Date -->
                         <div class="mb-3">
                             <label for="validUntil" class="form-label">Valid Until</label>
-                            <input type="date" class="form-control" id="validUntil" required>
+                            <input type="date" class="form-control" id="validUntil" >
                             <div class="invalid-feedback">Please select a valid end date.</div>
                         </div>
 
@@ -158,52 +146,13 @@
         const loading = document.getElementById('loading')
         const button = document.getElementById('button')
         loading.style.display = 'none'
-        document.getElementById('catagoery').addEventListener('change', () => {
-            getSelectedCategoryId()
-        })
-
-        function getSelectedCategoryId() {
-            var selectElement = document.getElementById('catagoery');
-            var selectedCategoryId = selectElement.value;
-            var url = '/admin/products/catagoery/' + selectedCategoryId + '/products';
-            loading.style.display = 'flex'
-            button.style.display = 'none'
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    loading.style.display = 'none'
-                    button.style.display = 'flex'
-                    displayProducts(data);
-                })
-                .catch(error => {
-                    loading.style.display = 'none'
-                    button.style.display = 'flex'
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-        }
-        function displayProducts(products) {
-            var productSelect = document.getElementById('product');
-
-            productSelect.innerHTML = '<option value="">Select a product</option>';
-
-
-            products.products.forEach(function (product) {
-                var option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = product.product_name;
-                productSelect.appendChild(option);
-            });
-        }
         
         document.getElementById('offerForm').addEventListener('submit', function (event) {
+            event.preventDefault()
+            event.stopPropagation()
             let isValid = true;
             let offerType = document.getElementById('offerType').value;
-            let product = document.getElementById('product').value;
+            let catagoery = document.getElementById('catagoery').value;
             let discountValue = document.getElementById('discountValue').value;
             let minQuantity = document.getElementById('minQuantity').value;
             let maxDiscount = document.getElementById('maxDiscount').value;
@@ -217,11 +166,11 @@
                 document.getElementById('offerType').classList.remove('is-invalid');
             }
 
-            if (!product) {
-                document.getElementById('product').classList.add('is-invalid');
+            if (!catagoery) {
+                document.getElementById('catagoery').classList.add('is-invalid');
                 isValid = false;
             } else {
-                document.getElementById('product').classList.remove('is-invalid');
+                document.getElementById('catagoery').classList.remove('is-invalid');
             }
 
             if (!discountValue || isNaN(discountValue)) {
@@ -259,10 +208,9 @@
                 document.getElementById('validUntil').classList.remove('is-invalid');
             }
             if (isValid) {
-                event.preventDefault()
-                event.stopPropagation()
+
                 const formData = {
-                    productId: product,
+                    category_id: catagoery,
                     offer_type: offerType,
                     discountValue: discountValue,
                     min_quantity: minQuantity,
@@ -274,7 +222,7 @@
                 console.log("formData", formData)
                 loading.style.display = 'flex'
                 button.style.display = 'none'
-                fetch('/admin/offers/create-product-offer', {
+                fetch('/admin/offers/create-catagoery-offer', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
