@@ -37,6 +37,16 @@ export const ADMIN_UPDATE_CUSTOMER = '/:id'
 export const ADMIN_ORDERS_BASE ='/admin/orders'
 export const ADMIN_ORDERS_STATUS ='/:id/status'
 
+export const ADMIN_OFFERS_BASE ='/admin/offers'
+export const ADMIN_OFFER_PRODUCT_CREATE = '/create-product-offer'
+export const ADMIN_OFFER_PRODUCT_UPDATE = '/prodict-update/:id'
+export const ADMIN_OFFER_PRODUCT_DELETE = '/prodict-delete/:id'
+
+export const ADMIN_OFFER_CATAGOERY_CREATE = '/create-catagoery-offer'
+export const ADMIN_OFFER_CATAGOERY_UPDATE = '/update-catagoery-offer/:offer_id'
+export const ADMIN_OFFER_CATAGOERY_DELETE = '/delete-catagoery-offer/:id'
+
+
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
@@ -73,6 +83,7 @@ export const USER_PRODUCTS ='/products'
 export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
 export const USER_PRODUCT = '/:id'
 export const USER_PRODUCT_FILTER = `/filter/:catagoery`
+export const PRODUCTS_BY_ID = '/catagoery/:id/products'
 
 
 export const USER_CART_BASE = '/user/cart'

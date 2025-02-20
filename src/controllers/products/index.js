@@ -10,8 +10,6 @@ export const productPage = (req, res) => {
     res.status(200).render('admin/products/index', { alertMessage: '', alertType: '', redirectUrl: '' })
 }
 
-
-
 export const deleteProduct = async (req, res) => {
     try {
         const product_id = req.params.id
@@ -156,6 +154,19 @@ export const updateProduct = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", status: 500 })
     }
 }
+
+export const getProductByCatagoery = async (req,res) =>{
+    try{
+        const {id}  = req.params
+
+        const products = await Product.find({ catagoery_id: id })
+        res.status(200).json({message:'success',products})
+    }catch(error){
+        res.status(500).json({message:'Internal Server Error',error:error.message})
+    }
+}
+
+
 
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, data, catagories, activeCatagoery) => {
     res.status(status).render(pageName, { alertMessage, alertType, redirectUrl, data, catagories, activeCatagoery })

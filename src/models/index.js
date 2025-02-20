@@ -9,6 +9,7 @@ import reviewSchema from "../schemas/reviewSchema.js";
 import addressSchema from "../schemas/addressSchema.js";
 import cartSchema from "../schemas/cartSchema.js";
 import orderSchema from "../schemas/orderSchema.js";
+import { categoryOfferSchema, productOfferSchema } from "../schemas/offerSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -20,6 +21,8 @@ const Review = mongoose.model('Reviews',reviewSchema)
 const Address = mongoose.model('Address',addressSchema)
 const Cart = mongoose.model('Cart',cartSchema)
 const Order = mongoose.model('Order',orderSchema)
+const productOffer = mongoose.model("ProductOffer",productOfferSchema)
+const CategoryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
 export {
     Role,
     User,
@@ -30,5 +33,7 @@ export {
     Review,
     Address,
     Cart,
-    Order
+    Order,
+    productOffer,
+    CategoryOffer
 }
