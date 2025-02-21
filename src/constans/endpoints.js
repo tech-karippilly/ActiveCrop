@@ -46,6 +46,9 @@ export const ADMIN_OFFER_CATAGOERY_CREATE = '/create-catagoery-offer'
 export const ADMIN_OFFER_CATAGOERY_UPDATE = '/update-catagoery-offer/:offer_id'
 export const ADMIN_OFFER_CATAGOERY_DELETE = '/delete-catagoery-offer/:id'
 
+export const ADMIN_OFFER_REFERAL_CREATE= '/referal-create'
+export const ADMIN_OFFER_REFERAL_UPDATE='/referal-update/:id'
+export const ADMIN_OFFER_REFERAL_DELETE='/referal-delete/:id'
 
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'

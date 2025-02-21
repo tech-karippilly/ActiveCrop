@@ -10,6 +10,7 @@ import addressSchema from "../schemas/addressSchema.js";
 import cartSchema from "../schemas/cartSchema.js";
 import orderSchema from "../schemas/orderSchema.js";
 import { categoryOfferSchema, productOfferSchema } from "../schemas/offerSchema.js";
+import ReferalofferSchema from "../schemas/referalOfferSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -23,6 +24,7 @@ const Cart = mongoose.model('Cart',cartSchema)
 const Order = mongoose.model('Order',orderSchema)
 const productOffer = mongoose.model("ProductOffer",productOfferSchema)
 const CategoryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
+const ReferralOffer = mongoose.model("ReferralOffer", ReferalofferSchema);
 export {
     Role,
     User,
@@ -35,5 +37,6 @@ export {
     Cart,
     Order,
     productOffer,
-    CategoryOffer
+    CategoryOffer,
+    ReferralOffer
 }
