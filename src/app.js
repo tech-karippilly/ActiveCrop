@@ -27,8 +27,9 @@ import orderRoute from './routes/app/order/index.js'
 import adminOrderRoute from './routes/orders/index.js'
 import offerRoutes  from './routes/offers/index.js'
 import whishlistRoutes from './routes/whishlist/index.js'
+import couponRoutes from './routes/coupon/index.js'
 
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ORDERS_BASE, USER_CART_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WHISLIST_BASE } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ORDERS_BASE, USER_CART_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WHISLIST_BASE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 
 const app = express()
@@ -84,6 +85,7 @@ app.use(ADMIN_PRODUCTS_BASE, productRoute)
 app.use(ADMIN_CUSTOMER_BASE,customerRoute)
 app.use(ADMIN_ORDERS_BASE,adminOrderRoute)
 app.use(ADMIN_OFFERS_BASE,offerRoutes)
+app.use(ADMIN_COUPON_BASE,couponRoutes)
 
 //USER ROUTES
 app.use(USER_LOGIN_BASE, userRoute)
