@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Profile Page</title>
+    <title>Active Crop | Wallet Page</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
     <link rel="stylesheet" href="../../../public/styles/profile.css">
@@ -129,7 +129,7 @@
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
                             <button type="button" onclick='window.location.href="/user/profile"'
-                                class="list-group-item list-group-item-action active" aria-current="true">
+                                class="list-group-item list-group-item-action " aria-current="true">
                                 User Details
                             </button>
                             <button onclick='window.location.href="/user/profile/address"' type="button"
@@ -139,10 +139,10 @@
                             <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action " onclick="window.location.href='/user/profile/wallet'">
                                 Wallets
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/user-referal'">
                                 Referal
                             </button>
                             <button type="button" class="list-group-item list-group-item-action"
@@ -155,96 +155,47 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-8 content-section ">
-                    <div class="display-container ">
-                        <div class="profile-image-container">
-                            <% if (currentUser.profileImage) { %>
-                                <img id="profileImg" src="<%= currentUser.profileImage %>" class="profile-image"
-                                    alt="profile-image">
-                                <% } else { %>
-                                    <img id="profileImg" src="../../public/asstes/images/logo.jpg" class="profile-image"
-                                        alt="profile-image">
-                                    <% } %>
-
-                                        <label for="imageUpload" class="edit-icon" id="edit-icon">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </label>
-                                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                        </div>
-                        <div class="contianer mt-3 ">
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <p>First Name</p>
-                                </div>
-                                <div class="col">
-                                    <p id="first-name">
-                                        <%= currentUser.firstName %>
-                                    </p>
-                                    <input type="text" class="form-control" name="firstName"
-                                        value="<%= currentUser.firstName %>" id="firstName" style="display: none;" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <p>Last Name</p>
-                                </div>
-                                <div class="col">
-                                    <p id="last-name">
-                                        <%= currentUser.lastName %>
-                                    </p>
-                                    <input type="text" class="form-control" value="<%= currentUser.lastName %>"
-                                        name="lastName" id="lastName" style="display: none;" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <p>User Name</p>
-                                </div>
-                                <div class="col">
-                                    <p id="user-name">
-                                        <%= currentUser.userName %>
-                                    </p>
-                                    <input type="text" class="form-control" value="<%= currentUser.userName %>"
-                                        name="userName" id="userName" style="display: none;" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <p>Email </p>
-                                </div>
-                                <div class="col">
-                                    <p id="email">
-                                        <%= currentUser.email %>
-                                    </p>
-                                    <input type="email" class="form-control" value="<%= currentUser.email %>"
-                                        name="email" id="useremail" style="display: none;" />
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <p>Phone </p>
-                                </div>
-                                <div class="col">
-                                    <p id="user-phone">
-                                        <%= currentUser.phone %>
-                                    </p>
-                                    <input type="tel" class="form-control" name="phone" value="<%= currentUser.phone %>"
-                                        id="userPhone" style="display: none;" />
-                                </div>
+                <div class="col-8 content-section">
+                    <div class="referral-container p-4 bg-light shadow rounded">
+                        <h2 class="mb-4">Refer & Earn</h2>
+                
+                        <div class="referral-code-container text-center p-3 bg-white shadow-sm rounded">
+                            <h5>Your Referral Code</h5>
+                            <div class="d-flex justify-content-center align-items-center mt-2">
+                                <span id="referral-code" class="fw-bold fs-4 px-3 py-2 border border-primary rounded">ACT12345</span>
+                                <button class="btn btn-primary ms-2" onclick="copyReferralCode()">Copy</button>
                             </div>
                         </div>
-                        <div class="container mt-3">
-                            <div class="row">
-                                <div class="col" id="edit-contianer">
-                                    <button class="btn btn-primary" id="edit-button">Edit</button>
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-danger" id="cancel-button">Cancel</button>
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-success" id="save-button">Save</button>
-                                </div>
+                
+                        <div class="referral-link-container mt-4 p-3 bg-white shadow-sm rounded">
+                            <h5>Share Your Referral Link</h5>
+                            <div class="d-flex">
+                                <input type="text" id="referral-link" class="form-control" value="https://activecrop.com/referral/ACT12345" readonly>
+                                <button class="btn btn-primary ms-2" onclick="copyReferralLink()">Copy Link</button>
                             </div>
+                        </div>
+                
+                        <div class="rewards-info mt-4 p-3 bg-white shadow-sm rounded">
+                            <h4>How It Works</h4>
+                            <ul>
+                                <li>Share your referral code with friends.</li>
+                                <li>Your friend gets ₹100 when they sign up using your code.</li>
+                                <li>You earn ₹50 for every successful referral.</li>
+                            </ul>
+                        </div>
+                
+                        <div class="referred-users mt-4 p-3 bg-white shadow-sm rounded">
+                            <h4>People You Referred</h4>
+                            <ul class="list-group" id="referred-list">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>John Doe</span>
+                                    <span class="text-success">Earned ₹50</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Jane Smith</span>
+                                    <span class="text-success">Earned ₹50</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

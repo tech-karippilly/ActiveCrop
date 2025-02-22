@@ -74,6 +74,7 @@ export const USER_ADDRESS_BASE = `/address`
 export const USER_ORDERS = '/order'
 export const USER_ORDER_DETAILS = `/order/:id`
 export const USER_WALLET = '/wallet'
+export const USER_REFERAL = '/user-referal'
 
 export const USER_ADDRESS_CREATE = `${USER_ADDRESS_BASE}/create`
 export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
