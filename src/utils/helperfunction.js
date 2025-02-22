@@ -23,7 +23,7 @@ function applyOffers(productList, offers) {
     return newProductList
 }
 
-const appyOfferPrice = (productPrice, offerPrice, offerType) => {
+export  const appyOfferPrice = (productPrice, offerPrice, offerType) => {
     if (offerType === 'percentage') {
         const product = Number(productPrice)
         const percentagePrice = calculatePercentage(product, Number(offerPrice))

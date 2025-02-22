@@ -142,7 +142,7 @@
         <secton class="main-container">
             <div class="catagoery-container">
                 <ul class="categoery-list">
-                    <% catagories.forEach((catagories)=>{ %>
+                    <% categories.forEach((catagories)=>{ %>
                         <li><a href="/products/<%=catagories._id %>" class="btn text-white btn-hover-underline">
                                 <%= catagories.catagoery_name %>
                             </a></li>
@@ -165,48 +165,58 @@
             </div>
             <div class="min-vh-40 " style="max-height: auto;">
 
-                <div class="row ">
-                    <!-- Image Column -->
+                <div class="product-details-container row align-items-center">
+                    <!-- Product Image Slider -->
                     <div class="col-md-6">
-                        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                        <div id="productCarousel" class="carousel slide shadow-lg rounded" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                <% Object.keys(products.images).forEach(function(key, index) { %>
+                                <% Object.keys(products.images).forEach(function (key, index) { %>
                                     <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                                         <img src="/<%= products.images[key] %>" class="d-block w-100"
-                                            alt="Product Image <%= parseInt(key) + 1 %>" style="object-fit: fill;">
+                                            alt="Product Image <%= parseInt(key) + 1 %>"
+                                            style="height: 400px; object-fit:fill; border-radius: 10px;">
                                     </div>
-                                    <% }); %>
+                                <% }); %>
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
                                 data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
                                 data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
-
-                    <!-- Product Details Column -->
-                    <div class="col-md-6 product-details">
-                        <h2>
-                            <%= products.product_name %>
-                        </h2>
-                        <p><strong>Description:</strong>
-                            <%= products.description %>
-                        </p>
+            
+                    <!-- Product Information -->
+                    <div class="col-md-6">
+                        <h2 class="fw-bold"><%= products.product_name %></h2>
+                        <p class="text-muted"><strong>Description:</strong> <%= products.description %></p>
                         <p><strong>Pack Size:</strong> 1 kg</p>
-                        <p class="product-price">$<%= products.price %>
+            
+                        <!-- Offer Price Handling -->
+                        <p class="product-price fw-bold fs-4">
+                            <% if (products.offerprice) { %>
+                                <span class="text-success">₹<%= products.offerprice %></span>
+                                <span class="text-muted text-decoration-line-through fs-6 ms-2">₹<%= products.price %></span>
+                            <% } else { %>
+                                <span class="text-primary">₹<%= products.price %></span>
+                            <% } %>
                         </p>
-                        <p class="stock-status">
-                            <strong>Stock:</strong>
-                            <%= products.stock_quantity> 0 ?   ' available' : 'Out of Stock' %>
+            
+                        <!-- Stock Status -->
+                        <p class="stock-status <%= products.stock_quantity > 0 ? 'text-success' : 'text-danger' %>">
+                            <strong>Stock:</strong> <%= products.stock_quantity > 0 ? 'Available' : 'Out of Stock' %>
                         </p>
+            
+                        <!-- Add to Cart Button -->
                         <% if (products.stock_quantity > 0) { %>
-                            <button class="btn btn-add-to-cart" onclick="addToCart('<%= products._id %>')">Add to Cart</button>
+                            <button class="btn btn-success w-100 py-2 mt-3" onclick="addToCart('<%= products._id %>')">
+                                Add to Cart
+                            </button>
+                        <% } else { %>
+                            <button class="btn btn-danger w-100 py-2 mt-3" disabled>Out of Stock</button>
                         <% } %>
                     </div>
                 </div>
