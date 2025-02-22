@@ -2,11 +2,13 @@ import express from "express";
 import multer from "multer";
 import fs from 'fs';
 
-import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_ORDER_DETAILS, USER_ORDERS, USER_PROFILE_EDIT, USER_REST_PASSWORD } from "../../../constans/endpoints.js";
+import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_ORDER_DETAILS, USER_ORDERS, USER_PROFILE_EDIT, USER_REFERAL, USER_REST_PASSWORD, USER_WALLET } from "../../../constans/endpoints.js";
 import { renderProfilePage, updateProfileDetails } from "../../../controllers/app/profile/index.js";
 import { createAddress, defaultAddress, deleteAddress, editAddress, renderAddressPage, renderCreateAddressPage, renderEditAddressPage, renderOrderDetails, renderOrders } from "../../../controllers/app/profile/address/index.js";
 import { resetPassword, resetPasswordPage } from "../../../controllers/app/profile/password/index.js";
 import { protect } from "../../../middleware/adminAuthMiddleware.js";
+import { renderWalletPage } from "../../../controllers/app/profile/wallet/index.js";
+import { renderReferalPage } from "../../../controllers/app/profile/referal/index.js";
 
 const route = express.Router()
 
@@ -43,6 +45,9 @@ route.put(USER_ADDRESS_DYNAMIC,upload.none(),editAddress)
 route.get(USER_ORDER_DETAILS,protect,renderOrderDetails)
 route.get(USER_ORDERS,renderOrders)
 
+route.get(USER_WALLET,renderWalletPage)
+
+route.get(USER_REFERAL,renderReferalPage)
 
 route.get(USER_REST_PASSWORD,protect,resetPasswordPage)
 route.patch(USER_REST_PASSWORD,protect,upload.none(),resetPassword)

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Address Create Page</title>
+    <title>Active Crop | Wallet Page</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
     <link rel="stylesheet" href="../../../public/styles/profile.css">
@@ -21,17 +21,16 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 </head>
 
 <body>
     <mian>
         <div class="alert-box" id="alert-box">
-            <div class="alert " id="alert-message">
+            <div class="alert " id="alert">
 
             </div>
         </div>
-        
         <section class="header-section">
             <div class="container-fluid d-flex justify-content-end">
                 <div class="row">
@@ -101,25 +100,27 @@
                     </div>
                 </div>
             </div>
-
+            </div>
         </section>
 
         <section class="logo-section">
             <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
                 <div class="row w-25 h-100 ">
                     <div class="col h-100">
-                        <img src="../../../../public/asstes/images/logo.jpg" class="logo-image" />
+                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
+
                     <div class="col h-100 logo-text-container">
                         <a href="/"  class="logo-text-container" style="text-decoration: none;">
                             <h5>ACTIVE CROP</h5>
                         </a>
                     </div>
+
                 </div>
             </div>
         </section>
 
-        <section class="container mt-5">
+        <section class="container mt-5 ">
             <div class="row gap-2">
                 <div class="col-3 side-menu-section">
                     <div class="header">
@@ -131,20 +132,21 @@
                                 class="list-group-item list-group-item-action " aria-current="true">
                                 User Details
                             </button>
-                            <button type="button" onclick='window.location.href="/user/profile/address"'
-                                class="list-group-item list-group-item-action active">
+                            <button onclick='window.location.href="/user/profile/address"' type="button"
+                                class="list-group-item list-group-item-action">
                                 Address Management
                             </button>
                             <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action " onclick="window.location.href='/user/profile/wallet'">
                                 Wallets
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/user-referal'">
                                 Referal
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/password'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
                             <button type="button" class="list-group-item list-group-item-action">
@@ -153,76 +155,49 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-8 content-section  p-1">
-
-                    <form id="editAddressForm" onsubmit="event.preventDefault(); return validateForm();">
-                        <div class="form-group">
-                            <label for="address1">Address 1</label>
-                            <input type="text" class="form-control" id="address1" name="address1">
-                            <small class="text-danger" id="error-address1"></small>
-                        </div>
-
-                        <div class="form-group mt-2">
-                            <label for="address2">Address 2</label>
-                            <input type="text" class="form-control" id="address2" name="address2">
-                            <small class="text-danger" id="error-address2"></small>
-                        </div>
-
-                        <div class="row gap-3  mt-2">
-                            <div class="col">
-                                <label for="state">State</label>
-                                <input type="text" class="form-control" id="state" name="state">
-                                <small class="text-danger" id="error-state"></small>
-                            </div>
-                            <div class="col">
-                                <label for="district">District</label>
-                                <input type="text" class="form-control" id="district" name="district">
-                                <small class="text-danger" id="error-district"></small>
+                <div class="col-8 content-section">
+                    <div class="referral-container p-4 bg-light shadow rounded">
+                        <h2 class="mb-4">Refer & Earn</h2>
+                
+                        <div class="referral-code-container text-center p-3 bg-white shadow-sm rounded">
+                            <h5>Your Referral Code</h5>
+                            <div class="d-flex justify-content-center align-items-center mt-2">
+                                <span id="referral-code" class="fw-bold fs-4 px-3 py-2 border border-primary rounded">ACT12345</span>
+                                <button class="btn btn-primary ms-2" onclick="copyReferralCode()">Copy</button>
                             </div>
                         </div>
-
-                        <div class="row gap-3  mt-2">
-                            <div class="col">
-                                <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city">
-                                <small class="text-danger" id="error-city"></small>
-                            </div>
-
-                            <div class="col">
-                                <label for="pincode">PinCode</label>
-                                <input type="text" class="form-control" id="pincode" name="pincode" maxlength="6">
-                                <small class="text-danger" id="error-pincode"></small>
+                
+                        <div class="referral-link-container mt-4 p-3 bg-white shadow-sm rounded">
+                            <h5>Share Your Referral Link</h5>
+                            <div class="d-flex">
+                                <input type="text" id="referral-link" class="form-control" value="https://activecrop.com/referral/ACT12345" readonly>
+                                <button class="btn btn-primary ms-2" onclick="copyReferralLink()">Copy Link</button>
                             </div>
                         </div>
-
-                        <div class="form-group  mt-2">
-                            <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" maxlength="10">
-                            <small class="text-danger" id="error-phone"></small>
+                
+                        <div class="rewards-info mt-4 p-3 bg-white shadow-sm rounded">
+                            <h4>How It Works</h4>
+                            <ul>
+                                <li>Share your referral code with friends.</li>
+                                <li>Your friend gets ₹100 when they sign up using your code.</li>
+                                <li>You earn ₹50 for every successful referral.</li>
+                            </ul>
                         </div>
-
-                        <div class="form-group  mt-2">
-                            <label for="land-mark">Land Mark</label>
-                            <input type="text" class="form-control" id="land-mark" name="land-mark">
-                            <small class="text-danger" id="error-land-mark"></small>
+                
+                        <div class="referred-users mt-4 p-3 bg-white shadow-sm rounded">
+                            <h4>People You Referred</h4>
+                            <ul class="list-group" id="referred-list">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>John Doe</span>
+                                    <span class="text-success">Earned ₹50</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Jane Smith</span>
+                                    <span class="text-success">Earned ₹50</span>
+                                </li>
+                            </ul>
                         </div>
-
-                        <div class="form-group  mt-2">
-                            <label for="nick-name">Nick Name</label>
-                            <input type="text" class="form-control" id="nick-name" name="nick-name">
-                            <small class="text-danger" id="error-nick-name"></small>
-                        </div>
-
-                        <div class="d-flex mt-2">
-                            <button type="button" class="btn btn-danger" onclick="cancel()">
-                                <i class="fa-solid fa-trash"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-success me-2 ms-2">
-                                <i class="fa-solid fa-save"></i> Save
-                            </button>
-                        </div>
-
-                    </form>
+                    </div>
                 </div>
 
             </div>
@@ -287,134 +262,129 @@
     </mian>
 
     <script>
+        let cropper;
         const alertBox = document.getElementById('alert-box')
-        const alertMessage = document.getElementById('alert-message')
+        const alertMessage = document.getElementById('alert')
+        const imageEditIcon = document.getElementById('edit-icon')
 
-        const addressRules = /^[A-Za-z0-9\s:,\-\/]+$/;
-        const pinCodeRule = /^\d{6}$/
-        const phoneRule = /^\d{10}$/
-        const normalRule = /^[A-Za-z\s.'-]+$/;
+        const progileImage = document.getElementById('profileImg')
 
+        const editButton = document.getElementById('edit-button')
+        const editButtonContainer = document.getElementById('edit-contianer')
+        const cancelButton = document.getElementById('cancel-button')
+        const saveButton = document.getElementById('save-button')
+        imageEditIcon.style.display = 'none'
+        cancelButton.style.display = 'none'
+        saveButton.style.display = 'none'
 
-        function validateForm() {
-            let isValid = true;
+        const firstNameLabel = document.getElementById('first-name')
+        const lastNameLabel = document.getElementById('last-name')
+        const userNameLabel = document.getElementById('user-name')
+        const userEmailLabel = document.getElementById('email')
+        const userPhoneLabel = document.getElementById('user-phone')
 
-            const addressOne = document.getElementById('address1').value.trim()
-            const addressTwo = document.getElementById('address2').value.trim()
-            const state = document.getElementById('state').value.trim()
-            const district = document.getElementById('district').value.trim()
-            const city = document.getElementById('city').value.trim()
-            const pincode = document.getElementById('pincode').value.trim()
-            const phoneNumber = document.getElementById('phone').value.trim()
-            const landMark = document.getElementById('land-mark').value.trim()
-            const nickName = document.getElementById('nick-name').value.trim()
-            clearErrors();
+        const firstNameInput = document.getElementById('firstName')
+        const lastNameInput = document.getElementById('lastName')
+        const userNameInput = document.getElementById('userName')
+        const userEmailInput = document.getElementById('useremail')
+        const userPhoneInput = document.getElementById('userPhone')
+        const userImageInput = document.getElementById('imageUpload')
 
-            if (!addressRules.test(addressOne)) {
+        const reader = new FileReader();
 
-                setError('address1', 'Address 1 is required.');
-                isValid = false;
+        userImageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        progileImage.src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
             }
-            if (!addressRules.test(addressTwo)) {
-                setError('address2', 'Address 2 is required.');
-                isValid = false;
-            }
-            if (!normalRule.test(state)) {
-                setError('state', 'State is required.');
-                isValid = false;
-            }
-            if (!normalRule.test(district)) {
-                setError('district', 'District is required.');
-                isValid = false;
-            }
-            if (!normalRule.test(city)) {
-                setError('city', 'City is required.');
-                isValid = false;
-            }
-            if (!pinCodeRule.test(pincode)) {
-                setError('pincode', 'PinCode is required. Must have 6 digits');
-                isValid = false;
-            }
-            if (!phoneRule.test(phoneNumber)) {
-                setError('phone', 'Phone is required. Must have 10 digits');
-                isValid = false;
-            }
-            if (!normalRule.test(nickName)) {
-                setError('nick-name', 'NickName required to add address');
-                isValid = false;
-            }
-            if (!normalRule.test(landMark)) {
-                setError('land-mark', 'Land mark required to add address');
-                isValid = false;
-            }
+        })
+
+        editButton.addEventListener('click', () => {
+            imageEditIcon.style.display = 'flex'
+            firstNameLabel.style.display = 'none'
+            lastNameLabel.style.display = 'none'
+            userNameLabel.style.display = 'none'
+            userEmailLabel.style.display = 'none'
+            userPhoneLabel.style.display = 'none'
+
+            firstNameInput.style.display = 'block'
+            lastNameInput.style.display = 'block'
+            userNameInput.style.display = 'block'
+            userEmailInput.style.display = 'block'
+            userPhoneInput.style.display = 'block'
+            editButton.style.display = 'none'
+            editButtonContainer.style.display = 'none'
+            cancelButton.style.display = 'block'
+            saveButton.style.display = 'block'
+        })
+        cancelButton.addEventListener('click', () => {
+            imageEditIcon.style.display = 'none'
+            firstNameLabel.style.display = 'block'
+            lastNameLabel.style.display = 'block'
+            userNameLabel.style.display = 'block'
+            userEmailLabel.style.display = 'block'
+            userPhoneLabel.style.display = 'block'
+
+            firstNameInput.style.display = 'none'
+            lastNameInput.style.display = 'none'
+            userNameInput.style.display = 'none'
+            userEmailInput.style.display = 'none'
+            userPhoneInput.style.display = 'none'
+
+            editButton.style.display = 'block'
+            editButtonContainer.style.display = 'flex'
+            cancelButton.style.display = 'none'
+            saveButton.style.display = 'none'
+        })
+        saveButton.addEventListener('click', () => {
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+
+            let formData = new FormData();
+            formData.append("firstName", firstNameInput.value);
+            formData.append("lastName", lastNameInput.value);
+            formData.append("userName", userNameInput.value);
+            formData.append("email", userEmailInput.value);
+            formData.append("phone", userPhoneInput.value);
 
 
-            return isValid;
-        }
-        function clearErrors() {
-            const errorElements = document.querySelectorAll('.text-danger');
-            errorElements.forEach(element => {
-                element.textContent = '';
-            });
-        }
-        function setError(field, message) {
-            document.getElementById(`error-${field}`).textContent = message;
-        }
-        function cancel() {
-            if (confirm('Are you sure you want to cancel?')) {
-                document.getElementById('editAddressForm').reset();
-                clearErrors();
-                window.location.href = '/user/profile/address'
+            if (file) {
+                formData.append("profile_image", file);
             }
-        }
 
-        document.getElementById('editAddressForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            clearErrors();
-            const isFormValid = validateForm();
-            if (isFormValid) {
-
-                const addressOne = document.getElementById('address1').value.trim()
-                const addressTwo = document.getElementById('address2').value.trim()
-                const state = document.getElementById('state').value.trim()
-                const district = document.getElementById('district').value.trim()
-                const city = document.getElementById('city').value.trim()
-                const pincode = document.getElementById('pincode').value.trim()
-                const phoneNumber = document.getElementById('phone').value.trim()
-                const landMark = document.getElementById('land-mark').value.trim()
-                const nickName = document.getElementById('nick-name').value.trim()
-
-                const formData = new FormData()
-
-                formData.append('address_line_1', addressOne)
-                formData.append('address_line_2', addressTwo)
-                formData.append('pincode', pincode)
-                formData.append('state', state)
-                formData.append('district', district)
-                formData.append('city', city)
-                formData.append('nickname', nickName)
-                formData.append('landmark', landMark)
-                formData.append('phone', phoneNumber)
-
-                fetch('/user/profile/address/create', {
-                    method: 'POST',
-                    body: formData
-                }).then((response) => {
+            fetch('/user/profile/edit', {
+                method: 'PUT',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alertMessage.classList.add('alert-success')
+                    } else {
+                        alertMessage.classList.add('alert-danger')
+                    }
                     return response.json()
-                }).then((data) => {
-                    alertMessage.classList.add(data.alertype)
-                    alertMessage.innerHTML = data.message
+                })
+                .then(data => {
+                    alertMessage.innerText = data.message
                     setTimeout(() => {
-                        alertMessage.classList.remove(data.alertype)
-                        alertMessage.innerHTML = ''
-                        
-                        if (data.redirect) {
-                            window.location.href = data.redirect
-                        }
+                        alertMessage.classList.remove('alert-success')
+                        window.location.reload()
                     }, 3000)
                 })
-            }
+                .catch(error => {
+                    setTimeout(() => {
+                        alertMessage.classList.remove('alert-danger')
+                    }, 3000)
+                });
+
+            editButton.style.display = 'block';
         });
+
     </script>
 
 
