@@ -25,6 +25,10 @@ const productSchema = mongoose.Schema({
     images: {
         type: Object,
         required: true
+    },
+    offer_price:{
+        type:String,
+        default:0
     }
 },
 {

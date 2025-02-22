@@ -197,8 +197,8 @@
             
                         <!-- Offer Price Handling -->
                         <p class="product-price fw-bold fs-4">
-                            <% if (products.offerprice) { %>
-                                <span class="text-success">₹<%= products.offerprice %></span>
+                            <% if (products.offer_price  && products.offer_price > 0) { %>
+                                <span class="text-success">₹<%= products.offer_price %></span>
                                 <span class="text-muted text-decoration-line-through fs-6 ms-2">₹<%= products.price %></span>
                             <% } else { %>
                                 <span class="text-primary">₹<%= products.price %></span>

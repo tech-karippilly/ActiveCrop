@@ -18,6 +18,7 @@ async function renderCartPage(req, res) {
             if (cart && cart.items) {
                 cartLength = cart.items.length;
             }
+           
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart, cartLength })
         }
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })
@@ -62,7 +63,9 @@ async function addToCart(req, res) {
                 }
                 cart.items[itemIndex].quantity = newQuantity;
             } else {
-                cart.items.push({product_name:product.product_name , product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity });
+
+
+                cart.items.push({ product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity,offer_price:product.offer_price });
             }
 
             await cart.save();
@@ -122,7 +125,7 @@ const removeItem = async (req, res) => {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const user = await User.findById(userId)
-            const cart = await Cart.findOne({ user_id: user._id,status: 'active' });
+            const cart = await Cart.findOne({ user_id: user._id, status: 'active' });
 
             if (!cart) {
                 return res.status(404).json({ message: 'Cart not found' });
