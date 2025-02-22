@@ -87,4 +87,5 @@ export const PLACE_ORDER  ='/place-order'
 export const RAZORPAY_VERIFY = '/payment/verify'
 
 export const ORDER_SUCCESS = '/order-success/:id'
+export const ORDER_FAILD = '/order-failed/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'

@@ -1,4 +1,4 @@
-import { CHECKOUT_PAGE, ORDER_SUCCESS_PAGE } from "../../../constans/page.js"
+import { CHECKOUT_PAGE, ORDER_FAILD_PAGE, ORDER_SUCCESS_PAGE } from "../../../constans/page.js"
 import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js"
 import jwt from 'jsonwebtoken'
 import { generateOrderNumber } from "../../../utils/order.js"
@@ -12,8 +12,6 @@ const razorpay = new Razorpay({
     key_id: process.env.KEY_ID,
     key_secret: process.env.KEY_SECRETE
 })
-
-
 
 const renderCheckout = async (req, res) => {
 
@@ -87,6 +85,7 @@ async function placeOreder(req, res) {
                 currency: "INR",
                 description: "Active Corp",
                 image: "https://yourdomain.com/logo.png",
+                redirect: `http://localhost:3000/orders/order-success/${razorPayOrder.id}`,
                 order_id: razorPayOrder.id,
                 prefill: {
                     name: user.getFullName(),
@@ -109,9 +108,9 @@ async function placeOreder(req, res) {
                     })
                         .then(res => res.json())
                         .then(data => {
-
+                            console.log('working')
                             if (data.redirect) {
-                                window.location.href = data.redirect;
+                                alert('Payment Successfull')
                             } else {
                                 alert('Payment verification failed');
                             }
@@ -131,7 +130,7 @@ async function placeOreder(req, res) {
             }
             cart.status = 'ordered';
             await cart.save();
-            return res.status(200).json({message:"Razor Pay Order Created",alertType: 'alert-success',user:user, razorPayOptions})
+            return res.status(200).json({ message: "Razor Pay Order Created", alertType: 'alert-success', user: user, razorPayOptions })
 
         } else if (paymentMethod === 'cod') {
             const newOrderDetails = {
@@ -164,7 +163,7 @@ async function placeOreder(req, res) {
                 await cart.save();
                 const newOrder = new Order(newOrderDetails);
                 await newOrder.save();
-              return  res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${newOrder._id}` });
+                return res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${newOrder._id}` });
             }
         }
 
@@ -176,26 +175,35 @@ async function placeOreder(req, res) {
 
 async function verifyPayment(req, res) {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature ,order_id} = req.body;
 
-        const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+        console.log(req.body)
+        if (order_id){
+            const order = await Order.findOne({ orderNumber: order_id })
+           return  res.status(400).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
+        }
+
+        const hmac = crypto.createHmac("sha256", process.env.KEY_SECRETE);
         hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
         const generatedSignature = hmac.digest("hex");
 
-        const order = await Order.findById(razorpay_order_id)
+        const order = await Order.findOne({ orderNumber: razorpay_order_id })
 
-        if (generatedSignature === razorpay_signature && order) {
+        if (!order) {
+           return res.status(404).json({ message: 'order to found' })
+        }
+
+        if (generatedSignature === razorpay_signature) {
             order.paymentStatus = "Paid";
             await order.save();
-
 
             res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
         } else {
             order.paymentStatus = "Failed";
             await order.save();
-            res.status(400).send("Payment Failed");
-        }
 
+            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
+        }
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: 'Internal Server Error', error: error.message })
@@ -209,6 +217,16 @@ async function OrderSuccess(req, res) {
         return res.status(200).render(ORDER_SUCCESS_PAGE, { orderDetails: order })
     } catch (error) {
         return res.status(500).render(ORDER_SUCCESS_PAGE, { orderDetails: {} })
+    }
+}
+
+async function OrderFailed(req, res) {
+    try {
+        const { id } = req.params
+        const order = await Order.findById(id)
+        return res.status(200).render(ORDER_FAILD_PAGE, { orderDetails: order })
+    } catch (error) {
+        return res.status(500).render(ORDER_FAILD_PAGE, { orderDetails: {} })
     }
 }
 
@@ -240,6 +258,7 @@ export {
     renderCheckout,
     placeOreder,
     OrderSuccess,
+    OrderFailed,
     OrderCancel,
     verifyPayment
 }

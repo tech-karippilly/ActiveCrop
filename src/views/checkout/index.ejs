@@ -367,9 +367,85 @@
         }
 
         function initializePayment(option) {
-            console.log("optios",option)
-            var rzp = new Razorpay(option);
-            rzp.open();
+            console.log("optios", option)
+
+            const razorPayOptions = {
+                key: 'rzp_test_d5nWckwlxAwcVf',
+                amount: '1000',
+                currency: "INR",
+                description: "Active Corp",
+                order_id: option.order_id, // Correct order_id
+                prefill: {
+                    name: 'vishnu kv',
+                    email: 'vishnukvcse@gmail.com',
+                    contact: '8078599537'
+                },
+
+                handler: function (response) {
+                    fetch("http://localhost:3000/orders/payment/verify", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.redirect) {
+                                alert("Payment Successful!");
+                                window.location.href = data.redirect;
+                            } else {
+                                alert("Payment verification failed");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert("Error verifying payment");
+                        });
+                },
+                retry: false,
+                modal: {
+                    confirm_close: true,
+                    ondismiss: function (event) {
+                        verifyPayment(razorPayOptions.order_id)
+                    }
+                }
+            };
+            try {
+                var rzp = new Razorpay(razorPayOptions);
+                rzp.open();
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+
+        function verifyPayment(order_id) {
+            fetch("http://localhost:3000/orders/payment/verify", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    order_id
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.redirect) {
+                        alert("Payment Successful!");
+                        window.location.href = data.redirect;
+                    } else {
+                        alert("Payment verification failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error verifying payment");
+                });
         }
 
 

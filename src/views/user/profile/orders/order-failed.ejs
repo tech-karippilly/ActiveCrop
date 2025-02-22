@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Order Failed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../../../../public/asstes/images/logo.jpg" type="image/x-icon">
+    <style>
+        :root {
+            --primary: #F2F3F4;
+            --error: #E74C3C;
+            --white: #FDFEFE;
+            --label-text: #1E1E2C;
+        }
+
+        body {
+            background-color: var(--primary);
+        }
+
+        .error-icon {
+            color: var(--error);
+            font-size: 3rem;
+        }
+
+        .card {
+            background-color: var(--white);
+        }
+
+        .btn-danger {
+            background-color: var(--error);
+            border-color: var(--error);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--error);
+            opacity: 0.9;
+        }
+
+        .text-label {
+            color: var(--label-text);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="text-center mb-4">
+                    <i class="bi bi-x-circle-fill error-icon"></i>
+                    <h1 class="text-label mt-3">Order Failed!</h1>
+                    <p class="text-label">We're sorry, but your order could not be processed.</p>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="text-label mb-3">Possible Reasons:</h5>
+                        <ul class="text-label">
+                            <li>Payment was declined.</li>
+                            <li>Technical issue occurred.</li>
+                            <li>Insufficient stock.</li>
+                        </ul>
+                        <p class="text-label">Please try again or contact support for assistance.</p>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-between">
+                    <a href="/" class="btn btn-outline-secondary flex-grow-1">
+                        Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = '/'
+        }, 1000000)
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
