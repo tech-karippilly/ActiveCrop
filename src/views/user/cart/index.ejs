@@ -165,14 +165,17 @@
                                                         alt="Product Image">
                                                 </div>
                                                 <div class="col-md-6 d-flex flex-column justify-content-center">
-                                                    <h5 class="card-title text-muted mb-1"><%= items.product_name %> (Out of Stock)
+                                                    <h5 class="card-title text-muted mb-1">
+                                                        <%= items.product_name %> (Out of Stock)
                                                     </h5>
                                                     <p class="text-muted mb-1">Price: ₹<%= items.priceAtPurchanse %>
                                                     </p>
                                                     <div class="input-group w-75">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>-</button>
-                                                            <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
+                                                        <input type="text" class="form-control text-center"
+                                                            id="quantity-<%= items.product_id %>"
+                                                            value="<%= items.quantity %>">
                                                         <button class="btn btn-outline-secondary disabled"
                                                             disabled>+</button>
                                                     </div>
@@ -191,13 +194,17 @@
                                                             alt="Product Image">
                                                     </div>
                                                     <div class="col-md-6 d-flex flex-column justify-content-center">
-                                                        <h5 class="card-title mb-1"><%= items.product_name %></h5>
+                                                        <h5 class="card-title mb-1">
+                                                            <%= items.product_name %>
+                                                        </h5>
                                                         <p class="text-muted mb-1">Price: ₹<%= items.priceAtPurchanse %>
                                                         </p>
                                                         <div class="input-group w-75">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('subtract','<%=items.product_id %>')">-</button>
-                                                                <input type="text" class="form-control text-center" id="quantity-<%= items.product_id %>" value="<%= items.quantity %>">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="quantity-<%= items.product_id %>"
+                                                                value="<%= items.quantity %>">
                                                             <button class="btn btn-outline-secondary" type="button"
                                                                 onclick="updateQuantity('add','<%=items.product_id %>')">+</button>
                                                         </div>
@@ -244,7 +251,8 @@
                                                             <span>Total:</span>
                                                             <strong>₹<%= cart.total_price + 100 %></strong>
                                                         </div>
-                                                        <button class="btn btn-checkout w-100 mt-3" onclick="proceedToCheckout()">Proceed to
+                                                        <button class="btn btn-checkout w-100 mt-3"
+                                                            onclick="proceedToCheckout()">Proceed to
                                                             Checkout</button>
                                                     </div>
                                                 </div>
@@ -399,8 +407,8 @@
 
         }
 
-        function proceedToCheckout(){
-            window.location.href='/orders/checkout'
+        function proceedToCheckout() {
+            window.location.href = '/orders/checkout'
         }
     </script>
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
