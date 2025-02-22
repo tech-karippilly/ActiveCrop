@@ -1,13 +1,15 @@
 import { HTTP_SUCCESS } from "../../../constans/httpStatus.js"
 import { USER_PRODUCT_DETAILS_PAGE, USER_PRODUCT_PAGE } from "../../../constans/page.js"
-import { Cart, Categoery, Product, Review, User } from "../../../models/index.js"
+import { Cart, Categoery, Product, productOffer, Review, User } from "../../../models/index.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
+import { applyOffers } from "../../../utils/helperfunction.js"
 
 async function productsPage(req, res) {
     try {
         const { id } = req.params
         const products = await Product.find({ catagoery_id: id })
+        const getOffers = await productOffer.find()
         const catagories = await Categoery.find()
         const access_token = req.session.accessToken
         if (access_token) {
@@ -20,10 +22,13 @@ async function productsPage(req, res) {
             if (cart.length > 0 && cart[0].items) { 
                 cartLength = cart[0].items.length;
             }
-            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products, catagories, activeCata: id, currentUser,cartLength })
+            
+            const newProductList = applyOffers(products,getOffers)
+            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products:newProductList, catagories, activeCata: id, currentUser,cartLength })
         }
        
-        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products, catagories, activeCata: id, currentUser: {} ,cartLength:0})
+        const newProductList = applyOffers(products,getOffers)
+        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products:newProductList, catagories, activeCata: id, currentUser: {} ,cartLength:0})
     } catch (error) {
         res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products: [], catagories: [], activeCata: '', currentUser: {} ,cartLength:0})
     }
