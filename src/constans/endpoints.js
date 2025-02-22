@@ -73,6 +73,7 @@ export const USER_PROFILE_EDIT= '/edit'
 export const USER_ADDRESS_BASE = `/address`
 export const USER_ORDERS = '/order'
 export const USER_ORDER_DETAILS = `/order/:id`
+export const USER_WALLET = '/wallet'
 
 export const USER_ADDRESS_CREATE = `${USER_ADDRESS_BASE}/create`
 export const USER_ADDRESS_DYNAMIC = `${USER_ADDRESS_BASE}${DYNAMIC_ID}`
@@ -105,3 +106,4 @@ export const ORDER_FAILD = '/order-failed/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'
 
 export const WHISLIST_BASE = '/whishlist'
+

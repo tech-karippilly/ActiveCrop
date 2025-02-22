@@ -43,6 +43,7 @@ export const USER_ORDER_DETAILS_PAGE = 'user/profile/orders/details'
 export const USER_ADDRESS_PAGE  = 'user/profile/address/index'
 export const USER_ADDRESS_CREATE_PAGE = 'user/profile/address/create'
 export const USER_ADDRESS_EDIT_PAGE = 'user/profile/address/edit'
+export const USER_WALLET_PAGE ='user/profile/wallet/index'
 
 export const USER_CART_PAGE = 'user/cart/index'
 
