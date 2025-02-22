@@ -50,6 +50,11 @@ export const ADMIN_OFFER_REFERAL_CREATE= '/referal-create'
 export const ADMIN_OFFER_REFERAL_UPDATE='/referal-update/:id'
 export const ADMIN_OFFER_REFERAL_DELETE='/referal-delete/:id'
 
+export const ADMIN_COUPON_BASE='/admin/coupons'
+export const ADMIN_COUPON_CREATE='/admin/coupons/create'
+export const ADMIN_COUPON_DYNAMIC='/admin/coupons/:id'
+
+
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
