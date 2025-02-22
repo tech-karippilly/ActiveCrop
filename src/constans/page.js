@@ -49,3 +49,4 @@ export const USER_CART_PAGE = 'user/cart/index'
 export const CHECKOUT_PAGE = 'checkout/index'
 
 export const ORDER_SUCCESS_PAGE = 'user/profile/orders/order-success'
+export const ORDER_FAILD_PAGE = 'user/profile/orders/order-failed'
