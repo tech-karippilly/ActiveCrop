@@ -1,4 +1,21 @@
+import { ADMIN_COUPON_PAGE } from "../../constans/page.js";
 import { Coupons } from "../../models/index.js";
+
+async function renderCoupon(req,res){
+  try{
+    const { page = 1, limit = 10, search = '' } = req.query;
+    const query = search ? { code: new RegExp(search, 'i') } : {};
+    const coupons = await Coupons.find(query)
+    .limit(limit * 1)
+    .skip((page - 1) * limit)
+    .exec();
+    const count = await Coupons.countDocuments(query);
+    res.status(200).render(ADMIN_COUPON_PAGE,{coupons, totalPages: Math.ceil(count / limit), currentPage: page})
+
+  }catch(error){
+
+  }
+}
 
 async function createCoupon(req,res){
     try{
@@ -32,6 +49,7 @@ async function deleteCoupon(req,res){
 }
 
 export {
+  renderCoupon,
     createCoupon,
     updateCoupon,
     deleteCoupon
