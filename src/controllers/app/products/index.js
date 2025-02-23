@@ -1,6 +1,6 @@
 import { HTTP_SUCCESS } from "../../../constans/httpStatus.js"
 import { USER_PRODUCT_DETAILS_PAGE, USER_PRODUCT_PAGE } from "../../../constans/page.js"
-import { Cart, Categoery, Product, productOffer, Review, User } from "../../../models/index.js"
+import { Cart, Categoery, Product, ProductOffer, Review, User } from "../../../models/index.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { applyOffers, appyOfferPrice } from "../../../utils/helperfunction.js"
@@ -9,7 +9,7 @@ async function productsPage(req, res) {
     try {
         const { id } = req.params
         const products = await Product.find({ catagoery_id: id })
-        const getOffers = await productOffer.find()
+        const getOffers = await ProductOffer.find()
         const catagories = await Categoery.find()
         const access_token = req.session.accessToken
         if (access_token) {
@@ -65,7 +65,7 @@ async function productDetailsPage(req, res) {
         const reviews = await Review.find({ 'product.productId': id })
         const activeCata = await Categoery.findById(cataid)
         const access_token = req.session.accessToken
-        const getOffers = await productOffer.findOne({ "product._id": id })
+        const getOffers = await ProductOffer.findOne({ "product._id": id })
 
         const price = appyOfferPrice(products.price, getOffers.discountValue, getOffers.offer_type)
 

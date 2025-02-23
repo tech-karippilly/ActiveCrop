@@ -6,11 +6,17 @@ const cartItemSchema =new mongoose.Schema({
         ref:"Product",
         require:true
     },
+    catagoery_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Catagoery",
+        require:true
+    },
     quantity:{
         type:Number,
         required:true,
         min:1
     },
+
     priceAtPurchanse:{
         type:Number,
         required:true
@@ -39,6 +45,14 @@ const cartSchema = new mongoose.Schema({
         require:true,
         default:0
     },
+    discount:{
+        type:Number,
+        default:0
+    },
+    shipping:{
+        type:Number,
+        default:100
+    },
     items:[cartItemSchema],
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -57,6 +71,7 @@ const cartSchema = new mongoose.Schema({
 
 cartSchema.pre('save', function (next) {
     this.total_price = this.items.reduce((acc, item) => acc + item.priceAtPurchanse * item.quantity, 0);
+    this.total_price = Math.max(0, this.total_price - this.discount  + this.shipping);
     next();
 });
 

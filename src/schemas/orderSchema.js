@@ -40,6 +40,10 @@ const orderSchema = new mongoose.Schema({
     }
     }
   ],
+  discount:{
+    type:Number,
+    default:true
+  },
   shippingAddress: {
     fullName: { type: String, required: true },
     address_1: { type: String, required: true },
