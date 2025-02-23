@@ -57,18 +57,13 @@ async function renderCartPage(req, res) {
                 })
 
                 if (productDiscount > 0){
-                    console.log('product discount applyed')
                     discount = productDiscount
                 }else if (catagoeryDiscount>0){
-                    console.log('cata discount applyed')
                     discount = catagoeryDiscount
                 }
                 
                 total_price = Math.max(cart.total_price - discount, 0);
             }
-
-        
-
 
             cart.discount = discount
             await cart.save()
