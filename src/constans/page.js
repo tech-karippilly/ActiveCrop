@@ -28,6 +28,7 @@ export const ADMIN_OFFERS_REFERAL_UPDATE ='admin/offer/referal/edit'
 
 export const ADMIN_COUPON_PAGE ='admin/coupon/index'
 export const ADMIN_COUPON_CREATE_PAGE ='admin/coupon/create'
+export const ADMIN_COUPON_UPDATE_PAGE ='admin/coupon/edit'
 
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'

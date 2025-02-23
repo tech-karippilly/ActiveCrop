@@ -1,4 +1,4 @@
-import { ADMIN_COUPON_CREATE_PAGE, ADMIN_COUPON_PAGE } from "../../constans/page.js";
+import { ADMIN_COUPON_CREATE_PAGE, ADMIN_COUPON_PAGE, ADMIN_COUPON_UPDATE_PAGE } from "../../constans/page.js";
 import { Coupons } from "../../models/index.js";
 
 async function renderCoupon(req, res) {
@@ -59,13 +59,40 @@ async function createCoupon(req, res) {
   }
 }
 
+async function renderUpdateCoupon(req, res) {
+  try{
+    const {id} = req.params
+    const existingCoupon = await Coupons.findById(id);
+    res.status(200).render(ADMIN_COUPON_UPDATE_PAGE,{existingCoupon})
+  }catch(error){
+
+  }
+}
+
+
 async function updateCoupon(req, res) {
   try {
-    const coupon = await Coupons.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!coupon) return res.status(404).json({ error: 'Coupon not found' });
-    res.json(coupon);
+    const { id } = req.params;
+    const { couponCode, discountType, discountValue, minPurchaseAmount, maxDiscount, validFrom, validTo } = req.body;
+
+    const existingCoupon = await Coupons.findById(id);
+    if (!existingCoupon) {
+      return res.status(404).json({ message: "Coupon not found" });
+    }
+
+    existingCoupon.couponCode = couponCode || existingCoupon.couponCode;
+    existingCoupon.discountType = discountType || existingCoupon.discountType;
+    existingCoupon.discountValue = discountValue || existingCoupon.discountValue;
+    existingCoupon.minPurchaseAmount = minPurchaseAmount || existingCoupon.minPurchaseAmount;
+    existingCoupon.maxDiscount = maxDiscount || existingCoupon.maxDiscount;
+    existingCoupon.validFrom = validFrom || existingCoupon.validFrom;
+    existingCoupon.validTo = validTo || existingCoupon.validTo;
+
+    await existingCoupon.save();
+
+    res.status(200).json({message:"Coupon Updated" ,redirect:"/admin/coupons"});
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: "Server error, please try again" ,error:error.message});
   }
 }
 
@@ -83,6 +110,7 @@ export {
   renderCoupon,
   renderCreateCoupon,
   createCoupon,
+  renderUpdateCoupon,
   updateCoupon,
   deleteCoupon
 }

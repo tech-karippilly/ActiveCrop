@@ -66,7 +66,7 @@
             <!-- Main Content Section -->
             <section class="container-section col-9">
                 <div class="container mt-4">
-                    <h2 class="mb-4">Create Coupon</h2>
+                    <h2 class="mb-4">Edit Coupon</h2>
 
                     <div class="alert alert-success d-none" id="successAlert">Coupon created successfully!</div>
                     <div class="alert alert-danger d-none" id="errorAlert">Failed to create coupon. Please try again.
@@ -77,12 +77,12 @@
                             <div class="mb-3">
                                 <label for="couponCode" class="form-label">Coupon Code</label>
                                 <input type="text" class="form-control" id="couponCode" placeholder="Enter coupon code"
-                                    >
+                                    value="<%= existingCoupon.code %>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="discountType" class="form-label">Discount Type</label>
-                                <select class="form-control" id="discountType" >
+                                <select class="form-control" id="discountType">
                                     <option value="percentage">Percentage</option>
                                     <option value="fixed">Fixed Amount</option>
                                 </select>
@@ -91,33 +91,36 @@
                             <div class="mb-3">
                                 <label for="discountValue" class="form-label">Discount Value</label>
                                 <input type="number" class="form-control" id="discountValue"
-                                    placeholder="Enter discount value" >
+                                    placeholder="Enter discount value" value="<%= existingCoupon.discountValue %>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="minPurchaseAmount" class="form-label">Minimum Purchase Amount</label>
                                 <input type="number" class="form-control" id="minPurchaseAmount"
-                                    placeholder="Enter min purchase amount" >
+                                    placeholder="Enter min purchase amount"
+                                    value="<%= existingCoupon.minPurchaseAmount %>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="maxDiscount" class="form-label">Maximum Discount</label>
                                 <input type="number" class="form-control" id="maxDiscount"
-                                    placeholder="Enter max discount" >
+                                    placeholder="Enter max discount" value="<%= existingCoupon.maxDiscount %>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="validFrom" class="form-label">Valid From</label>
-                                <input type="date" class="form-control" id="validFrom" >
+                                <input type="date" class="form-control" id="validFrom"
+                                    value="<%= new Date(existingCoupon.validFrom).toISOString().split('T')[0] %>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="validTo" class="form-label">Valid Until</label>
-                                <input type="date" class="form-control" id="validTo" >
+                                <input type="date" class="form-control" id="validTo"
+                                    value="<%= new Date(existingCoupon.validTo).toISOString().split('T')[0] %>">
                             </div>
 
                             <button type="submit" class="btn btn-success w-100">
-                                <span id="btnText">Create Coupon</span>
+                                <span id="btnText">Update Coupon</span>
                                 <span id="btnLoader" class="spinner-border spinner-border-sm d-none"></span>
                             </button>
                         </form>
@@ -175,8 +178,9 @@
 
         // API Call function
         function submitCoupon(couponData) {
-            fetch("/admin/coupons/create", {
-                method: "POST",
+            const id = window.location.pathname.split("/").pop();
+            fetch(`/admin/coupons/${id}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(couponData)
             })
@@ -184,11 +188,11 @@
                 .then(data => {
                     console.log(data)
                     if (data.redirect) {
-                        showAlert("successAlert", "Coupon created successfully!");
+                        showAlert("successAlert", "Coupon Updated successfully!");
                         document.getElementById("createCouponForm").reset();
-                        setTimeout(()=>{
-                            window.location.href=data.redirect
-                        },2000)
+                        setTimeout(() => {
+                            window.location.href = data.redirect
+                        }, 2000)
                     } else {
                         showAlert("errorAlert", "Failed to create coupon!");
                     }

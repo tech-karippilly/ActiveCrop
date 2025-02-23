@@ -84,7 +84,7 @@
                                 <th>Discount Value</th>
                                 <th>Min Purchase</th>
                                 <th>Used Count</th>
-                                <th>Valid To</th>
+                                <th>Valid Up To</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -99,7 +99,7 @@
                                     <td><%= coupon.usedCount %></td>
                                     <td><%= coupon.validTo.toDateString() %></td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm">Edit</button>
+                                        <button class="btn btn-warning btn-sm" onclick="window.location.href='/admin/coupons/<%=coupon._id %>'">Edit</button>
                                         <button class="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
