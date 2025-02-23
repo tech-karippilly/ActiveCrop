@@ -113,3 +113,6 @@ export const ORDER_CANCEL = '/order-cancel/:id'
 
 export const WHISLIST_BASE = '/whishlist'
 
+export const USER_COUPON_BASE ='/coupon'
+export const APPLY_COUPON = '/:coupon'
+
