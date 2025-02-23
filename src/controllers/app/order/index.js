@@ -42,7 +42,6 @@ async function placeOreder(req, res) {
         const user = await User.findById(userId);
         const cart = await Cart.findById(cartId);
         const address = await Address.findById(addressId);
-        console.log(paymentMethod)
         if (paymentMethod === 'razorpay') {
             const options = {
                 amount: (cart.total_price + 100),
@@ -70,7 +69,8 @@ async function placeOreder(req, res) {
                 paymentMethod,
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
-                receipt: razorPayOrder.receipt
+                receipt: razorPayOrder.receipt,
+                discount:cart.discount
             };
 
             const newOrder = new Order(newOrderDetails);
@@ -79,48 +79,21 @@ async function placeOreder(req, res) {
             cart.status = 'ordered';
             await cart.save();
 
-            const razorPayOptions = {
-                key: process.env.KEY_ID,
-                amount: Math.round((cart.total_price + 100) * 100),
+            const optionsRazorPay ={
+                key:process.env.KEY_ID,
+                amount:cart.total_price,
                 currency: "INR",
                 description: "Active Corp",
-                image: "https://yourdomain.com/logo.png",
-                redirect: `http://localhost:3000/orders/order-success/${razorPayOrder.id}`,
-                order_id: razorPayOrder.id,
-                prefill: {
+                user:{
                     name: user.getFullName(),
                     email: user.email || user.user,
                     contact: user.phone
                 },
+                order_id:razorPayOrder.id,
+                redirect: `http://localhost:3000/orders/order-success/${razorPayOrder.id}`,
                 redirect: true,
+            }
 
-                handler: function (response) {
-                    fetch(`http:localhost:3000/orders/payment/verify`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature
-                        })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            console.log('working')
-                            if (data.redirect) {
-                                alert('Payment Successfull')
-                            } else {
-                                alert('Payment verification failed');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error verifying payment');
-                        });
-                }
-            };
             for (const item of cart.items) {
                 const product = await Product.findById(item.product_id)
                 if (product.stock_quantity >= item.quantity) {
@@ -130,7 +103,7 @@ async function placeOreder(req, res) {
             }
             cart.status = 'ordered';
             await cart.save();
-            return res.status(200).json({ message: "Razor Pay Order Created", alertType: 'alert-success', user: user, razorPayOptions })
+            return res.status(200).json({ message: "Razor Pay Order Created", alertType: 'alert-success',  optionsRazorPay })
 
         } else if (paymentMethod === 'cod') {
             const newOrderDetails = {
@@ -151,7 +124,8 @@ async function placeOreder(req, res) {
                 paymentMethod,
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
-                receipt: generateReceiptNumber()
+                receipt: generateReceiptNumber(),
+                discount:cart.discount
             };
             for (const item of cart.items) {
                 const product = await Product.findById(item.product_id)
@@ -245,7 +219,6 @@ async function OrderCancel(req, res) {
                 await product.save();
             }
         }
-
 
         await order.save()
         res.status(200).json({ message: "Order Cancled", alertType: 'alert-success' })
