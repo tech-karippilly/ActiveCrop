@@ -70,7 +70,8 @@ async function placeOreder(req, res) {
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
                 receipt: razorPayOrder.receipt,
-                discount:cart.discount
+                discount:cart.discount,
+                appliedCoupon:cart.appliedCoupon
             };
 
             const newOrder = new Order(newOrderDetails);
@@ -125,7 +126,8 @@ async function placeOreder(req, res) {
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
                 receipt: generateReceiptNumber(),
-                discount:cart.discount
+                discount:cart.discount,
+                appliedCoupon:cart.appliedCoupon
             };
             for (const item of cart.items) {
                 const product = await Product.findById(item.product_id)

@@ -12,11 +12,11 @@ async function getCoupons(req, res) {
 
 async function applyCoupons(req, res) {
     try {
+        const user = req.user
         const { coupon } = req.params
         const { cartId } = req.query
 
-        console.log(coupon)
-        console.log(cartId)
+        console.log(user)
         const existingCoupon = await Coupons.findOne({ code: coupon })
 
         if (!existingCoupon) {
@@ -33,8 +33,11 @@ async function applyCoupons(req, res) {
         cart.discount += existingCoupon.discountValue
         cart.discount += existingCoupon.discountValue
         cart.total_price -= existingCoupon.discountValue
-
+        cart.appliedCoupon = coupon
+        existingCoupon.usedCount +=1
+        
         await cart.save()
+        await existingCoupon.save()
         res.status(200).json({ message: 'Coupon Applied ' })
 
 

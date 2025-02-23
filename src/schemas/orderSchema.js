@@ -85,6 +85,9 @@ const orderSchema = new mongoose.Schema({
     type:String,
     default:'',
     trim:true
+  },
+  appliedCoupon:{
+    type:String,
   }
 }, {
   timestamps: true
