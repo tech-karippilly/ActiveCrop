@@ -41,6 +41,7 @@ const CouponSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+
   applicableProducts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',

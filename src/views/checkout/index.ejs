@@ -236,8 +236,8 @@
                     <div class="card mb-4">
                         <div class="card-header">Apply Coupon</div>
                         <div class="card-body d-flex">
-                            <input type="text" class="form-control me-2" placeholder="Enter coupon code">
-                            <button class="btn btn-success">Apply</button>
+                            <input type="text" id="couponCode" class="form-control me-2" placeholder="Enter coupon code">
+                            <button class="btn btn-success" onclick="applyCoupon()">Apply</button>
                         </div>
                     </div>
 
@@ -454,6 +454,35 @@
                     alert("Error verifying payment");
                 });
         }
+
+        function applyCoupon() {
+        const couponCode = document.getElementById("couponCode").value;
+        const cartId ="<%= cart._id %>"; 
+
+        if (!couponCode) {
+            alert("Please enter a coupon code.");
+            return;
+        }
+
+        fetch(`/coupon/${couponCode}?cartId=${cartId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.message); });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert("Coupon applied successfully!");
+        window.location.reload()
+    })
+    .catch(error => {
+        alert("Failed to apply coupon: " + error.message);
+    });
+    }
 
     </script>
 

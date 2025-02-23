@@ -10,5 +10,4 @@ route.post(ADD_CART,protect,addToCart)
 route.patch(UPDATE_CART,protect,updateCart)
 route.delete(DELETE_ITEM,protect,removeItem)
 
-
 export default route

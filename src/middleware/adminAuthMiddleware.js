@@ -32,14 +32,21 @@ export const adminAuthMiddleware = async (req, res, next) => {
     }
 };
 
-export const preventLoggedInAccess = (req, res, next) => {
+export const preventLoggedInAccess =async (req, res, next) => {
     if (req.session && req.session.accessToken) {
+
         return res.redirect(ADMIN_DASHBOARD);
     }
     next();
 }
-export const protect = (req,res,next)=>{
+export const protect = async(req,res,next)=>{
     if(req.session && req.session.accessToken){
+        const access_token = req.session.accessToken
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        
+        const userId = jwtDecode.userId
+        const currentUser = await User.findById(userId)
+        req.user =currentUser
         next()
     }else{
         res.redirect('/auth/login')

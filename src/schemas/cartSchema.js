@@ -32,7 +32,8 @@ const cartItemSchema =new mongoose.Schema({
     product_name:{
         type:String,
         required:true 
-    }
+    },
+
 },
 {
     timestamps:true
@@ -64,6 +65,9 @@ const cartSchema = new mongoose.Schema({
         enum:['active','ordered','canceled'],
         default:'active'
     },
+    appliedCoupon:{
+        type:String,
+      },
 },
 {
     timestamps:true
