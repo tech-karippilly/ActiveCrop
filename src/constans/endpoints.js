@@ -112,6 +112,7 @@ export const ORDER_FAILD = '/order-failed/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'
 
 export const WHISLIST_BASE = '/whishlist'
+export const ADD_WISHLIST='/add/:id'
 
 export const USER_COUPON_BASE ='/coupon'
 export const APPLY_COUPON = '/:coupon'

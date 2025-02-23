@@ -11,7 +11,9 @@ const ObjectId = mongoose.Types.ObjectId;
 async function renderCartPage(req, res) {
     try {
         const access_token = req.session.accessToken
+       
         if (access_token) {
+           
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
@@ -67,18 +69,19 @@ async function renderCartPage(req, res) {
                 total_price = Math.max(cart.total_price - discount, 0);
             }
 
-        
-
-
-            cart.discount = discount
+            console.log("discount",discount)
+            console.log("cart",cart)
+            cart.discount = discount ?? 0
             await cart.save()
 
 
-            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart, cartLength })
+            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })
         }
-        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })
+       
+        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
     } catch (error) {
-        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })
+        console.log(error.message)
+        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
     }
 }
 

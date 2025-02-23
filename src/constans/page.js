@@ -40,6 +40,8 @@ export const USER_HOME_PAGE = 'user/home/homePage'
 export const USER_PRODUCT_PAGE = 'user/products/products'
 export const USER_PRODUCT_DETAILS_PAGE = 'user/products/productDetails'
 
+export const USER_WISHLIST ='user/whishlist/index'
+
 export const USER_PROFILE_PAGE = 'user/profile/index'
 export const USER_PASSWORD_REST_PAGE = 'user/profile/password'
 export const USER_ORDER_PAGE= 'user/profile/orders/index'
