@@ -41,14 +41,15 @@ async function renderEditPage(req, res) {
 async function editProductOffer(req, res) {
     try {
         const { id } = req.params
-        const { offer_type, discountValue, min_quantity, max_discount } = req.body;
-
+        const { offer_type, discountValue, min_quantity, max_discount,valid_from,valid_until } = req.body;
         const existingOffer = await ProductOffer.findById(id)
 
         existingOffer.offer_type = offer_type ?? existingOffer.offer_type;
         existingOffer.discountValue = discountValue ?? existingOffer.discountValue;
         existingOffer.min_quantity = min_quantity ?? existingOffer.min_quantity;
         existingOffer.max_discount = max_discount ?? existingOffer.max_discount;
+        existingOffer.valid_from = valid_from ??  existingOffer.valid_from;
+        existingOffer.valid_until = valid_until ?? existingOffer.valid_until;
 
         await existingOffer.save();
         res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success', redirect: '/admin/offers', offer: existingOffer, });
