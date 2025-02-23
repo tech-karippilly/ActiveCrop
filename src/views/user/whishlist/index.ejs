@@ -142,41 +142,52 @@
         <section class="main-container">
             <div class="wishlist-section">
                 <h2 class="text-start mb-4">💖 Your Wishlist</h2>
-        
+
                 <div id="wishlist-content">
                     <div class="row" id="wishlist-items">
-                        <% if(wishlist && wishlist.items.length > 0) { %>
-                            <% wishlist.items.forEach(function(item, index) { %>
+                        <% if (whishlist && whishlist[0].items && whishlist[0].items.length> 0) { %>
+                            <% whishlist[0].items.forEach(function(item, index) { %>
                                 <div class="col-md-8">
-                                    <div class="card mb-3 shadow-sm position-relative d-flex" style="height: 15vh; overflow: hidden;">
+                                    <div class="card mb-3 shadow-sm position-relative d-flex"
+                                        style="height: 15vh; overflow: hidden;">
                                         <div class="row g-0 align-items-center p-2 h-100 d-flex flex-nowrap">
-                                            <div class="col-md-3 d-flex justify-content-center align-items-center h-100">
-                                                <img src="/<%= item.product_image %>" class="img-fluid rounded h-100 object-fit-contain" alt="Product Image">
+                                            <div
+                                                class="col-md-3 d-flex justify-content-center align-items-center h-100">
+                                                <img src="/<%= item.product_image %>"
+                                                    class="img-fluid rounded h-100 object-fit-contain"
+                                                    alt="Product Image">
                                             </div>
                                             <div class="col-md-6 d-flex flex-column justify-content-center">
-                                                <h5 class="card-title mb-1"><%= item.product_name %></h5>
-                                                <p class="text-muted mb-1">Price: ₹<%= item.price %></p>
+                                                <h5 class="card-title mb-1">
+                                                    <%= item.product_name %>
+                                                </h5>
+                                                <p class="text-muted mb-1">Price: ₹<%= item.priceAtPurchase %>
+                                                </p>
                                             </div>
                                             <div class="col-md-3 text-end d-flex flex-column align-items-end">
-                                                <button class="btn btn-success btn-sm mb-2" onclick="moveToCart('<%= item.product_id %>')">Move to Cart</button>
-                                                <button class="btn btn-danger btn-sm" onclick="removeFromWishlist('<%= item.product_id %>')">Remove</button>
+                                                <button class="btn btn-success btn-sm mb-2"
+                                                    onclick="moveToCart('<%= item.product_id %>',1)">Move to Cart</button>
+                                                <button class="btn btn-danger btn-sm"
+                                                    onclick="removeFromWishlist('<%= item.product_id %>')">Remove</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            <% }) %>
-                        <% } else { %>
-                            <div id="empty-wishlist" class="text-center py-5">
-                                <h4>Your Wishlist is Empty!</h4>
-                                <p class="text-muted">Looks like you haven’t added anything to your wishlist yet.</p>
-                                <a href="/" class="btn btn-primary">Continue Shopping</a>
-                            </div>
-                        <% } %>
+                                <% }) %>
+                                    <% } else { %>
+                                        <div id="empty-wishlist" class="text-center py-5">
+                                            <h4>Your Wishlist is Empty!</h4>
+                                            <p class="text-muted">Looks like you haven’t added anything to your wishlist
+                                                yet.</p>
+                                            <a href="/" class="btn btn-primary">Continue Shopping</a>
+                                        </div>
+                                        <% } %>
                     </div>
+
                 </div>
             </div>
         </section>
-        
+
 
 
         <section class="footer-section">
@@ -239,43 +250,52 @@
     </main>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('/user/wishlist/get-wishlist')
-        .then(response => response.json())
-        .then(data => {
-            if (data.wishlist) {
-                renderWishlistItems(data.wishlist);
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/user/wishlist/get-wishlist')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.wishlist) {
+                        renderWishlistItems(data.wishlist);
+                    }
+                });
         });
-});
 
-function removeFromWishlist(productId) {
-    fetch(`/user/wishlist/delete/${productId}`, {
-        method: 'DELETE'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.wishlist) {
-            window.location.reload();
+        function removeFromWishlist(productId) {
+            fetch(`/user/wishlist/delete/${productId}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.wishlist) {
+                        window.location.reload();
+                    }
+                });
         }
-    });
-}
 
-function moveToCart(productId) {
-    fetch('/user/wishlist/move-to-cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: productId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.reload();
-        } else {
-            alert('Failed to move item to cart');
+        function moveToCart(productId) {
+            fetch('/user/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, quantity: 1 })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cart) {
+                        alertMessage.innerHTML = 'Added to Cart'
+                        alertMessage.classList.add('alert-success')
+                        setTimeout(() => {
+                            alertMessage.innerHTML = ''
+                            alertMessage.classList.remove('alert-success')
+                            window.location.reload()
+                        }, 2000)
+                    }
+
+                })
+                .catch(error => {
+                })
         }
-    });
-}
 
     </script>
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
