@@ -51,8 +51,8 @@ export const ADMIN_OFFER_REFERAL_UPDATE='/referal-update/:id'
 export const ADMIN_OFFER_REFERAL_DELETE='/referal-delete/:id'
 
 export const ADMIN_COUPON_BASE='/admin/coupons'
-export const ADMIN_COUPON_CREATE='/admin/coupons/create'
-export const ADMIN_COUPON_DYNAMIC='/admin/coupons/:id'
+export const ADMIN_COUPON_CREATE='/create'
+export const ADMIN_COUPON_DYNAMIC='/:id'
 
 
 export const USER_AUTH_BASE ='/auth'
