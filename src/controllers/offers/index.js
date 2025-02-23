@@ -1,12 +1,12 @@
 import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
 import { ADMIN_OFFERS_CATAGOERY_CREATE, ADMIN_OFFERS_CATAGOERY_UPDATE, ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
-import { Categoery, CategoryOffer, Product, productOffer, ReferralOffer } from "../../models/index.js"
+import { Categoery, CategoryOffer, Product, ProductOffer, ReferralOffer } from "../../models/index.js"
 
 
 async function renderOfferPage(req, res) {
     try {
         const catagoeryOffers = await CategoryOffer.find()
-        const products = await productOffer.find()
+        const products = await ProductOffer.find()
         const referal = await ReferralOffer.find()
         res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products,referal });
     } catch (error) {
@@ -28,7 +28,7 @@ async function renderCreatePage(req, res) {
 async function renderEditPage(req, res) {
     try {
         const { id } = req.params
-        const existingOffer = await productOffer.findById(id)
+        const existingOffer = await ProductOffer.findById(id)
         const catagoery = await Categoery.find()
         const offerTypes = ['percentage', 'flat_discount'];
         const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
@@ -43,7 +43,7 @@ async function editProductOffer(req, res) {
         const { id } = req.params
         const { offer_type, discountValue, min_quantity, max_discount } = req.body;
 
-        const existingOffer = await productOffer.findById(id)
+        const existingOffer = await ProductOffer.findById(id)
 
         existingOffer.offer_type = offer_type ?? existingOffer.offer_type;
         existingOffer.discountValue = discountValue ?? existingOffer.discountValue;
@@ -61,7 +61,7 @@ async function editProductOffer(req, res) {
 async function deleteProductOffer(req, res) {
     try {
         const { id } = req.params
-        const existingOffer = await productOffer.findOneAndDelete({ _id: id });
+        const existingOffer = await ProductOffer.findOneAndDelete({ _id: id });
 
         if (!existingOffer) {
             return res.status(404).json({ message: "Offer not found" });
@@ -83,7 +83,7 @@ async function createProductOffer(req, res) {
             return res.status(404).json({ message: "Product not found", alertType: "alert-danger" });
         }
 
-        const existingOffer = await productOffer.findOne({
+        const existingOffer = await ProductOffer.findOne({
             "product._id": productId,
             valid_until: { $gte: new Date() }
         });
@@ -97,7 +97,7 @@ async function createProductOffer(req, res) {
             _id: product._id,
         };
 
-        const offer = new productOffer({
+        const offer = new ProductOffer({
             product: productDetails,
             offer_type,
             discountValue: Number(discountValue),

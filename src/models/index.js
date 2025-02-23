@@ -9,7 +9,7 @@ import reviewSchema from "../schemas/reviewSchema.js";
 import addressSchema from "../schemas/addressSchema.js";
 import cartSchema from "../schemas/cartSchema.js";
 import orderSchema from "../schemas/orderSchema.js";
-import { categoryOfferSchema, productOfferSchema } from "../schemas/offerSchema.js";
+import { categoryOfferSchema, ProductOfferSchema } from "../schemas/offerSchema.js";
 import ReferalofferSchema from "../schemas/referalOfferSchema.js";
 import WhishlistSchema from "../schemas/whishlistSchema.js";
 import CouponSchema from "../schemas/CouponSchema.js";
@@ -24,7 +24,7 @@ const Review = mongoose.model('Reviews',reviewSchema)
 const Address = mongoose.model('Address',addressSchema)
 const Cart = mongoose.model('Cart',cartSchema)
 const Order = mongoose.model('Order',orderSchema)
-const productOffer = mongoose.model("ProductOffer",productOfferSchema)
+const ProductOffer = mongoose.model("ProductOffer",ProductOfferSchema)
 const CategoryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
 const ReferralOffer = mongoose.model("ReferralOffer", ReferalofferSchema);
 const Whishlist = mongoose.model("Whishlist",WhishlistSchema)
@@ -40,7 +40,7 @@ export {
     Address,
     Cart,
     Order,
-    productOffer,
+    ProductOffer,
     CategoryOffer,
     ReferralOffer,
     Whishlist,

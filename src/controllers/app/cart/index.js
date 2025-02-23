@@ -1,8 +1,10 @@
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../constans/httpStatus.js";
 import { CHECKOUT_PAGE, USER_CART_PAGE } from "../../../constans/page.js";
 import jwt from 'jsonwebtoken'
-import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js";
+import { Address, Cart, Categoery, Order, Product, ProductOffer, User } from "../../../models/index.js";
 import mongoose from 'mongoose';
+import { appyOfferPrice } from "../../../utils/helperfunction.js";
+import moment from "moment";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -13,12 +15,44 @@ async function renderCartPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
+            const offers = await ProductOffer.find()
             const cart = await Cart.findOne({ user_id: userId, status: 'active' })
-            let cartLength = 0
+            let cartLength = 0;
+            let discount = 0;
+            let total_price = cart ? cart.total_price : 0;
+
             if (cart && cart.items) {
                 cartLength = cart.items.length;
+                cart.items.forEach(item=>{
+                    console.log("item",item)
+                    const offer = offers.find(offersItems =>
+                        offersItems.product._id.equals(item.product_id) &&
+                        item.quantity >= offersItems.min_quantity
+                    );
+                    console.log("offer",offer)
+                    if (offer){
+                        const price = appyOfferPrice(item.priceAtPurchanse,offer.discountValue,offer.offer_type)
+                        const discountPrice = Number(item.priceAtPurchanse) - price
+                        console.log("price",price)
+                        console.log("discountPrice",discountPrice)
+                        discount += discountPrice;
+                    }
+                  
+
+                })
+                total_price = Math.max(cart.total_price - discount, 0);
             }
-           
+
+            console.log('total_price',total_price)
+            console.log('discount',discount)
+
+            console.log('cart',cart)
+            cart.discount = discount
+            cart.total_price = total_price
+            await cart.save()
+            // moment(offersItems.valid_from).isSameOrBefore(moment()) &&
+            // moment(offersItems.valid_until).isSameOrAfter(moment()) &&
+        
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart, cartLength })
         }
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })
@@ -65,7 +99,7 @@ async function addToCart(req, res) {
             } else {
 
 
-                cart.items.push({ product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity,offer_price:product.offer_price });
+                cart.items.push({ product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity, offer_price: product.offer_price });
             }
 
             await cart.save();
