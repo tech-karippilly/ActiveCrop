@@ -7,9 +7,9 @@ function generateReceiptNumber(prefix = "REC", length = 10) {
 
 function applyOffers(productList, offers) {
     const newProductList = productList.map((product) => {
-        const productOffer = offers.find((offer) => offer.product._id.equals(product._id));
-        if (productOffer) {
-            const value = appyOfferPrice(product.price, productOffer.discountValue, productOffer.offer_type)
+        const ProductOffer = offers.find((offer) => offer.product._id.equals(product._id));
+        if (ProductOffer) {
+            const value = appyOfferPrice(product.price, ProductOffer.discountValue, ProductOffer.offer_type)
             return {
                 ...product._doc,
                 offerprice: `${value}`

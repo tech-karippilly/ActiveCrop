@@ -1,3 +1,4 @@
+import { ADMIN_OFFERS_CATAGOERY_CREATE, ADMIN_OFFERS_CATAGOERY_UPDATE } from "../../../constans/page.js";
 import { Categoery, CategoryOffer } from "../../../models/index.js";
 
 async function rendercreateCategoryPage(req,res){

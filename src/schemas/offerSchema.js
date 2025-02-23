@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const productOfferSchema = new Schema({
+const ProductOfferSchema = new Schema({
     product: {
         product_name: {
             type: String,
@@ -78,4 +78,4 @@ const categoryOfferSchema = new Schema({
 });
 
 
-export { categoryOfferSchema, productOfferSchema };
+export { categoryOfferSchema, ProductOfferSchema };

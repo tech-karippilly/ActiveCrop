@@ -211,13 +211,20 @@
 
                                         <strong>Shpping:</strong>
                                         <span>
-                                            100
+                                            <%= cart.shipping %>
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+
+                                        <strong>Discount:</strong>
+                                        <span>
+                                            <%= cart.discount %>
                                         </span>
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <strong>Total Price:</strong>
                                         <span>
-                                            <%= cart.total_price + 100%>
+                                            <%= cart.total_price %>
                                         </span>
                                     </div>
                                 </div>

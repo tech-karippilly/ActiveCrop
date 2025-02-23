@@ -1,8 +1,10 @@
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../constans/httpStatus.js";
 import { CHECKOUT_PAGE, USER_CART_PAGE } from "../../../constans/page.js";
 import jwt from 'jsonwebtoken'
-import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js";
+import { Address, Cart, Categoery, CategoryOffer, Order, Product, ProductOffer, User } from "../../../models/index.js";
 import mongoose from 'mongoose';
+import { appyOfferPrice } from "../../../utils/helperfunction.js";
+import moment from "moment";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -13,12 +15,65 @@ async function renderCartPage(req, res) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
+            const offers = await ProductOffer.find()
+            const catagoeryOffer = await CategoryOffer.find()
             const cart = await Cart.findOne({ user_id: userId, status: 'active' })
-            let cartLength = 0
+            let cartLength = 0;
+            let discount = 0;
+            let productDiscount = 0;
+            let catagoeryDiscount = 0;
+            let total_price = cart ? cart.total_price : 0;
+
             if (cart && cart.items) {
                 cartLength = cart.items.length;
+                cart.items.forEach(item => {
+                    const offer = offers.find(offersItems =>
+                        offersItems.product._id.equals(item.product_id) &&
+                        moment(offersItems.valid_from).isSameOrBefore(moment()) &&
+                        moment(offersItems.valid_until).isSameOrAfter(moment()) &&
+                        item.quantity >= offersItems.min_quantity
+                    );
+
+                    const cataOffer = catagoeryOffer.find(offersItems=>
+                        offersItems.category.id.equals(item.catagoery_id)&&
+                        moment(offersItems.valid_from).isSameOrBefore(moment())&&
+                        moment(offersItems.valid_until).isSameOrAfter(moment())&&
+                        item.quantity >= offersItems.min_quantity
+                    )
+                    
+                    if (cataOffer){
+                        const price = appyOfferPrice(item.priceAtPurchanse, cataOffer.discountValue, cataOffer.offer_type)
+                        const discountPrice = Number(item.priceAtPurchanse) - price
+                        catagoeryDiscount +=discountPrice
+                    }
+
+                    if (offer) {
+                        const price = appyOfferPrice(item.priceAtPurchanse, offer.discountValue, offer.offer_type)
+                        const discountPrice = Number(item.priceAtPurchanse) - price
+                        productDiscount += discountPrice;
+                    }
+
+                    productDiscount *= item.quantity
+                })
+
+                if (productDiscount > 0){
+                    console.log('product discount applyed')
+                    discount = productDiscount
+                }else if (catagoeryDiscount>0){
+                    console.log('cata discount applyed')
+                    discount = catagoeryDiscount
+                }
+                
+                total_price = Math.max(cart.total_price - discount, 0);
             }
-           
+
+        
+
+
+            cart.discount = discount
+            await cart.save()
+
+
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart, cartLength })
         }
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })
@@ -65,7 +120,7 @@ async function addToCart(req, res) {
             } else {
 
 
-                cart.items.push({ product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity,offer_price:product.offer_price });
+                cart.items.push({ catagoery_id:product.catagoery_id, product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity, offer_price: product.offer_price });
             }
 
             await cart.save();
