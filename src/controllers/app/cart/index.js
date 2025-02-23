@@ -23,36 +23,32 @@ async function renderCartPage(req, res) {
 
             if (cart && cart.items) {
                 cartLength = cart.items.length;
-                cart.items.forEach(item=>{
-                    console.log("item",item)
+                cart.items.forEach(item => {
                     const offer = offers.find(offersItems =>
                         offersItems.product._id.equals(item.product_id) &&
+                        moment(offersItems.valid_from).isSameOrBefore(moment()) &&
+                        moment(offersItems.valid_until).isSameOrAfter(moment()) &&
                         item.quantity >= offersItems.min_quantity
                     );
-                    console.log("offer",offer)
-                    if (offer){
-                        const price = appyOfferPrice(item.priceAtPurchanse,offer.discountValue,offer.offer_type)
+                    if (offer) {
+                        const price = appyOfferPrice(item.priceAtPurchanse, offer.discountValue, offer.offer_type)
                         const discountPrice = Number(item.priceAtPurchanse) - price
-                        console.log("price",price)
-                        console.log("discountPrice",discountPrice)
                         discount += discountPrice;
                     }
-                  
-
+                    discount *= item.quantity
                 })
+
+                console.log("cart.total_price", cart.total_price)
+                console.log("discount", discount)
+
                 total_price = Math.max(cart.total_price - discount, 0);
             }
 
-            console.log('total_price',total_price)
-            console.log('discount',discount)
 
-            console.log('cart',cart)
             cart.discount = discount
-            cart.total_price = total_price
             await cart.save()
-            // moment(offersItems.valid_from).isSameOrBefore(moment()) &&
-            // moment(offersItems.valid_until).isSameOrAfter(moment()) &&
-        
+
+
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart, cartLength })
         }
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {}, cartLength: 0 })

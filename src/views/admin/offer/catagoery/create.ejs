@@ -159,7 +159,7 @@
             let validFrom = document.getElementById('validFrom').value;
             let validUntil = document.getElementById('validUntil').value;
 
-            if (!['percentage', 'flat'].includes(offerType)) {
+            if (!['percentage', 'flat_discount'].includes(offerType)) {
                 document.getElementById('offerType').classList.add('is-invalid');
                 isValid = false;
             } else {

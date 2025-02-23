@@ -64,9 +64,10 @@ const cartSchema = new mongoose.Schema({
     timestamps:true
 })
 
-// cartSchema.pre('save', function (next) {
-//     this.total_price = this.items.reduce((acc, item) => acc + item.priceAtPurchanse * item.quantity, 0);
-//     next();
-// });
+cartSchema.pre('save', function (next) {
+    this.total_price = this.items.reduce((acc, item) => acc + item.priceAtPurchanse * item.quantity, 0);
+    this.total_price = Math.max(0, this.total_price - this.discount  + this.shipping);
+    next();
+});
 
 export default cartSchema

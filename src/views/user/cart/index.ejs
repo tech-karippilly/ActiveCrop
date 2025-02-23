@@ -234,8 +234,8 @@
                                                         <h4>Order Summary</h4>
                                                         <hr>
                                                         <div class="d-flex justify-content-between">
-                                                            <span>Subtotal:</span>
-                                                            <strong>₹<%= cart.total_price %></strong>
+                                                            <span>Total Item Price:</span>
+                                                            <strong>₹<%= cart.total_price - cart.shipping - cart.discount %></strong>
                                                         </div>
                                                         <div class="d-flex justify-content-between">
                                                             <span>Shipping:</span>
