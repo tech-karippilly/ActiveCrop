@@ -168,7 +168,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 text-end d-flex align-items-center justify-content-end">
-                                                    <button class="btn btn-outline-danger btn-sm me-2 wishlist-btn" onclick="addToWishlist('<%= items.product_id %>')">
+                                                    <button class="btn btn-outline-danger btn-sm me-2 wishlist-btn" onclick="addToWishlist('<%= items.product_id %>','<%= items.quantity %>')">
                                                         <i class="fa fa-heart"></i> Wishlist
                                                     </button>
                                                     <button class="btn btn-danger btn-sm">Remove</button>
@@ -189,7 +189,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 text-end d-flex align-items-center justify-content-end">
-                                                    <button class="btn btn-outline-danger btn-sm me-2 wishlist-btn" onclick="addToWishlist('<%= items.product_id %>')">
+                                                    <button class="btn btn-outline-danger btn-sm me-2 wishlist-btn" onclick="addToWishlist('<%= items.product_id %>','<%= items.quantity %>')">
                                                         <i class="fa fa-heart"></i> Wishlist
                                                     </button>
                                                     <button class="btn btn-danger btn-sm" onclick="removeItem('<%= items.product_id %>')">Remove</button>
@@ -388,8 +388,8 @@
             window.location.href = '/orders/checkout'
         }
 
-        function addToWishlist(productId) {
-        fetch(`/whishlist/add/${productId}`,)
+        function addToWishlist(productId,quantity) {
+        fetch(`/whishlist/add/${productId}/${quantity}`,)
         .then(response => response.json())
         .then(data => {
             if (data.wishlist){

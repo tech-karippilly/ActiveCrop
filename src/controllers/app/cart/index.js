@@ -70,6 +70,7 @@ async function renderCartPage(req, res) {
             cart.discount = discount ?? 0
             await cart.save()
 
+            console.log(cart)
 
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })
         }
