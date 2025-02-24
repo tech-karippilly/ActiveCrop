@@ -129,11 +129,17 @@
 
                     <!-- Cart Icon with Badge -->
                     <div class="position-relative">
-                        <i class="fa fa-shopping-cart fa-2x text-secondary"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            <%= cartLength %>
-                                <span class="visually-hidden">unread messages</span>
-                        </span>
+                        <div class="position-relative">
+                            <i class="fa fa-shopping-cart fa-2x text-secondary" onClick="onCartClick()"></i>
+                            <% if(isLogin){ %>
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <%=cartLength%>
+                                        <span class="visually-hidden">unread messages</span>
+                                </span>
+                                <% } %>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -145,8 +151,8 @@
 
                 <div id="wishlist-content">
                     <div class="row" id="wishlist-items">
-                        <% if (whishlist && whishlist[0].items && whishlist[0].items.length> 0) { %>
-                            <% whishlist[0].items.forEach(function(item, index) { %>
+                        <% if (wishlist && wishlist.items.length> 0) { %>
+                            <% wishlist.items.forEach(function(item, index) { %>
                                 <div class="col-md-8">
                                     <div class="card mb-3 shadow-sm position-relative d-flex"
                                         style="height: 15vh; overflow: hidden;">
@@ -166,7 +172,8 @@
                                             </div>
                                             <div class="col-md-3 text-end d-flex flex-column align-items-end">
                                                 <button class="btn btn-success btn-sm mb-2"
-                                                    onclick="moveToCart('<%= item.product_id %>',1)">Move to Cart</button>
+                                                    onclick="moveToCart('<%= wishlist._id %>','<%= item.product_id %>')">Move
+                                                    to Cart</button>
                                                 <button class="btn btn-danger btn-sm"
                                                     onclick="removeFromWishlist('<%= item.product_id %>')">Remove</button>
                                             </div>
@@ -250,6 +257,14 @@
     </main>
 
     <script>
+        function onCartClick() {
+            const isLoggedIn = '<%= isLogin %>' === 'true'
+            if (isLoggedIn) {
+                window.location.href = '/user/cart'
+            } else {
+                window.location.href = '/auth/login'
+            }
+        }
         document.addEventListener('DOMContentLoaded', function () {
             fetch('/user/wishlist/get-wishlist')
                 .then(response => response.json())
@@ -261,7 +276,7 @@
         });
 
         function removeFromWishlist(productId) {
-            fetch(`/user/wishlist/delete/${productId}`, {
+            fetch(`/whishlist/${productId}`, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -272,17 +287,14 @@
                 });
         }
 
-        function moveToCart(productId) {
-            fetch('/user/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId, quantity: 1 })
+        function moveToCart(wishlist, productId) {
+            fetch(`/whishlist/move-to-cart/${wishlist}/${productId}`, {
             })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     if (data.cart) {
+                        window.location.reload()
                         alertMessage.innerHTML = 'Added to Cart'
                         alertMessage.classList.add('alert-success')
                         setTimeout(() => {

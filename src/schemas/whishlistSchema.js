@@ -8,7 +8,8 @@ const WishlistItemSchema = new mongoose.Schema({
     priceAtPurchase: { type: Number, required: true },
     product_image: { type: String, required: true },
     product_stock: { type: Number, required: true },
-    offer_price: { type: Number }
+    offer_price: { type: Number },
+    quantity:{type:Number,required:true}
 });
 
 const WhishlistSchema = new mongoose.Schema({
