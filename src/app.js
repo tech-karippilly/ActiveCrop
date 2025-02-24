@@ -90,6 +90,7 @@ app.use(ADMIN_OFFERS_BASE,offerRoutes)
 app.use(ADMIN_COUPON_BASE,couponRoutes)
 app.use(ADMIN_REPORT_BASE,reportRoutes)
 
+
 //USER ROUTES
 app.use(USER_LOGIN_BASE, userRoute)
 app.use(USER_OTP_BASE, otpRoute)
