@@ -1,3 +1,4 @@
+export const NOT_FOUNT_PAGE='notFound'
 export const ADMIN_LOGIN_PAGE = 'admin/auth/loginPage'
 export const ADMIN_SIGNUP_PAGE ='admin/auth/signupPage'
 
@@ -60,3 +61,4 @@ export const CHECKOUT_PAGE = 'checkout/index'
 
 export const ORDER_SUCCESS_PAGE = 'user/profile/orders/order-success'
 export const ORDER_FAILD_PAGE = 'user/profile/orders/order-failed'
+
