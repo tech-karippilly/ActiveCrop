@@ -114,6 +114,7 @@ export const ORDER_CANCEL = '/order-cancel/:id'
 export const WHISLIST_BASE = '/whishlist'
 export const ADD_WISHLIST='/add/:id/:quantity'
 export const TO_CART ='/move-to-cart/:id/:productId'
+export const WHISHLIST_REMOVE = '/:id'
 
 export const USER_COUPON_BASE ='/coupon'
 export const APPLY_COUPON = '/:coupon'

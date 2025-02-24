@@ -276,7 +276,7 @@
         });
 
         function removeFromWishlist(productId) {
-            fetch(`/user/wishlist/delete/${productId}`, {
+            fetch(`/whishlist/${productId}`, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
