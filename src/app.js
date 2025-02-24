@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import passport from 'passport'
 import cors from 'cors'
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ import reportRoutes from './routes/reports/index.js'
 import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WHISLIST_BASE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 import { NOT_FOUNT_PAGE } from "./constans/page.js";
+
 
 const app = express()
 
@@ -83,7 +85,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //     console.log('working')
 //     res.status(404).render(NOT_FOUNT_PAGE)
 // })
-
+app.use(morgan('dev'));
 // ADMIN ROUTES
 app.use(ADMIN_AUTH_BASE, adiminAuthRoute)
 app.use('/api/admin/role', roleAuth)
