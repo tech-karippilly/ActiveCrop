@@ -22,46 +22,113 @@
 
 <body>
 
-    <div class="contianer-fluid ">
-        <section class="side-bar">
-            <div class="side-bar-heading">
-                <h1>ADMIN</h1>
-            </div>
-            <div class="side-bar-menu" id="menuId">
-                <div class="link-container">
-                    <a href="/admin/dashboard" class="link-text-active">Dashboard</a>
+    <div class="contianer-fluid " style="overflow-x: hidden;">
+        <div class="row">
+            <section class="side-bar col-3">
+                <div class="side-bar-heading">
+                    <h1>ADMIN</h1>
                 </div>
-                <div class="link-container">
-                    <a href="/admin/catagoery" class="link-text">Categoery</a>
+                <div class="side-bar-menu" id="menuId">
+                    <div class="link-container">
+                        <a href="/admin/dashboard" class="link-text-active">Dashboard</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/catagoery" class="link-text">Categoery</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/products" class="link-text">Products</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/customers" class="link-text">Customers</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/orders" class="link-text">Orders</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/offers" class="link-text">Offers</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/coupons" class="link-text">Coupons</a>
+                    </div>
+    
+                    <div class="link-container">
+                        <a href="#" class="link-text">Banner</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="#" class="link-text">Transactions</a>
+                    </div>
+                    <div class="link-container">
+                        <a onclick="logoutUser()" class="button-link">Logout</a>
+                    </div>
                 </div>
-                <div class="link-container">
-                    <a href="/admin/products" class="link-text">Products</a>
+            </section>
+            <section class="container-section  col-9">
+                <div class="container-fluid mt-5">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card text-white bg-primary mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Orders</h5>
+                                    <p class="card-text display-6">
+                                        <i class="fas fa-shopping-cart"></i> 
+                                        <%= totalOrders.length > 0 ? totalOrders[0].totalOrders : 0 %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card text-white bg-warning mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Pending Orders</h5>
+                                    <p class="card-text display-6">
+                                        <i class="fas fa-hourglass-half"></i> 
+                                        <%= pendingOrders.length > 0 ? pendingOrders[0].totalOrders : 0 %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div class="card text-white bg-success mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Successful Orders</h5>
+                                    <p class="card-text display-6">
+                                        <i class="fas fa-check-circle"></i> 
+                                        <%= successOrders.length > 0 ? successOrders[0].totalOrders : 0 %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-3">
+                            <div class="card text-white bg-danger mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Amount</h5>
+                                    <p class="card-text display-6">
+                                        <i class="fas fa-dollar-sign"></i> 
+                                        <%= totalAmount.length > 0 ? totalAmount[0].totalAmount.toFixed(2) : '0.00' %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-3">
+                            <div class="card text-white bg-info mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Discount</h5>
+                                    <p class="card-text display-6">
+                                        <i class="fas fa-tags"></i> 
+                                        <%= totalDiscoutAmount.length > 0 ? totalDiscoutAmount[0].discount.toFixed(2) : '0.00' %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="link-container">
-                    <a href="/admin/customers" class="link-text">Customers</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/orders" class="link-text">Orders</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/offers" class="link-text">Offers</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/coupons" class="link-text">Coupons</a>
-                </div>
+            </section>
+        </div>
 
-                <div class="link-container">
-                    <a href="#" class="link-text">Banner</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Transactions</a>
-                </div>
-                <div class="link-container">
-                    <a onclick="logoutUser()" class="button-link">Logout</a>
-                </div>
-            </div>
-        </section>
-        <section class="container-section"></section>
     </div>
 
 
