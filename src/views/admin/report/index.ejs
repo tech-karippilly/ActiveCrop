@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Dashboard</title>
+    <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
+
+    <link href="/public/styles/dashboard.css" rel="stylesheet" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        #reportContainer {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contianer-fluid " style="overflow-x: hidden;">
+        <div class="row">
+            <section class="side-bar col-3">
+                <div class="side-bar-heading">
+                    <h1>ADMIN</h1>
+                </div>
+                <div class="side-bar-menu" id="menuId">
+                    <div class="link-container">
+                        <a href="/admin/dashboard" class="link-text">Dashboard</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/catagoery" class="link-text">Categoery</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/products" class="link-text">Products</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/customers" class="link-text">Customers</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/orders" class="link-text">Orders</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/offers" class="link-text">Offers</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/coupons" class="link-text">Coupons</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="/admin/report" class="link-text-active">Report</a>
+                    </div>
+
+                    <div class="link-container">
+                        <a href="#" class="link-text">Banner</a>
+                    </div>
+                    <div class="link-container">
+                        <a href="#" class="link-text">Transactions</a>
+                    </div>
+                    <div class="link-container">
+                        <a onclick="logoutUser()" class="button-link">Logout</a>
+                    </div>
+                </div>
+            </section>
+            <section class="container-section  col-9">
+                <h2 class="mb-4">Generate Report</h2>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="reportType" id="dailyReport" value="daily"
+                        checked>
+                    <label class="form-check-label" for="dailyReport">Daily Report</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="reportType" id="monthlyReport" value="monthly">
+                    <label class="form-check-label" for="monthlyReport">Monthly Report</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="reportType" id="customDateReport" value="custom">
+                    <label class="form-check-label" for="customDateReport">Custom Date Report</label>
+                </div>
+                <!-- Daily Report Input -->
+                <div id="dailyDateSelector" class="mt-3">
+                    <label for="dailyDate" class="form-label">Select Date</label>
+                    <input type="date" class="form-control" id="dailyDate">
+                </div>
+
+                <!-- Monthly Report Input -->
+                <div id="monthSelector" class="mt-3 d-none">
+                    <label for="monthInput" class="form-label">Select Month</label>
+                    <input type="month" class="form-control" id="monthInput">
+                </div>
+
+                <!-- Custom Date Range Inputs -->
+                <div id="customDateSelector" class="mt-3 d-none">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate">
+
+                    <label for="endDate" class="form-label mt-2">End Date</label>
+                    <input type="date" class="form-control" id="endDate">
+                </div>
+
+                <button id="generateReport" class="btn btn-primary mt-3" disabled>Generate Report</button>
+
+
+                <div id="reportContainer" class="mt-4 d-none">
+                    <h3>Report List</h3>
+
+                    <button id="downloadCsv" class="btn btn-success mt-2">Download as CSV</button>
+                    <button id="downloadPdf" class="btn btn-danger mt-2">Download as PDF</button>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order Number</th>
+                                <th>Order Date</th>
+                                <th>Order Price</th>
+                                <th>Discount Amount</th>
+                                <th>Coupon</th>
+                                <th>Payment Method</th>
+                                <th>Payment Status</th>
+                                <th>Delivery Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody">
+                            
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div id="noDataMessage" class="mt-4 d-none">
+                    <p class="text-danger">No reports found for the selected criteria.</p>
+                </div>
+        </div>
+        </section>
+    </div>
+
+    </div>
+
+
+    <script>
+
+        function logoutUser() {
+            fetch('/api/admin/auth/logout', {
+                method: 'GET'
+            })
+                .then((data) => {
+                    if (data.ok) {
+                        window.location.href = '/admin'
+                    }
+                }).catch(error => {
+                })
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dailyReport = document.getElementById("dailyReport");
+            const monthlyReport = document.getElementById("monthlyReport");
+            const customDateReport = document.getElementById("customDateReport");
+            const dailyDate = document.getElementById("dailyDate");
+            const dailyDateSelector = document.getElementById("dailyDateSelector");
+            const monthSelector = document.getElementById("monthSelector");
+            const customDateSelector = document.getElementById("customDateSelector");
+            const monthInput = document.getElementById("monthInput");
+            const startDate = document.getElementById("startDate");
+            const endDate = document.getElementById("endDate");
+            const generateReport = document.getElementById("generateReport");
+
+
+            function validateForm() {
+                if (dailyReport.checked && dailyDate.value) {
+                    generateReport.disabled = false;
+                } else if (monthlyReport.checked && monthInput.value) {
+                    generateReport.disabled = false;
+                } else if (customDateReport.checked && startDate.value && endDate.value && startDate.value <= endDate.value) {
+                    generateReport.disabled = false;
+                } else {
+                    generateReport.disabled = true;
+                }
+            }
+
+            function toggleInputs() {
+                dailyDateSelector.classList.toggle("d-none", !dailyReport.checked);
+                monthSelector.classList.toggle("d-none", !monthlyReport.checked);
+                customDateSelector.classList.toggle("d-none", !customDateReport.checked);
+                validateForm();
+            }
+
+
+            function generateReportApi() {
+                let reportType = document.querySelector("input[name='reportType']:checked").value;
+                let requestData = { type: reportType };
+
+                if (reportType === "daily") {
+                    requestData.date = dailyDate.value;
+                } else if (reportType === "monthly") {
+                    requestData.month = monthInput.value;
+                } else if (reportType === "custom") {
+                    requestData.startDate = startDate.value;
+                    requestData.endDate = endDate.value;
+                }
+
+                fetch('/admin/report/generate-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const reportContainer = document.getElementById("reportContainer");
+                        const noDataMessage = document.getElementById("noDataMessage");
+                        const reportTableBody = document.getElementById("reportTableBody");
+                        reportTableBody.innerHTML = "";
+
+                        if (data.report.length > 0) {
+                            data.report.forEach(report => {
+                                let row = `<tr>
+                        <td>${report.orderNumber}</td>
+                        <td>${new Date(report.createdAt).toLocaleDateString()}</td>
+                        <td>${report.totalAmount}</td>
+                        <td>${report.discount}</td>
+                        <td>${report.appliedCoupon ?? ''}</td>
+                        <td>${report.paymentMethod}</td>
+                        <td>${report.paymentStatus}</td>
+                        <td>${report.deliveryStatus}</td>
+                    </tr>`;
+                                reportTableBody.innerHTML += row;
+                            });
+                            reportContainer.classList.remove("d-none");
+                            noDataMessage.classList.add("d-none");
+                        } else {
+                            reportContainer.classList.add("d-none");
+                            noDataMessage.classList.remove("d-none");
+                        }
+                    })
+                    .catch(error => {
+                        alert("Error generating report");
+                    });
+            }
+            document.querySelectorAll("input[name='reportType']").forEach(input => {
+                input.addEventListener("change", toggleInputs);
+            });
+
+            dailyDate.addEventListener("input", validateForm);
+            monthInput.addEventListener("input", validateForm);
+            startDate.addEventListener("input", validateForm);
+            endDate.addEventListener("input", validateForm);
+            generateReport.addEventListener("click", generateReportApi);
+        });
+
+        document.getElementById("downloadCsv").addEventListener("click", function () {
+            let csvContent = "data:text/csv;charset=utf-8," +
+                "Order Number,Order Date,Order Price,Discount Amount,Coupon,Payment Method,Payment Status,Delivery Status\n";
+            document.querySelectorAll("#reportTableBody tr").forEach(row => {
+                let rowData = Array.from(row.children).map(cell => cell.innerText).join(",");
+                csvContent += rowData + "\n";
+            });
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "report.csv");
+            document.body.appendChild(link);
+            link.click();
+        });
+
+        document.getElementById("downloadPdf").addEventListener("click", function () {
+            let { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            doc.text("Report List", 20, 10);
+            let rows = [];
+            document.querySelectorAll("#reportTableBody tr").forEach(row => {
+                let rowData = Array.from(row.children).map(cell => cell.innerText);
+                rows.push(rowData);
+            });
+            doc.autoTable({ head: [["Order Number", "Order Date", "Order Price", "Discount Amount", "Coupon", "Payment Method", "Payment Status", "Delivery Status"]], body: rows });
+            doc.save("report.pdf");
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+</body>
+
+</html>
