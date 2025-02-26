@@ -32,8 +32,6 @@ async function createCoupon(req, res) {
 
     const existingCoupon = await Coupons.findOne({couponCode})
 
-    console.log("existingCoupon",existingCoupon)
-
     if(existingCoupon){
       return res.status(409).json({message:'Coupon already exists'})
     }
@@ -54,7 +52,6 @@ async function createCoupon(req, res) {
 
     res.status(201).json({ message: "Coupon Created", redirect:'/admin/coupons' })
   } catch (error) {
-    console.log(error.message)
     res.status(500).json({ message: "Internal Server Error", error: error.message })
   }
 }

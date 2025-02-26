@@ -8,10 +8,8 @@ const renderWishlist = async (req, res) => {
         const userId = req.user._id
         const wishlist = await Whishlist.findOne({ user: user._id })
         const cart = await Cart.findOne({ user_id: userId, status: 'active' })
-        console.log("whishlist", wishlist)
         res.status(200).render(USER_WISHLIST, { isLogin: user ? true : false, currentUser: user, cartLength: cart.items.length, wishlist })
     } catch (error) {
-        console.log(error.message)
         res.status(500).render(USER_WISHLIST)
     }
 }

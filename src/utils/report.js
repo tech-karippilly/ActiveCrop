@@ -27,10 +27,6 @@ const getMonthlyReportForSpecificMonth = async (monthString) => {
       const startDate = moment(monthString, "YYYY-MM").startOf("month").toDate();
       const endDate = moment(monthString, "YYYY-MM").endOf("month").toDate(); 
 
-      console.log(startDate)
-      console.log(endDate)
-      console.log(moment(monthString))
-
       const order = await Order.aggregate([
         {
           $match: {
@@ -38,8 +34,7 @@ const getMonthlyReportForSpecificMonth = async (monthString) => {
           }
         }
       ]);
-  
-      console.log(`Report for ${monthString}:`, order);
+      
       return order
     } catch (error) {
       console.error("Error generating monthly report:", error);

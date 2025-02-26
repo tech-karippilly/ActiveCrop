@@ -16,7 +16,6 @@ async function applyCoupons(req, res) {
         const { coupon } = req.params
         const { cartId } = req.query
 
-        console.log(user)
         const existingCoupon = await Coupons.findOne({ code: coupon })
 
         if (!existingCoupon) {
@@ -24,8 +23,7 @@ async function applyCoupons(req, res) {
         }
 
         const cart = await Cart.findById(cartId)
-        console.log(cart)
-
+        
         if (cart.total_price < existingCoupon.minPurchaseAmount) {
             return res.status(400).json({ message: `not satisfied to apply coupon need ${Number(existingCoupon.minPurchaseAmount) - Number(cart.total_price)} to apply coupon`, })
         }

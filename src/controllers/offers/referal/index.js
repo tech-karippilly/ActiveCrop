@@ -36,10 +36,8 @@ async function renderUpdateReferalPage(req, res) {
         
         const { id } = req.params
         const exsitingOffer = await ReferralOffer.findById(id)
-        console.log(exsitingOffer)
         res.status(200).render(ADMIN_OFFERS_REFERAL_UPDATE, { exsitingOffer })
     } catch (error) {
-        console.log(error.message)
         res.status(500).render(ADMIN_OFFERS_REFERAL_UPDATE, { exsitingOffer: {} })
     }
 }

@@ -182,7 +182,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     if (data.redirect) {
                         showAlert("successAlert", "Coupon created successfully!");
                         document.getElementById("createCouponForm").reset();

@@ -205,7 +205,6 @@
         }
 
         function deleteCataOffer(offerId){
-            console.log(offerId)
             if (confirm("Are you sure you want to delete this offer?")) {
                 fetch(`/admin/offers/delete-catagoery-offer/${offerId}`, {
                     method: 'DELETE'
