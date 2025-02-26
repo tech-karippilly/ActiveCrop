@@ -292,7 +292,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     if (data.cart) {
                         window.location.reload()
                         alertMessage.innerHTML = 'Added to Cart'
@@ -303,7 +302,6 @@
                             window.location.reload()
                         }, 2000)
                     }
-
                 })
                 .catch(error => {
                 })
