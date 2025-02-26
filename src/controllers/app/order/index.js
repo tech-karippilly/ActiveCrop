@@ -144,7 +144,6 @@ async function placeOreder(req, res) {
         }
 
     } catch (error) {
-        console.log(error.message);
         res.status(500).json({ message: 'Internal Server Error', error: error.message, alertType: 'alert-danger' });
     }
 }
@@ -153,7 +152,6 @@ async function verifyPayment(req, res) {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature ,order_id} = req.body;
 
-        console.log(req.body)
         if (order_id){
             const order = await Order.findOne({ orderNumber: order_id })
            return  res.status(400).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
@@ -173,15 +171,15 @@ async function verifyPayment(req, res) {
             order.paymentStatus = "Paid";
             await order.save();
 
-            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
+          return  res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
         } else {
             order.paymentStatus = "Failed";
-            await order.save();
+            // await order.save();
 
-            res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
+           return res.status(200).json({message:"Processing"})
+        //   return  res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
         }
     } catch (error) {
-        console.log(error.message)
         res.status(500).json({ message: 'Internal Server Error', error: error.message })
     }
 }

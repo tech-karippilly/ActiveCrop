@@ -374,8 +374,6 @@
         }
 
         function initializePayment(optionsRazorPay) {
-            console.log("optios", optionsRazorPay)
-
             const razorPayOptions = {
                 key: optionsRazorPay.key,
                 amount: optionsRazorPay.amount * 100 ,
@@ -426,7 +424,6 @@
                 var rzp = new Razorpay(razorPayOptions);
                 rzp.open();
             } catch (error) {
-                console.log(error.message)
             }
         }
 
