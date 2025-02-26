@@ -70,8 +70,8 @@ async function placeOreder(req, res) {
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
                 receipt: razorPayOrder.receipt,
-                discount:cart.discount,
-                appliedCoupon:cart.appliedCoupon
+                discount: cart.discount,
+                appliedCoupon: cart.appliedCoupon
             };
 
             const newOrder = new Order(newOrderDetails);
@@ -80,17 +80,17 @@ async function placeOreder(req, res) {
             cart.status = 'ordered';
             await cart.save();
 
-            const optionsRazorPay ={
-                key:process.env.KEY_ID,
-                amount:cart.total_price,
+            const optionsRazorPay = {
+                key: process.env.KEY_ID,
+                amount: cart.total_price,
                 currency: "INR",
                 description: "Active Corp",
-                user:{
+                user: {
                     name: user.getFullName(),
                     email: user.email || user.user,
                     contact: user.phone
                 },
-                order_id:razorPayOrder.id,
+                order_id: razorPayOrder.id,
                 redirect: `http://localhost:3000/orders/order-success/${razorPayOrder.id}`,
                 redirect: true,
             }
@@ -104,7 +104,7 @@ async function placeOreder(req, res) {
             }
             cart.status = 'ordered';
             await cart.save();
-            return res.status(200).json({ message: "Razor Pay Order Created", alertType: 'alert-success',  optionsRazorPay })
+            return res.status(200).json({ message: "Razor Pay Order Created", alertType: 'alert-success', optionsRazorPay })
 
         } else if (paymentMethod === 'cod') {
             const newOrderDetails = {
@@ -126,8 +126,8 @@ async function placeOreder(req, res) {
                 paymentStatus: 'Pending',
                 totalAmount: cart.total_price,
                 receipt: generateReceiptNumber(),
-                discount:cart.discount,
-                appliedCoupon:cart.appliedCoupon
+                discount: cart.discount,
+                appliedCoupon: cart.appliedCoupon
             };
             for (const item of cart.items) {
                 const product = await Product.findById(item.product_id)
@@ -150,11 +150,14 @@ async function placeOreder(req, res) {
 
 async function verifyPayment(req, res) {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature ,order_id} = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, order_id } = req.body;
 
-        if (order_id){
+        if (order_id) {
             const order = await Order.findOne({ orderNumber: order_id })
-           return  res.status(400).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
+            order.paymentStatus = 'Failed'
+            order.deliveryStatus = 'Cancelled'
+            await order.save()
+            return res.status(400).json({ message: 'Order failed', alertType: 'alert-danger', redirect: `/orders/order-failed/${order._id}` });
         }
 
         const hmac = crypto.createHmac("sha256", process.env.KEY_SECRETE);
@@ -164,20 +167,19 @@ async function verifyPayment(req, res) {
         const order = await Order.findOne({ orderNumber: razorpay_order_id })
 
         if (!order) {
-           return res.status(404).json({ message: 'order to found' })
+            return res.status(404).json({ message: 'order to found' })
         }
 
         if (generatedSignature === razorpay_signature) {
             order.paymentStatus = "Paid";
+            order.deliveryStatus = 'Pending'
             await order.save();
-
-          return  res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
+            return res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
         } else {
-            order.paymentStatus = "Failed";
-            // await order.save();
-
-           return res.status(200).json({message:"Processing"})
-        //   return  res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-failed/${order._id}` });
+            order.paymentStatus = 'Failed'
+            order.deliveryStatus = 'Cancelled'
+            await order.save();
+            return res.status(400).json({ message: 'Order Failed', alertType: 'alert-danger', redirect: `/orders/order-failed/${order._id}` });
         }
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message })
