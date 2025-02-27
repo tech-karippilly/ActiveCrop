@@ -8,8 +8,6 @@ export const BASE_URL = '/'
 export const DYNAMIC_ID = '/:id'
 export const LOGOUT = '/logout'
 
-
-
 export const ADMIN_DASHBOARD_BASE = '/admin/dashboard'
 
 export const ADMIN_CATAGOERY_BASE = '/admin/catagoery'
@@ -121,4 +119,6 @@ export const WHISHLIST_REMOVE = '/:id'
 
 export const USER_COUPON_BASE ='/coupon'
 export const APPLY_COUPON = '/:coupon'
+
+export const WALLET_BASE ='/wallet'
 
