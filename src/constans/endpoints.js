@@ -111,6 +111,7 @@ export const RAZORPAY_VERIFY = '/payment/verify'
 export const ORDER_SUCCESS = '/order-success/:id'
 export const ORDER_FAILD = '/order-failed/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'
+export const ORDER_RETRY = '/order-retry/:id'
 
 export const WHISLIST_BASE = '/whishlist'
 export const ADD_WISHLIST='/add/:id/:quantity'
