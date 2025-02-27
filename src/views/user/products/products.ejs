@@ -88,7 +88,7 @@
                                                 <div class="col">
                                                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                                 </div>
-                                                <div class="col">
+                                                <div class="col" onclick="window.location.href='/auth/logout'">
                                                     Logout
                                                 </div>
                                             </div>
@@ -258,6 +258,7 @@
                     <% } %>
                 </div>
             </div>
+
         </section>
 
 
@@ -369,12 +370,12 @@
                     productContainer.innerHTML = '';
                     data.products.forEach(product => {
                         const productCard = `
-            <div class="col-md-4">
-                <div class="card product-card text-center" onclick="handleCardClick('${product._id}')">
-                    <div class="image-container">
-                        <img src="/${product.images[0]}" class="card-img-top product-image" alt="${product.product_name}">
+            <div class="col-md-3 col-sm-6 col-12 p-2">
+                <div class="card product-card text-center shadow-sm" style="max-width: 250px; font-size: 14px;" onclick="handleCardClick('${product._id}')">
+                    <div class="image-container" style="height: 150px; overflow: hidden;">
+                        <img src="/${product.images[0]}" class="card-img-top product-image" style="width: 100%; height: 100%; object-fit:fill" alt="${product.product_name}">
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-2">
                         <h5 class="card-title fw-bold">${product.product_name}</h5>
                         <p class="card-text description">${product.description}</p>
                         <div class="d-flex justify-content-between align-items-center">

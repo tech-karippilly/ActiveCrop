@@ -152,7 +152,7 @@
                                 onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action">
+                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>
@@ -331,6 +331,11 @@
     </mian>
 
     <script>
+
+        let cropper;
+        const alertBox = document.getElementById('alert-box')
+        const alertMessage = document.getElementById('alert')
+        const imageEditIcon = document.getElementById('edit-icon')
 
         document.getElementById('imageUpload').addEventListener('change', function (event) {
             const file = event.target.files[0]; 
