@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import passport from 'passport'
 import cors from 'cors'
+import swaggerUi from 'swagger-ui-express'
 
 dotenv.config();
 
@@ -31,9 +32,12 @@ import couponRoutes from './routes/coupon/index.js'
 import userCouponRoutes from './routes/app/coupon/index.js'
 import reportRoutes from './routes/reports/index.js'
 
+
 import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WHISLIST_BASE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 import { NOT_FOUNT_PAGE } from "./constans/page.js";
+import swaggerSpec from "./utils/swagger.js";
+import swaggerDocument from "./utils/swaggerDocuments.js";
 
 const app = express()
 
@@ -84,7 +88,17 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //     res.status(404).render(NOT_FOUNT_PAGE)
 // })
 
+// SWAGGER DOCS
+const combinedSwaggerSpec = {
+    ...swaggerSpec,
+    ...swaggerDocument
+ }
+
+app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(combinedSwaggerSpec))
+
 // ADMIN ROUTES
+
+
 app.use(ADMIN_AUTH_BASE, adiminAuthRoute)
 app.use('/api/admin/role', roleAuth)
 app.use('/admin/dashboard',dashboardRoute)

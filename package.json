@@ -30,7 +30,9 @@
     "passport": "^0.7.0",
     "passport-google-oidc": "^0.1.0",
     "razorpay": "^2.9.5",
-    "save": "^2.9.0"
+    "save": "^2.9.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
