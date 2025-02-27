@@ -13,6 +13,7 @@ import { categoryOfferSchema, ProductOfferSchema } from "../schemas/offerSchema.
 import ReferalofferSchema from "../schemas/referalOfferSchema.js";
 import WhishlistSchema from "../schemas/whishlistSchema.js";
 import CouponSchema from "../schemas/CouponSchema.js";
+import walletSchema from "../schemas/walletSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -29,6 +30,7 @@ const CategoryOffer = mongoose.model('CatagoeryOffer',categoryOfferSchema)
 const ReferralOffer = mongoose.model("ReferralOffer", ReferalofferSchema);
 const Whishlist = mongoose.model("Whishlist",WhishlistSchema)
 const Coupons = mongoose.model("Coupons",CouponSchema)
+const Wallet = mongoose.model("Wallet",walletSchema)
 export {
     Role,
     User,
@@ -44,5 +46,6 @@ export {
     CategoryOffer,
     ReferralOffer,
     Whishlist,
-    Coupons
+    Coupons,
+    Wallet
 }
