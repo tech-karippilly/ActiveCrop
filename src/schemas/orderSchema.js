@@ -67,7 +67,7 @@ const orderSchema = new mongoose.Schema({
   },
   deliveryStatus: {
     type: String,
-    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled'],
+    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled','Retrun Order Processing','Returned'],
     default: 'Pending'
   },
   totalAmount: {
@@ -77,6 +77,15 @@ const orderSchema = new mongoose.Schema({
   isDelivered: {
     type: Boolean,
     default: false
+  },
+  orderRetrun:{
+    type:String,
+    enum:['Pending','Processing', 'Approved','Rejected'],
+    default:'Pending'
+  },
+  orderReturnReason:{
+    type:String,
+    required:false
   },
   deliveredAt: {
     type: Date

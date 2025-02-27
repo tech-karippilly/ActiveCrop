@@ -218,63 +218,122 @@
                                 <button class="btn btn-danger" onclick="cancelOrder('<%= orders._id %>')">Cancel
                                     Order</button>
                                 <% } %>
+
                                     <% if (orders.paymentStatus==='Failed' ) { %>
                                         <button class="btn btn-warning"
                                             onclick="retryPayment('<%= orders._id %>')">Retry Payment</button>
                                         <% } %>
+
+                                            <% if (orders.deliveryStatus==='Delivered' ) { %>
+                                                <button class="btn btn-primary"
+                                                    onclick="showReturnForm('<%= orders._id %>')">Return Order</button>
+                                                <div id="returnForm_<%= orders._id %>" class="mt-2"
+                                                    style="display: none;">
+                                                    <input type="text" id="returnReason_<%= orders._id %>"
+                                                        class="form-control" placeholder="Enter return reason">
+                                                    <small class="text-danger" id="error_<%= orders._id %>"
+                                                        style="display: none;">Reason is required</small>
+                                                    <button class="btn btn-success mt-2"
+                                                        onclick="submitReturn('<%= orders._id %>')">Submit</button>
+                                                </div>
+                                                <% } %>
                         </div>
                     </div>
 
                     <div id="orderTrackingTimeline" class="container mt-5">
-                        <h3>Order Tracking</h3>
+                        <h3><%= orders.orderRetrun ? 'Return Order Tracking' : 'Order Tracking' %></h3>
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
-                                    <div class="timeline-step text-center">
-                                        <div class="step-circle bg-warning text-white ">
-                                            <i class="fa fa-clock"></i>
+                                    <% if (orders.orderRetrun) { %>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-warning text-white">
+                                                <i class="fa fa-reply"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.returnStatus === 'Return Requested' || orders.returnStatus === 'Return Approved' || orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Requested
+                                            </div>
                                         </div>
-                                        <div
-                                            class="step-label <%= (orders.deliveryStatus === 'Pending' || orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Order Placed</div>
-                                    </div>
-                                    <div class="timeline-step text-center">
-                                        <div class="step-circle bg-secondary text-white ">
-                                            <i class="fa fa-box"></i>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-secondary text-white">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.returnStatus === 'Return Approved' || orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Approved
+                                            </div>
                                         </div>
-                                        <div
-                                            class="step-label <%= (orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Packaging
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-info text-white">
+                                                <i class="fa fa-calendar-check"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Pickup Scheduled
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="timeline-step text-center">
-                                        <div class="step-circle bg-info text-white ">
-                                            <i class="fa fa-truck"></i>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-primary text-white">
+                                                <i class="fa fa-truck"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Shipped
+                                            </div>
                                         </div>
-                                        <div
-                                            class="step-label <%= (orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Shipped</div>
-                                    </div>
-                                    <div class="timeline-step text-center">
-                                        <div class="step-circle bg-primary text-white ">
-                                            <i class="fa fa-location-arrow"></i>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-success text-white">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Completed
+                                            </div>
                                         </div>
-                                        <div
-                                            class="step-label <%= (orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Out for Delivery</div>
-                                    </div>
-                                    <div class="timeline-step text-center">
-                                        <div class="step-circle bg-success text-white">
-                                            <i class="fa fa-check"></i>
+                                    <% } else { %>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-warning text-white">
+                                                <i class="fa fa-clock"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.deliveryStatus === 'Pending' || orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                                Order Placed
+                                            </div>
                                         </div>
-                                        <div
-                                            class="step-label  <%= (orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %> ">
-                                            Delivered</div>
-                                    </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-secondary text-white">
+                                                <i class="fa fa-box"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                                Packaging
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-info text-white">
+                                                <i class="fa fa-truck"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                                Shipped
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-primary text-white">
+                                                <i class="fa fa-location-arrow"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                                Out for Delivery
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-success text-white">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <div class="step-label <%= (orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                                Delivered
+                                            </div>
+                                        </div>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
+ 
                 </div>
             </div>
         </section>
@@ -460,6 +519,41 @@
                     alert("Error verifying payment");
                 });
         }
+
+        function showReturnForm(orderId) {
+            document.getElementById(`returnForm_${orderId}`).style.display = 'block';
+        }
+
+        function submitReturn(orderId) {
+            const reasonInput = document.getElementById(`returnReason_${orderId}`);
+            const errorMsg = document.getElementById(`error_${orderId}`);
+            const reason = reasonInput.value.trim();
+
+            if (!reason) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+
+            fetch('/orders/order-return', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, reason })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.order) {
+                        alert("Return request submitted successfully!");
+                        document.getElementById(`returnForm_${orderId}`).style.display = 'none';
+                        window.location.reload()
+                    } else {
+                        alert("Failed to submit return request. Try again!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
     </script>
 
 

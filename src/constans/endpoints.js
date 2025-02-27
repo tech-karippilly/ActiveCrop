@@ -112,6 +112,8 @@ export const ORDER_SUCCESS = '/order-success/:id'
 export const ORDER_FAILD = '/order-failed/:id'
 export const ORDER_CANCEL = '/order-cancel/:id'
 export const ORDER_RETRY = '/order-retry/:id'
+export const ORDER_RETURN ='/order-return'
+export const ORDER_RETURN_STATUS ='/order-return-status/:id'
 
 export const WHISLIST_BASE = '/whishlist'
 export const ADD_WISHLIST='/add/:id/:quantity'

@@ -276,6 +276,51 @@ async function RetryOrder(req, res) {
     }
 }
 
+async function OrderReturn(req,res){
+    try{
+        const {orderId,reason} = req.body
+
+        const order = await Order.findById(orderId)
+
+        if(!order){
+            return res.status(404).json({message:"Order not Found"})
+        }
+
+        order.deliveryStatus="Retrun Order Processing"
+        order.orderRetrun='Processing'
+        order.orderReturnReason=reason
+        await order.save()
+
+        return res.status(200).json({message:"Order Retrun Processing",order})
+    }catch(error){
+        console.log("error",error.message)
+        res.status(500).json({message:"Internal Server Error",error:error.message})
+    }
+}
+
+async function OrderReturnStatus(req,res){
+    try{
+        const {id} = req.params
+        const {status} = req.query
+
+        const order = await Order.findById(id)
+
+        if(!order){
+            return res.status(404).json({messsage:"Order not Found"})
+        }
+
+        order.orderRetrun =status
+        
+        await order.save()
+
+        res.status(200).json({message:"Order Status Changed"})
+    }
+    catch(error){
+        console.error(error.message)
+        res.status(500).json({message:"Internal Server Error",error:error.message})
+    }
+}
+
 export {
     renderCheckout,
     placeOreder,
@@ -283,5 +328,7 @@ export {
     OrderFailed,
     OrderCancel,
     verifyPayment,
-    RetryOrder
+    RetryOrder,
+    OrderReturn,
+    OrderReturnStatus
 }
