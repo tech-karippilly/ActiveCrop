@@ -1,5 +1,5 @@
 import { CHECKOUT_PAGE, ORDER_FAILD_PAGE, ORDER_SUCCESS_PAGE } from "../../../constans/page.js"
-import { Address, Cart, Categoery, Order, Product, User } from "../../../models/index.js"
+import { Address, Cart, Categoery, Order, Product, Transactions, User, Wallet } from "../../../models/index.js"
 import jwt from 'jsonwebtoken'
 import { generateOrderNumber } from "../../../utils/order.js"
 import { config } from "dotenv"
@@ -211,8 +211,11 @@ async function OrderCancel(req, res) {
         const { id } = req.params
         const order = await Order.findById(id)
 
-        order.deliveryStatus = 'Cancelled';
+        const access_token = req.session.accessToken
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId;
 
+        order.deliveryStatus = 'Cancelled';
 
         for (const item of order.items) {
             const product = await Product.findById(item.product_id);
@@ -222,6 +225,19 @@ async function OrderCancel(req, res) {
             }
         }
 
+        const wallet = await Wallet.findOne({userId})
+        wallet.balance = order.totalAmount
+
+        const transaction = new Transactions({
+            walletId:wallet._id,
+            amount:order.totalAmount,
+            type:'debit',
+            description:"Order Cancelation",
+            status:'completed'
+        })
+
+        await wallet.save()
+        await transaction.save()
         await order.save()
         res.status(200).json({ message: "Order Cancled", alertType: 'alert-success' })
     } catch (error) {

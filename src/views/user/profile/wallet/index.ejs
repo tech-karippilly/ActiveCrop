@@ -160,31 +160,29 @@
                         <h2 class="mb-4">My Wallet</h2>
                         <div class="wallet-balance d-flex justify-content-between align-items-center p-3 bg-white shadow-sm rounded">
                             <h5>Available Balance</h5>
-                            <h3 class="text-success fw-bold">₹<span id="wallet-balance">5000.00</span></h3>
+                            <h3 class="text-success fw-bold">₹<span id="wallet-balance"><%= wallet.balance %></span></h3>
                         </div>
                         
                         <div class="wallet-actions mt-4 d-flex justify-content-between">
-                            <button class="btn btn-primary w-45" id="add-money">Add Money</button>
-                            <button class="btn btn-secondary w-45" id="withdraw-money">Withdraw</button>
+                            <!-- <button class="btn btn-primary w-45" id="add-money">Add Money</button> -->
+                            <!-- <button class="btn btn-secondary w-45" id="withdraw-money">Withdraw</button> -->
                         </div>
                         
-                        <div class="transaction-history mt-5">
-                            <h4>Transaction History</h4>
-                            <ul class="list-group" id="transaction-list">
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>Added ₹1000</span>
-                                    <span class="text-success">+₹1000</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>Purchased Items</span>
-                                    <span class="text-danger">-₹500</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>Withdrawn ₹2000</span>
-                                    <span class="text-danger">-₹2000</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <% if (transactions.length > 0) { %>
+                            <div class="transaction-history mt-5">
+                                <h4>Transaction History</h4>
+                                <ul class="list-group" id="transaction-list">
+                                    <% transactions.forEach(transaction => { %>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span><%= transaction.description %></span>
+                                            <span class="<%= transaction.amount > 0 ? 'text-success' : 'text-danger' %>">
+                                                <%= transaction.amount > 0 ? '+' : '' %>₹<%= transaction.amount %>
+                                            </span>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
 
