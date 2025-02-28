@@ -27,13 +27,11 @@ const userSchema = mongoose.Schema({
     isVerifyed:{type:Boolean,default:false},
     role: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
     profileImage:{type:String,required:false}
-},{
-    timestamps:true
 })
 
-userSchema.method.getFullName= function(){
-    return `${this.firstName} ${this.lastName}`
-}
+userSchema.methods.getFullName = function () {
+  return `${this.firstName} ${this.lastName}`;
+};
 
 userSchema.methods.comparePassword = async function (plainPassword) {
     return await bcrypt.compare(plainPassword, this.password);

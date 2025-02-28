@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Profile Page</title>
+    <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
+
+    <link rel="stylesheet" href="../../../public/styles/profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <mian>
+        <div class="alert-box" id="alert-box">
+            <div class="alert " id="alert">
+
+            </div>
+        </div>
+        <section class="header-section">
+            <div class="container-fluid d-flex justify-content-end">
+                <div class="row">
+                    <div class="col d-flex align-items-center">
+                        <i class="fa fa-whatsapp  icon"></i>
+                        <span class="text-lowercase  ">8078599537</span>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-headset  icon"></i>
+                        <span class="text-lowercase">8078599537</span>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-comment-alt icon"></i>
+                        <span class="text-capitalize">Chat</span>
+                    </div>
+                    <div class="col profile-container">
+                        <!-- <span class="text-capitalize" style="cursor: pointer;"
+                            onclick="window.location.href='/auth/login'">Login</span> -->
+                        <div class="btn-group">
+                            <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                VISHNU
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-regular fa-user"></i>
+                                            </div>
+                                            <div class="col">
+                                                Profile
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-solid fa-gear"></i>
+                                            </div>
+                                            <div class="col">
+                                                Settings
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                            </div>
+                                            <div class="col">
+                                                Logout
+                                            </div>
+                                        </div>
+
+                        </div>
+
+                        </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="logo-section">
+            <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
+                <div class="row w-25 h-100 ">
+                    <div class="col h-100">
+                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
+                    </div>
+
+                    <div class="col h-100 logo-text-container">
+                        <a href="/" class="logo-text-container" style="text-decoration: none;">
+                            <h5>ACTIVE CROP</h5>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="container mt-5 ">
+            <div class="row gap-2">
+                <div class="col-3 side-menu-section">
+                    <div class="header">
+                        <h1>Profile</h1>
+                    </div>
+                    <div class="links-container">
+                        <ul class="list-group list-group-flush">
+                            <button type="button" onclick='window.location.href="/user/profile"'
+                                class="list-group-item list-group-item-action active" aria-current="true">
+                                User Details
+                            </button>
+                            <button onclick='window.location.href="/user/profile/address"' type="button"
+                                class="list-group-item list-group-item-action">
+                                Address Management
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/order'">
+                                Orders
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/wallet'">
+                                Wallets
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action "
+                                onclick="window.location.href='/user/profile/user-referal'">
+                                Referal
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
+                                Password
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                                Logout
+                            </button>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8 content-section">
+                    <div class="display-container">
+                        <div class="profile-image-container">
+                            <% if (currentUser.profileImage) { %>
+                                <img id="profileImg" src="<%= currentUser.profileImage %>" class="profile-image"
+                                    alt="Profile Image">
+                                <% } else { %>
+                                    <img id="profileImg" src="/assets/images/logo.jpg" class="profile-image"
+                                        alt="Default Profile Image">
+                                    <% } %>
+
+                                        <label for="imageUpload" class="edit-icon" id="edit-icon">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </label>
+                                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                        </div>
+
+                        <div class="container mt-3">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p>First Name</p>
+                                </div>
+                                <div class="col">
+                                    <p id="first-name">
+                                        <%= currentUser.firstName %>
+                                    </p>
+                                    <input type="text" class="form-control" name="firstName"
+                                        value="<%= currentUser.firstName %>" id="firstName" style="display: none;" />
+                                    <span class="text-danger" id="firstNameError" style="display: none;">First name is
+                                        required</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p>Last Name</p>
+                                </div>
+                                <div class="col">
+                                    <p id="last-name">
+                                        <%= currentUser.lastName %>
+                                    </p>
+                                    <input type="text" class="form-control" name="lastName"
+                                        value="<%= currentUser.lastName %>" id="lastName" style="display: none;" />
+                                    <span class="text-danger" id="lastNameError" style="display: none;">Last name is
+                                        required</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p>User Name</p>
+                                </div>
+                                <div class="col">
+                                    <p id="user-name">
+                                        <%= currentUser.userName %>
+                                    </p>
+                                    <input type="text" class="form-control" name="userName"
+                                        value="<%= currentUser.userName %>" id="userName" style="display: none;"
+                                        disabled />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p>Email</p>
+                                </div>
+                                <div class="col">
+                                    <p id="email">
+                                        <%= currentUser.email %>
+                                    </p>
+                                    <input type="email" class="form-control" name="email"
+                                        value="<%= currentUser.email %>" id="useremail" style="display: none;"
+                                        disabled />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p>Phone</p>
+                                </div>
+                                <div class="col">
+                                    <p id="user-phone">
+                                        <%= currentUser.phone %>
+                                    </p>
+                                    <input type="tel" class="form-control" name="phone" value="<%= currentUser.phone %>"
+                                        id="userPhone" style="display: none;" maxlength="10" />
+                                    <span class="text-danger" id="phoneError" style="display: none;">Enter a valid phone
+                                        number</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="container mt-3">
+                            <div class="row">
+                                <div class="col" id="edit-container">
+                                    <button class="btn btn-primary" id="edit-button"
+                                        aria-label="Edit Profile">Edit</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-danger" id="cancel-button" style="display: none;"
+                                        aria-label="Cancel Edit">Cancel</button>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-success" id="save-button" style="display: none;"
+                                        aria-label="Save Changes">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="footer-section">
+            <div class="footer-container">
+                <div class="contianer">
+                    <div class="row">
+                        <div class="col aboutus-container">
+                            <p>
+                                Active Crop is an e-commerce platform designed to connect farmers directly with
+                                customers, enabling
+                                the sale of fresh vegetables and fruits. The core idea is to source produce directly
+                                from farmers,
+                                ensuring freshness and fair pricing. Customers can browse and purchase products online,
+                                while
+                                farmers earn 85% of each sale, with 15% retained by the platform as commission (plus
+                                delivery
+                                charges).
+                                The project emphasizes sustainability, farmer empowerment, and customer satisfaction,
+                                offering
+                                transparent pricing, fast delivery, and eco-friendly practices. With features like
+                                user-friendly
+                                dashboards for both farmers and customers, secure payment systems, and a reliable
+                                delivery network,
+                                Active Crop aims to revolutionize the way people access fresh produce while supporting
+                                the farming
+                                community.
+                            </p>
+                        </div>
+                        <div class="col col-items">
+                            <h5>Get To Know Us</h5>
+                            <ul>
+                                <li>About Us</li>
+                                <li>Our Farmers</li>
+                                <li>Gallery</li>
+                                <li>Media</li>
+                                <li>Blog</li>
+                            </ul>
+
+                        </div>
+                        <div class="col col-items ">
+                            <h5>Useful Links</h5>
+                            <ul>
+                                <li>Privacy Policy</li>
+                                <li>Refun & Refund Policy</li>
+                                <li>Ship and Delivery policy</li>
+                                <li>Terms & Condtitions</li>
+                                <li>Disclaimer</li>
+                                <li>Carrers</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right-contianer">
+                <h5 class="text-center text-white">Copyrights@activeCrop</h5>
+            </div>
+        </section>
+    </mian>
+
+    <script>
+
+        let cropper;
+        const alertBox = document.getElementById('alert-box')
+        const alertMessage = document.getElementById('alert')
+        const imageEditIcon = document.getElementById('edit-icon')
+
+        document.getElementById('imageUpload').addEventListener('change', function (event) {
+            const file = event.target.files[0]; 
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profileImg').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const editButton = document.getElementById('edit-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const saveButton = document.getElementById('save-button');
+
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const userPhoneInput = document.getElementById('userPhone');
+            const emailInput = document.getElementById('useremail')
+            const userNameInput = document.getElementById('userName')
+
+            const firstNameError = document.getElementById('firstNameError');
+            const lastNameError = document.getElementById('lastNameError');
+            const phoneError = document.getElementById('phoneError');
+
+            const imageEditIcon = document.getElementById('edit-icon');
+            const userImageInput = document.getElementById('imageUpload');
+            const profileImage = document.getElementById('profileImg');
+            imageEditIcon.style.display = 'none'
+
+
+            function hideErrors() {
+                firstNameError.style.display = 'none';
+                lastNameError.style.display = 'none';
+                phoneError.style.display = 'none';
+            }
+
+            function validateName(name) {
+                return /^[A-Za-z]+(?: [A-Za-z]+)?$/.test(name.trim());
+            }
+
+            function validatePhone(phone) {
+                if (!/^[0-9]{10}$/.test(phone.trim())) {
+                    return false; 
+                }
+                if (/^(\d)\1{9}$/.test(phone.trim())) {
+                    return false; 
+                }
+                return true;
+            }
+
+            editButton.addEventListener('click', () => {
+                hideErrors();
+                imageEditIcon.style.display = 'flex';
+
+                firstNameInput.style.display = 'block';
+                lastNameInput.style.display = 'block';
+                userPhoneInput.style.display = 'block';
+
+
+                firstNameInput.previousElementSibling.style.display = 'none';
+                lastNameInput.previousElementSibling.style.display = 'none';
+                userPhoneInput.previousElementSibling.style.display = 'none';
+
+                editButton.style.display = 'none';
+                cancelButton.style.display = 'block';
+                saveButton.style.display = 'block';
+            });
+
+            cancelButton.addEventListener('click', () => {
+                hideErrors();
+                imageEditIcon.style.display = 'none';
+
+                firstNameInput.style.display = 'none';
+                lastNameInput.style.display = 'none';
+                userPhoneInput.style.display = 'none';
+
+                firstNameInput.previousElementSibling.style.display = 'block';
+                lastNameInput.previousElementSibling.style.display = 'block';
+                userPhoneInput.previousElementSibling.style.display = 'block';
+
+                editButton.style.display = 'block';
+                cancelButton.style.display = 'none';
+                saveButton.style.display = 'none';
+            });
+
+            saveButton.addEventListener('click', () => {
+                hideErrors();
+                let isValid = true;
+
+                let firstName = firstNameInput.value.trim();
+                let lastName = lastNameInput.value.trim();
+                let phone = userPhoneInput.value.trim();
+                let userName = userNameInput.value.trim();
+                let email = emailInput.value.trim();
+
+                if (!firstName) {
+                    firstNameError.innerText = "First name is required.";
+                    firstNameError.style.display = "block";
+                    isValid = false;
+                } else if (!validateName(firstName)) {
+                    firstNameError.innerText = "Invalid first name (only letters allowed).";
+                    firstNameError.style.display = "block";
+                    isValid = false;
+                }
+
+                if (!lastName) {
+                    lastNameError.innerText = "Last name is required.";
+                    lastNameError.style.display = "block";
+                    isValid = false;
+                } else if (!validateName(lastName)) {
+                    lastNameError.innerText = "Invalid last name (only letters allowed).";
+                    lastNameError.style.display = "block";
+                    isValid = false;
+                }
+
+                if (!phone) {
+                    phoneError.innerText = "Phone number is required.";
+                    phoneError.style.display = "block";
+                    isValid = false;
+                } else if (!validatePhone(phone)) {
+                    phoneError.innerText = "Phone number must be exactly 10 digits.";
+                    phoneError.style.display = "block";
+                    isValid = false;
+                }
+
+                if (!isValid) return; 
+
+                const formData = new FormData();
+                formData.append("firstName", firstName);
+                formData.append("lastName", lastName);
+                formData.append("phone", phone);
+                formData.append("userName", userName)
+                formData.append('email', email)
+
+                if (userImageInput.files.length > 0) {
+
+                    formData.append("profile_image", userImageInput.files[0]);
+                }
+
+                fetch('/user/profile/edit', {
+                    method: 'PUT',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        if (data.message) {
+                            alert(`${data.message}`);
+                            window.location.reload();
+                        }
+                    })
+                    .catch(() => {
+                        alert("Something went wrong!");
+                    });
+            });
+        });
+    </script>
+
+
+    <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

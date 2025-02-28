@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Product</title>
+    <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
+
+    <link href="/public/styles/dashboard.css" rel="stylesheet" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="main-container">
+        <section class="side-bar">
+            <div class="side-bar-heading">
+                <h1>ADMIN</h1>
+            </div>
+            <div class="side-bar-menu" id="menuId">
+                <div class="link-container">
+                    <a href="/admin/dashboard" class="link-text">Dashboard</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/catagoery" class="link-text">Categoery</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/products" class="link-text-active">Products</a>
+                </div>
+                <div class="link-container">
+                    <a href="/admin/customers" class="link-text">Customers</a>
+                </div>
+
+                <div class="link-container">
+                    <a href="#" class="link-text">Orders</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Coupons</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Banner</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="link-text">Transactions</a>
+                </div>
+                <div class="link-container">
+                    <a href="#" class="button-link">Logout</a>
+                </div>
+            </div>
+        </section>
+        <section class="container-section p-5  w-100">
+            <div class="alert-box" id="alert-box">
+                <% if (alertMessage) { %>
+                    <div class="alert alert-<%= alertType %>" id="alert">
+                        <% Object.entries(alertMessage).forEach(([key, value]) => { %>
+                            <p><%= value %></p> 
+                        <% }); %>
+                    </div>
+                    <% } else{%>
+                        <div id="alert"></div>
+                        <%}%>
+            </div>
+            <div class="container-fluid  w-100">
+                <div>
+                    <h1>Update Product</h1>
+                </div>
+
+                <div class="catagoery-form">
+
+                    <form id="create-update-form" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-3 mb-4">
+                                <div class="card">
+                                    <% if (data.images) {%>
+                                        <img src="/<%= data.images[0] %>" class="card-img-top product-img"
+                                            id="preview-image-one" alt="Product Image">
+                                        <button type="button" class="btn btn-primary mt-2" id="crop-button-one">Crop
+                                            Image</button>
+                                        <% }else{ %>
+                                            <img class="card-img-top product-img" id="preview-image-one"
+                                                alt="Product Image">
+                                            <button type="button" class="btn btn-primary mt-2" id="crop-button-one">Crop
+                                                Image</button>
+                                            <%} %>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card">
+                                    <% if (data.images) {%>
+                                        <img src="/<%= data.images[1] %>" class="card-img-top product-img"
+                                            id="preview-image-two" alt="Product Image">
+                                        <button type="button" class="btn btn-primary mt-2" id="crop-button-two">Crop
+                                            Image</button>
+                                        <% }else{ %>
+                                            <img class="card-img-top product-img" id="preview-image-two"
+                                                alt="Product Image">
+                                            <button type="button" class="btn btn-primary mt-2" id="crop-button-two">Crop
+                                                Image</button>
+                                            <%} %>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card">
+                                    <% if (data.images) {%>
+                                        <img src="/<%= data.images[2] %>" class="card-img-top product-img"
+                                            id="preview-image-three" alt="Product Image">
+                                        <button type="button" class="btn btn-primary mt-2" id="crop-button-three">Crop
+                                            Image</button>
+                                        <% }else{ %>
+                                            <img class="card-img-top product-img" id="preview-image-three"
+                                                alt="Product Image">
+                                            <button type="button" class="btn btn-primary mt-2"
+                                                id="crop-button-three">Crop
+                                                Image</button>
+                                            <%} %>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 mb-4">
+                                <div class="card">
+                                    <% if (data.images) {%>
+                                        <img src="/<%= data.images[3] %>" class="card-img-top product-img"
+                                            id="preview-image-four" alt="Product Image">
+                                        <button type="button" class="btn btn-primary mt-2" id="crop-button-four">Crop
+                                            Image</button>
+                                        <% }else{ %>
+                                            <img class="card-img-top product-img" id="preview-image-four"
+                                                alt="Product Image">
+                                            <button type="button" class="btn btn-primary mt-2"
+                                                id="crop-button-four">Crop
+                                                Image</button>
+                                            <%} %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="product_image1" class="form-label">Select Product Image</label>
+                                <input class="form-control" type="file" name="product_image" id="formFile1">
+                                <input type="hidden" name="product_image1" id="product_image1_hidden">
+                            </div>
+                            <div class="col">
+                                <label for="product_image2" class="form-label">Select Product Image</label>
+                                <input class="form-control" type="file" name="product_image" id="formFile2">
+                                <input type="hidden" name="product_image2" id="product_image2_hidden">
+                            </div>
+                            <div class="col">
+                                <label for="product_image3" class="form-label">Select Product Image</label>
+                                <input class="form-control" type="file" name="product_image" id="formFile3">
+                                <input type="hidden" name="product_image3" id="product_image3_hidden">
+                            </div>
+                            <div class="col">
+                                <label for="product_image4" class="form-label">Select Product Image</label>
+                                <input class="form-control" type="file" name="product_image" id="formFile4">
+                                <input type="hidden" name="product_image4" id="product_image4_hidden">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product_name" class="form-label label-text">Product Name</label>
+                            <input type="text" value="<%=data.product_name %>" class="form-control" name="product_name"
+                                id="product_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label label-text">Product Price</label>
+                            <input type="text" value="<%=data.price %>" class="form-control" name="price" id="price">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock_quantity" class="form-label label-text">Stock Quantity</label>
+                            <input type="text" class="form-control" value="<%=data.stock_quantity %>"
+                                name="stock_quantity" id="stock_quantity">
+                        </div>
+                        <div class="mb-3">
+                            <label for="catagoery">Select Catagoery</label>
+                            <div class="dropdown">
+                                <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false" id="catagoery-name">
+                                    <%= activeCatagoery.catagoery_name %>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+
+                                    <% catagories.forEach((catagoery)=>{ %>
+                                        <li><a class="dropdown-item "
+                                                onclick="selectCategory('<%= catagoery._id %>','<%= catagoery.catagoery_name %>')">
+                                                <%= catagoery.catagoery_name %>
+                                            </a></li>
+                                        <% }); %>
+
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control visually-hidden" name="catagoery_id"
+                                id="catagoery_id" value="<%= activeCatagoery._id %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <textarea class="form-control" placeholder="Leave description" name="description"
+                                    id="description" style="height: 100px"><%=  data.description %></textarea>
+                                <label for="description">Description</label>
+                            </div>
+                        </div>
+                        <div class="btn-container">
+                            <button type="submit" class="btn button-style">Update Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+
+    <script>
+
+        let cropper, cropper2, cropper3, cropper4;
+
+        const previewImageOne = document.getElementById('preview-image-one')
+        const previewImageTwo = document.getElementById('preview-image-two')
+        const previewImageThree = document.getElementById('preview-image-three')
+        const previewImageFour = document.getElementById('preview-image-four')
+
+        const imageInputOne = document.getElementById('formFile1')
+        const imageInputTwo = document.getElementById('formFile2')
+        const imageInputThree = document.getElementById('formFile3')
+        const imageInputFour = document.getElementById('formFile4')
+
+
+        const cropButton = document.getElementById('crop-button-one')
+        const cropButtonTwo = document.getElementById('crop-button-two')
+        const cropButtonThree = document.getElementById('crop-button-three')
+        const cropButtonFour = document.getElementById('crop-button-four')
+
+        cropButton.style.display = 'none'
+        cropButtonTwo.style.display = 'none'
+        cropButtonThree.style.display = 'none'
+        cropButtonFour.style.display = 'none'
+
+        const reader = new FileReader();
+
+        imageInputOne.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        previewImageOne.src = e.target.result;
+                        if (cropper) cropper.destroy();
+                        cropper = new Cropper(previewImageOne, {
+                            aspectRatio: 1,
+                            viewMode: 2,
+                        });
+                    }
+                }
+                reader.readAsDataURL(file);
+                cropButton.style.display = 'block'
+            }
+        })
+        cropButton.addEventListener('click', (event) => {
+            if (cropper) {
+                const croppedCanvas = cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                });
+
+                const croppedImageDataUrl = croppedCanvas.toDataURL('image/png');
+
+                const croppedBlob = dataURLToBlob(croppedImageDataUrl);
+
+                const timestamp = Date.now();
+                const fileName = `cropped-image-${timestamp}.png`;
+                const file = new File([croppedBlob], fileName, { type: 'image/png' });
+
+                const dataTransfer = new DataTransfer();
+
+                dataTransfer.items.add(file);
+
+                imageInputOne.files = dataTransfer.files;
+
+                previewImageOne.src = croppedImageDataUrl;
+
+                cropButton.style.display = 'none';
+
+                cropper.destroy();
+            }
+        })
+
+        imageInputTwo.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        previewImageTwo.src = e.target.result;
+                        if (cropper2) cropper2.destroy();
+                        cropper2 = new Cropper(previewImageTwo, {
+                            aspectRatio: 1,
+                            viewMode: 2,
+                        });
+                    }
+                }
+                reader.readAsDataURL(file);
+                cropButtonTwo.style.display = 'block'
+            }
+        })
+        cropButtonTwo.addEventListener('click', (event) => {
+            if (cropper2) {
+                const croppedCanvas = cropper2.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                });
+
+                const croppedImageDataUrl = croppedCanvas.toDataURL('image/png');
+
+                const croppedBlob = dataURLToBlob(croppedImageDataUrl);
+
+                const timestamp = Date.now();
+                const fileName = `cropped-image-${timestamp}.png`;
+                const file = new File([croppedBlob], fileName, { type: 'image/png' });
+
+                const dataTransfer = new DataTransfer();
+
+                dataTransfer.items.add(file);
+
+                imageInputTwo.files = dataTransfer.files;
+
+                previewImageTwo.src = croppedImageDataUrl;
+
+                cropButtonTwo.style.display = 'none';
+
+                cropper2.destroy();
+            }
+        })
+
+        imageInputThree.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        previewImageThree.src = e.target.result;
+                        if (cropper3) cropper3.destroy();
+                        cropper3 = new Cropper(previewImageThree, {
+                            aspectRatio: 1,
+                            viewMode: 2,
+                        });
+                    }
+                }
+                reader.readAsDataURL(file);
+                cropButtonThree.style.display = 'block'
+            }
+        })
+        cropButtonThree.addEventListener('click', (event) => {
+            if (cropper3) {
+                const croppedCanvas = cropper3.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                });
+
+                const croppedImageDataUrl = croppedCanvas.toDataURL('image/png');
+
+                const croppedBlob = dataURLToBlob(croppedImageDataUrl);
+
+                const timestamp = Date.now();
+                const fileName = `cropped-image-${timestamp}.png`;
+                const file = new File([croppedBlob], fileName, { type: 'image/png' });
+
+                const dataTransfer = new DataTransfer();
+
+                dataTransfer.items.add(file);
+
+                imageInputThree.files = dataTransfer.files;
+
+                previewImageThree.src = croppedImageDataUrl;
+
+                cropButtonThree.style.display = 'none';
+
+                cropper3.destroy();
+            }
+        })
+
+        imageInputFour.addEventListener('change', (event) => {
+            const file = event.target.files[0]
+            if (file) {
+                reader.onload = (e) => {
+                    if (e.target.result) {
+                        previewImageFour.src = e.target.result;
+                        if (cropper4) cropper4.destroy();
+                        cropper4 = new Cropper(previewImageFour, {
+                            aspectRatio: 1,
+                            viewMode: 2,
+                        });
+                    }
+                }
+                reader.readAsDataURL(file);
+                cropButtonFour.style.display = 'block'
+            }
+        })
+        cropButtonFour.addEventListener('click', (event) => {
+            if (cropper4) {
+                const croppedCanvas = cropper4.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                });
+
+                const croppedImageDataUrl = croppedCanvas.toDataURL('image/png');
+
+                const croppedBlob = dataURLToBlob(croppedImageDataUrl);
+
+                const timestamp = Date.now();
+                const fileName = `cropped-image-${timestamp}.png`;
+                const file = new File([croppedBlob], fileName, { type: 'image/png' });
+
+                const dataTransfer = new DataTransfer();
+
+                dataTransfer.items.add(file);
+
+                imageInputFour.files = dataTransfer.files;
+
+                previewImageFour.src = croppedImageDataUrl;
+
+                cropButtonFour.style.display = 'none';
+
+                cropper4.destroy();
+            }
+        })
+
+        const alertBox = document.getElementById('alert-box')
+        setTimeout(() => {
+            alertBox.classList = '';
+            alertBox.innerHTML = '';
+        }, 5000);
+
+        const redirectUrl = "<%= redirectUrl %>";
+        if (redirectUrl && redirectUrl.trim() !== "") {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000)
+
+        }
+        function selectCategory(categoryId, categoryName) {
+            document.getElementById('catagoery-name').innerText = categoryName
+            document.getElementById('catagoery_id').value = categoryId
+        }
+
+        const updateForm = document.getElementById('create-update-form')
+
+        updateForm.addEventListener('submit', async (events) => {
+
+            events.preventDefault()
+            let fileInputs = [
+                document.getElementById('formFile1'),
+                document.getElementById('formFile2'),
+                document.getElementById('formFile3'),
+                document.getElementById('formFile4')
+            ];
+
+            fileInputs.forEach(function (input, index) {
+
+                if (input.files.length === 0) {
+                    const image = "<%= data.images[3] %>"
+                    if (index === 0) {
+                        document.getElementById('product_image1_hidden').value = `<%= data.images[0] %>`;
+                    } else if (index === 1) {
+                        document.getElementById('product_image2_hidden').value = `<%= data.images[1] %>`;
+                    } else if (index === 2) {
+                        document.getElementById('product_image3_hidden').value = `<%= data.images[2] %>`;
+                    } else if (index === 3) {
+                        document.getElementById('product_image4_hidden').value = `<%= data.images[3] %>`;
+                    }
+                }
+            })
+
+            const alertBox = document.getElementById('alert-box')
+            const alertMessageDiv = document.getElementById('alert')
+            const formData = new FormData(updateForm)
+
+            fetch('/admin/products/<%=data._id %>', {
+                method: "put",
+                body: formData
+            })
+                .then((response) => response.json())
+                .then((data) => {
+
+                    if (data.status === 200) {
+                        if (alertMessageDiv) {
+                            alertMessageDiv.classList.add('alert')
+                            alertMessageDiv.innerHTML = data.message
+                            alertMessageDiv.classList.add('alert-success')
+                            setTimeout(() => {
+                                alertMessageDiv.innerHTML = ''
+                                alertMessageDiv.classList.remove('alert')
+                                alertMessageDiv.classList.remove('alert-success')
+                                window.location.href = '/admin/products'
+                            }, 3000)
+                        }
+
+                        setTimeout(() => {
+
+                            window.location.href = '/admin/products'
+                        }, 3000)
+                    } else {
+                        if (alertMessageDiv) {
+                            alertMessageDiv.classList.add('alert')
+
+                            if (typeof(data.message === Object)){
+                                alertMessageDiv.innerHTML = JSON.stringify(data.message) 
+                            }else{
+                                alertMessageDiv.innerHTML = data.message
+                            }
+                           
+                            alertMessageDiv.classList.add('alert-danger')
+                            setTimeout(() => {
+                                alertMessageDiv.innerHTML = ''
+                                alertMessageDiv.classList.remove('alert')
+                                alertMessageDiv.classList.remove('alert-success')
+                            }, 3000)
+                        }
+                    }
+
+                })
+                .catch((error) => {
+                    if (alertMessageDiv) {
+                        alertMessageDiv.innerHTML = error.message
+                        alertMessageDiv.classList.add('alert')
+                        alertMessageDiv.classList.add('alert-danger')
+                        setTimeout(() => {
+                            alertMessageDiv.innerHTML = ''
+                            alertMessageDiv.classList.remove('alert')
+                            alertMessageDiv.classList.remove('alert-success')
+                        }, 3000)
+                    }
+
+                })
+        })
+
+        function dataURLToBlob(dataURL) {
+            const binaryString = atob(dataURL.split(',')[1]);
+            const length = binaryString.length;
+            const bytes = new Uint8Array(length);
+            for (let i = 0; i < length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return new Blob([bytes], { type: 'image/png' });
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+</body>
+
+</html>
