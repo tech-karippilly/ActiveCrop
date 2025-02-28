@@ -126,25 +126,32 @@
                     </div>
                     <div class="links-container">
                         <ul class="list-group list-group-flush">
-                            <button type="button" class="list-group-item list-group-item-action " aria-current="true" onclick='window.location.href="/user/profile"'>
+                            <button type="button" class="list-group-item list-group-item-action " aria-current="true"
+                                onclick='window.location.href="/user/profile"'>
                                 User Details
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick='window.location.href="/user/profile/address"'>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick='window.location.href="/user/profile/address"'>
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action active" onclick="window.location.href='/user/profile/order'">
+                            <button type="button" class="list-group-item list-group-item-action active"
+                                onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/wallet'">
                                 Wallets
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action " onclick="window.location.href='/user/profile/user-referal'">
+                            <button type="button" class="list-group-item list-group-item-action "
+                                onclick="window.location.href='/user/profile/user-referal'">
                                 Referal
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/password'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>
@@ -157,8 +164,8 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <h3>Order Details - <span id="orderId" style="font-size: 0.85em;">
-                                    <%= orders.orderNumber %>
-                                </span></h3>
+                                        <%= orders.orderNumber %>
+                                    </span></h3>
                                 <p><strong>Total Price:</strong> ₹<span id="orderTotalPrice">
                                         <%= orders.totalAmount.toFixed(2) %>
                                     </span></p>
@@ -211,24 +218,96 @@
                                 <button class="btn btn-danger" onclick="cancelOrder('<%= orders._id %>')">Cancel
                                     Order</button>
                                 <% } %>
+
+                                    <% if (orders.paymentStatus==='Failed' ) { %>
+                                        <button class="btn btn-warning"
+                                            onclick="retryPayment('<%= orders._id %>')">Retry Payment</button>
+                                        <% } %>
+
+                                            <% if (orders.deliveryStatus==='Delivered' ) { %>
+                                                <button class="btn btn-primary"
+                                                    onclick="showReturnForm('<%= orders._id %>')">Return Order</button>
+                                                <div id="returnForm_<%= orders._id %>" class="mt-2"
+                                                    style="display: none;">
+                                                    <input type="text" id="returnReason_<%= orders._id %>"
+                                                        class="form-control" placeholder="Enter return reason">
+                                                    <small class="text-danger" id="error_<%= orders._id %>"
+                                                        style="display: none;">Reason is required</small>
+                                                    <button class="btn btn-success mt-2"
+                                                        onclick="submitReturn('<%= orders._id %>')">Submit</button>
+                                                </div>
+                                                <% } %>
                         </div>
                     </div>
 
                     <div id="orderTrackingTimeline" class="container mt-5">
-                        <h3>Order Tracking</h3>
+                        <h3>
+                            <%= orders.orderRetrun !=='Pending' ? 'Return Order Tracking' : 'Order Tracking' %>
+                        </h3>
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
+                                    <% if (orders.orderRetrun !=='Pending' ){ %>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-warning text-white">
+                                                <i class="fa fa-reply"></i>
+                                            </div>
+                                            <div
+                                                class="step-label <%= (orders.returnStatus === 'Return Requested' || orders.returnStatus === 'Return Approved' || orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Requested
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-secondary text-white">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                            <div
+                                                class="step-label <%= (orders.returnStatus === 'Return Approved' || orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Approved
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-info text-white">
+                                                <i class="fa fa-calendar-check"></i>
+                                            </div>
+                                            <div
+                                                class="step-label <%= (orders.returnStatus === 'Pickup Scheduled' || orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Pickup Scheduled
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-primary text-white">
+                                                <i class="fa fa-truck"></i>
+                                            </div>
+                                            <div
+                                                class="step-label <%= (orders.returnStatus === 'Return Shipped' || orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Shipped
+                                            </div>
+                                        </div>
+                                        <div class="timeline-step text-center">
+                                            <div class="step-circle bg-success text-white">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <div
+                                                class="step-label <%= (orders.returnStatus === 'Return Completed') ? 'fw-bold fs-5' : '' %>">
+                                                Return Completed
+                                            </div>
+                                        </div>
+
+                                </div>
+
+                                <%}else{ %>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-warning text-white ">
+                                        <div class="step-circle bg-warning text-white">
                                             <i class="fa fa-clock"></i>
                                         </div>
                                         <div
                                             class="step-label <%= (orders.deliveryStatus === 'Pending' || orders.deliveryStatus === 'Packaging' || orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Order Placed</div>
+                                            Order Placed
+                                        </div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-secondary text-white ">
+                                        <div class="step-circle bg-secondary text-white">
                                             <i class="fa fa-box"></i>
                                         </div>
                                         <div
@@ -237,34 +316,38 @@
                                         </div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-info text-white ">
+                                        <div class="step-circle bg-info text-white">
                                             <i class="fa fa-truck"></i>
                                         </div>
                                         <div
                                             class="step-label <%= (orders.deliveryStatus === 'Shipped' || orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Shipped</div>
+                                            Shipped
+                                        </div>
                                     </div>
                                     <div class="timeline-step text-center">
-                                        <div class="step-circle bg-primary text-white ">
+                                        <div class="step-circle bg-primary text-white">
                                             <i class="fa fa-location-arrow"></i>
                                         </div>
                                         <div
                                             class="step-label <%= (orders.deliveryStatus === 'Out for Delivery' || orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
-                                            Out for Delivery</div>
+                                            Out for Delivery
+                                        </div>
                                     </div>
                                     <div class="timeline-step text-center">
                                         <div class="step-circle bg-success text-white">
                                             <i class="fa fa-check"></i>
                                         </div>
                                         <div
-                                            class="step-label  <%= (orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %> ">
-                                            Delivered</div>
+                                            class="step-label <%= (orders.deliveryStatus === 'Delivered') ? 'fw-bold fs-5' : '' %>">
+                                            Delivered
+                                        </div>
                                     </div>
-                                </div>
+                                    <% } %>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -342,27 +425,152 @@
                         alertMessage.innerText = data.message
                         alertMessage.classList.add(data.alertType)
 
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             alertMessage.innerText = ''
                             alertMessage.classList.remove(data.alertType)
                             window.location.reload()
-                        },2000)
+                        }, 2000)
                     })
-                    .catch(error =>{
+                    .catch(error => {
                         alertMessage.innerText = data.message
                         alertMessage.classList.add(data.alertType)
 
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             alertMessage.innerText = ''
                             alertMessage.classList.remove(data.alertType)
-                        },3000)
+                        }, 3000)
                     });
             }
+        }
+
+
+        function retryPayment(orderId) {
+
+            fetch(`/orders/order-retry/${orderId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("data", data)
+                    if (data.optionsRazorPay) {
+                        initializePayment(data.optionsRazorPay)
+                    }
+                }).catch(error => {
+                    console.error(error.message)
+                })
+        }
+
+        function initializePayment(optionsRazorPay) {
+            const razorPayOptions = {
+                key: optionsRazorPay.key,
+                amount: optionsRazorPay.amount,
+                currency: optionsRazorPay.currency,
+                description: optionsRazorPay.description,
+                order_id: optionsRazorPay.order_id,
+                prefill: {
+                    name: optionsRazorPay.user.name,
+                    email: optionsRazorPay.user.email,
+                    contact: optionsRazorPay.user.contact
+                },
+                handler: function (response) {
+                    fetch("http://localhost:3000/orders/payment/verify", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            } else {
+                                alert("Payment verification failed");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert("Error verifying payment");
+                        });
+                },
+                retry: false,
+                modal: {
+                    confirm_close: true,
+                    ondismiss: function (event) {
+                        verifyPayment(razorPayOptions.order_id)
+                    }
+                }
+            };
+            try {
+                var rzp = new Razorpay(razorPayOptions);
+                rzp.open();
+            } catch (error) {
+            }
+        }
+        function verifyPayment(order_id) {
+            fetch("http://localhost:3000/orders/payment/verify", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    order_id
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert("Payment verification failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error verifying payment");
+                });
+        }
+
+        function showReturnForm(orderId) {
+            document.getElementById(`returnForm_${orderId}`).style.display = 'block';
+        }
+
+        function submitReturn(orderId) {
+            const reasonInput = document.getElementById(`returnReason_${orderId}`);
+            const errorMsg = document.getElementById(`error_${orderId}`);
+            const reason = reasonInput.value.trim();
+
+            if (!reason) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+
+            fetch('/orders/order-return', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, reason })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.order) {
+                        alert("Return request submitted successfully!");
+                        document.getElementById(`returnForm_${orderId}`).style.display = 'none';
+                        window.location.reload()
+                    } else {
+                        alert("Failed to submit return request. Try again!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
         }
 
     </script>
 
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

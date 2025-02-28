@@ -225,15 +225,15 @@ async function OrderCancel(req, res) {
             }
         }
 
-        const wallet = await Wallet.findOne({userId})
+        const wallet = await Wallet.findOne({ userId })
         wallet.balance = order.totalAmount
 
         const transaction = new Transactions({
-            walletId:wallet._id,
-            amount:order.totalAmount,
-            type:'debit',
-            description:"Order Cancelation",
-            status:'completed'
+            walletId: wallet._id,
+            amount: order.totalAmount,
+            type: 'debit',
+            description: "Order Cancelation",
+            status: 'completed'
         })
 
         await wallet.save()
@@ -245,11 +245,90 @@ async function OrderCancel(req, res) {
     }
 }
 
+async function RetryOrder(req, res) {
+    try {
+        const { id } = req.params
+        const access_token = req.session.accessToken
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId;
+        const user = await User.findById(userId);
+        const order = await Order.findById(id)
+        console.log('Order', order)
+        const optionsRazorPay = {
+            key: process.env.KEY_ID,
+            amount: order.totalAmount *100,
+            currency: "INR",
+            description: "Active Corp",
+            user: {
+                name: user.getFullName(),
+                email: user.email || user.user,
+                contact: user.phone
+            },
+            order_id: order.orderNumber,
+            redirect: `http://localhost:3000/orders/order-success/${order.orderNumber}`,
+            redirect: true,
+        }
+
+        res.status(200).json({ message: "Order Retry added", optionsRazorPay })
+    } catch (error) {
+        console.log("error", error.message)
+        res.status(500).json({ message: "Internal server Error", error: error.message })
+    }
+}
+
+async function OrderReturn(req,res){
+    try{
+        const {orderId,reason} = req.body
+
+        const order = await Order.findById(orderId)
+
+        if(!order){
+            return res.status(404).json({message:"Order not Found"})
+        }
+
+        order.deliveryStatus="Retrun Order Processing"
+        order.orderRetrun='Processing'
+        order.orderReturnReason=reason
+        await order.save()
+
+        return res.status(200).json({message:"Order Retrun Processing",order})
+    }catch(error){
+        console.log("error",error.message)
+        res.status(500).json({message:"Internal Server Error",error:error.message})
+    }
+}
+
+async function OrderReturnStatus(req,res){
+    try{
+        const {id} = req.params
+        const {status} = req.query
+
+        const order = await Order.findById(id)
+
+        if(!order){
+            return res.status(404).json({messsage:"Order not Found"})
+        }
+
+        order.orderRetrun =status
+        
+        await order.save()
+
+        res.status(200).json({message:"Order Status Changed"})
+    }
+    catch(error){
+        console.error(error.message)
+        res.status(500).json({message:"Internal Server Error",error:error.message})
+    }
+}
+
 export {
     renderCheckout,
     placeOreder,
     OrderSuccess,
     OrderFailed,
     OrderCancel,
-    verifyPayment
+    verifyPayment,
+    RetryOrder,
+    OrderReturn,
+    OrderReturnStatus
 }
