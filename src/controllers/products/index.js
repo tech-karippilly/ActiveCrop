@@ -25,8 +25,15 @@ export const deleteProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({})
-        return renderPage(ADMIN_PRODUCT_LIST_PAGE, res, HTTP_SUCCESS, '', ALERT_DANGER, '', products)
+
+        let page = parseInt(req.query.page) || 1;
+        let limit =10 ;
+        let skip = (page - 1) * limit;
+
+        let totalItems = await Product.countDocuments();
+        let data = await Product.find().skip(skip).limit(limit);
+        
+       return res.status(HTTP_SUCCESS).render(ADMIN_PRODUCT_LIST_PAGE,{alertMessage:'',alertType:'',redirectUrl:'',currentPage:page,totalPages:Math.ceil(totalItems/limit),data})
     } catch (error) {
         return renderPage(ADMIN_PRODUCT_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', [])
     }
