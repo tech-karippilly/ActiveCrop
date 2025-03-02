@@ -484,7 +484,6 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data)
                         if (data.message) {
                             alert(`${data.message}`);
                             window.location.reload();

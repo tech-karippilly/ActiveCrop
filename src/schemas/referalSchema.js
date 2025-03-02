@@ -28,10 +28,6 @@ const referralSchema = new mongoose.Schema({
     referralCode: {
         type: String,
         required: true,
-        unique: true,
-        trim: true,
-        uppercase: true,
-        index: true
     }
 }, {
     timestamps: true

@@ -253,7 +253,6 @@ async function RetryOrder(req, res) {
         const userId = jwtDecode.userId;
         const user = await User.findById(userId);
         const order = await Order.findById(id)
-        console.log('Order', order)
         const optionsRazorPay = {
             key: process.env.KEY_ID,
             amount: order.totalAmount *100,
@@ -271,7 +270,6 @@ async function RetryOrder(req, res) {
 
         res.status(200).json({ message: "Order Retry added", optionsRazorPay })
     } catch (error) {
-        console.log("error", error.message)
         res.status(500).json({ message: "Internal server Error", error: error.message })
     }
 }
@@ -293,7 +291,6 @@ async function OrderReturn(req,res){
 
         return res.status(200).json({message:"Order Retrun Processing",order})
     }catch(error){
-        console.log("error",error.message)
         res.status(500).json({message:"Internal Server Error",error:error.message})
     }
 }

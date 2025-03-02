@@ -84,10 +84,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// app.use((req,res,next)=>{
-//     console.log('working')
-//     res.status(404).render(NOT_FOUNT_PAGE)
-// })
 
 // SWAGGER DOCS
 const combinedSwaggerSpec = {

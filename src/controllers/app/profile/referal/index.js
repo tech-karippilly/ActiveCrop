@@ -12,24 +12,21 @@ async function renderReferalPage(req, res) {
             const currentUser = await User.findById(userId)
             const referal = await Referal.findOne({ userId })
             if (!referal) {
-                const code = await generateUniqueReferralCode()
+                const referralCode = await generateUniqueReferralCode()
                 const newReferal = new Referal({
                     userId,
-
-                    referralCode: code
+                    referralCode
                 })
                 await newReferal.save()
             }
             const referalDetails = await Referal.findOne({ userId })
             const referralCode = referalDetails.referralCode
-            const referralHistory = await ReferalHistory.find({referralCode})
-            console.log(referalDetails)
+            const referralHistory = await ReferalHistory.find({ referralCode })
             const referalLink = `${process.env.HOST_URL}/auth/signup?referalCode=${referralCode}`
-            res.status(200).render(USER_REFERAL_PAGE, { currentUser,referalDetails ,referralHistory,referalLink})
+           return res.status(200).render(USER_REFERAL_PAGE, { currentUser, referalDetails, referralHistory, referalLink })
         }
     } catch (error) {
-        console.log(error.message)
-        res.status(500).render(USER_REFERAL_PAGE, { currentUser: {} })
+       return  res.status(500).render(USER_REFERAL_PAGE, { currentUser: {} })
     }
 }
 

@@ -50,18 +50,19 @@ function generateReferralCode(length = 8) {
     return referralCode;
 }
 
-async function generateUniqueReferralCode(){
+const generateUniqueReferralCode = async () => {
     let code;
-    let exists;
-    
-    do {
-      code = generateReferralCode();
-      exists = await Referal.findOne({ referalCode: code }); 
-    } while (exists);
-  
+    let isUnique = false;
+
+    while (!isUnique) {
+        code = generateReferralCode()
+        const existing = await Referal.findOne({ referralCode: code });
+        if (!existing) {
+            isUnique = true;
+        }
+    }
     return code;
-  
-}
+};
 export {
     generateReceiptNumber,
     applyOffers,

@@ -24,18 +24,18 @@
 
   <div class="alert-box " id="alert-box">
     <% if (alertMessage) { %>
-      <% if (typeof alertMessage === 'string') { %>
+      <% if (typeof alertMessage==='string' ) { %>
         <div class="alert alert-<%= alertType %>" id="alert">
           <%= alertMessage %>
         </div>
-      <% } else { %>
-        <% Object.entries(alertMessage).forEach(([key, message]) => { %>
-          <div class="alert alert-<%= alertType %>" id="alert">
-            <%= message %>
-          </div>
-        <% }) %>
-      <% } %>
-    <% } %>
+        <% } else { %>
+          <% Object.entries(alertMessage).forEach(([key, message])=> { %>
+            <div class="alert alert-<%= alertType %>" id="alert">
+              <%= message %>
+            </div>
+            <% }) %>
+              <% } %>
+                <% } %>
   </div>
 
   <section class="login-form-section">
@@ -80,6 +80,7 @@
             <label for="confirmPassword" class="form-label lable-text"> Confrim Password</label>
             <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
           </div>
+          <input type="hidden" id="referal" name="referal">
 
           <div class="btn-contianer mb-3">
             <button type="submit" class="btn ">Create Account</button>
@@ -94,6 +95,14 @@
   </section>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const referalInput = document.getElementById('referal');
+      const urlParams = new URLSearchParams(window.location.search);
+      const referalCode = urlParams.get('referalCode');
+      if (referalCode) {
+        referalInput.value = referalCode;
+      }
+    })
     const alertBox = document.getElementById('alert-box')
     setTimeout(() => {
       alertBox.classList = '';
@@ -104,7 +113,7 @@
     if (redirectUrl && redirectUrl.trim() !== "") {
       setTimeout(() => {
         const userName = "<%= userName %>";
-        window.localStorage.setItem('userName',userName)
+        window.localStorage.setItem('userName', userName)
         window.location.href = redirectUrl;
       }, 2000)
 

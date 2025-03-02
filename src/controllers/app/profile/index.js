@@ -55,7 +55,6 @@ export async function updateProfileDetails(req, res) {
         return res.status(HTTP_NOT_FOUND).json({ message: "Log in to continue" })
 
     } catch (error) {
-        console.log('error',error.message)
         return res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error" })
     }
 }
