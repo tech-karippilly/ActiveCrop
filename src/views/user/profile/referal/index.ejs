@@ -52,7 +52,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                VISHNU
+                                <%= currentUser.firstName %>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
@@ -162,7 +162,7 @@
                         <div class="referral-code-container text-center p-3 bg-white shadow-sm rounded">
                             <h5>Your Referral Code</h5>
                             <div class="d-flex justify-content-center align-items-center mt-2">
-                                <span id="referral-code" class="fw-bold fs-4 px-3 py-2 border border-primary rounded">ACT12345</span>
+                                <span id="referral-code" class="fw-bold fs-4 px-3 py-2 border border-primary rounded"><%= referalDetails.referralCode %></span>
                                 <button class="btn btn-primary ms-2" onclick="copyReferralCode()">Copy</button>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                         <div class="referral-link-container mt-4 p-3 bg-white shadow-sm rounded">
                             <h5>Share Your Referral Link</h5>
                             <div class="d-flex">
-                                <input type="text" id="referral-link" class="form-control" value="https://activecrop.com/referral/ACT12345" readonly>
+                                <input type="text" id="referral-link" class="form-control" value="<%= referalLink %>" readonly>
                                 <button class="btn btn-primary ms-2" onclick="copyReferralLink()">Copy Link</button>
                             </div>
                         </div>
@@ -187,14 +187,16 @@
                         <div class="referred-users mt-4 p-3 bg-white shadow-sm rounded">
                             <h4>People You Referred</h4>
                             <ul class="list-group" id="referred-list">
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>John Doe</span>
-                                    <span class="text-success">Earned ₹50</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span>Jane Smith</span>
-                                    <span class="text-success">Earned ₹50</span>
-                                </li>
+                                <% if (referralHistory.length > 0) { %>
+                                    <% referralHistory.forEach(user => { %>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span><%= user.fullName %></span>
+                                            <span class="text-success">Earned ₹<%= user.referalAmount %></span>
+                                        </li>
+                                    <% }) %>
+                                <% } else { %>
+                                    <li class="list-group-item text-center text-muted">No referrals yet.</li>
+                                <% } %>
                             </ul>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { Referal } from '../models/index.js';
 function generateReceiptNumber(prefix = "REC", length = 10) {
     const randomBytes = crypto.randomBytes(length);
     const receiptNumber = randomBytes.toString('hex').toUpperCase().slice(0, length);
@@ -40,7 +41,31 @@ function calculatePercentage(number, percentage) {
     return (number * percentage) / 100;
 }
 
+function generateReferralCode(length = 8) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let referralCode = '';
+    for (let i = 0; i < length; i++) {
+        referralCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return referralCode;
+}
+
+const generateUniqueReferralCode = async () => {
+    let code;
+    let isUnique = false;
+
+    while (!isUnique) {
+        code = generateReferralCode()
+        const existing = await Referal.findOne({ referralCode: code });
+        if (!existing) {
+            isUnique = true;
+        }
+    }
+    return code;
+};
 export {
     generateReceiptNumber,
-    applyOffers
+    applyOffers,
+    generateReferralCode,
+    generateUniqueReferralCode
 }
