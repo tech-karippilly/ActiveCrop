@@ -11,8 +11,8 @@ export async function renderAddressPage(req, res) {
             const userId = jwtDecode.userId
             const user = await User.findById(userId)
             const addressList = await Address.find({ user_id: user })
-    
-            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { addressList })
+            const currentUser = await User.findById(userId)
+            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { currentUser,addressList })
         }
 
     } catch (errr) {

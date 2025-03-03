@@ -49,54 +49,54 @@
                     <div class="col profile-container">
                         <!-- <span class="text-capitalize" style="cursor: pointer;"
                             onclick="window.location.href='/auth/login'">Login</span> -->
-                            <div class="btn-group">
-                                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <%= currentUser.firstName %>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="/user/profile">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-regular fa-user"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Profile
-                                                </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <%= currentUser.firstName %>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/user/profile">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-regular fa-user"></i>
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-solid fa-gear"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Settings
-                                                </div>
+                                            <div class="col">
+                                                Profile
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a href="/auth/logout">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                                </div>
-                                                <div class="col" onclick="window.location.href='/auth/logout'">
-                                                    Logout
-                                                </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-solid fa-gear"></i>
                                             </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                            <div class="col">
+                                                Settings
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </div>
+                                        <div class="col" onclick="window.location.href='/auth/logout'">
+                                            Logout
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                         <img src="../../../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
-                        <a href="/"  class="logo-text-container" style="text-decoration: none;">
+                        <a href="/" class="logo-text-container" style="text-decoration: none;">
                             <h5>ACTIVE CROP</h5>
                         </a>
                     </div>
@@ -134,19 +134,24 @@
                                 class="list-group-item list-group-item-action active">
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/order'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/wallet'">
                                 Wallets
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action " onclick="window.location.href='/user/profile/user-referal'">
+                            <button type="button" class="list-group-item list-group-item-action "
+                                onclick="window.location.href='/user/profile/user-referal'">
                                 Referal
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/password'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>
@@ -378,7 +383,7 @@
 
                 clearErrors();
 
-                window.location.href='/user/profile/address'
+                window.location.href = '/user/profile/address'
             }
         }
 
@@ -386,7 +391,7 @@
             event.preventDefault();
             const isFormValid = validateForm();
 
-            if(isFormValid){
+            if (isFormValid) {
                 const addressOne = document.getElementById('address1').value.trim()
                 const addressTwo = document.getElementById('address2').value.trim()
                 const state = document.getElementById('state').value.trim()
@@ -420,7 +425,7 @@
                     setTimeout(() => {
                         alertMessage.classList.remove(data.alertType)
                         alertMessage.innerHTML = ''
-                        
+
                         if (data.redirect) {
                             window.location.href = data.redirect
                         }
