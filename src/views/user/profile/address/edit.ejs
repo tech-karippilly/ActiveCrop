@@ -49,54 +49,54 @@
                     <div class="col profile-container">
                         <!-- <span class="text-capitalize" style="cursor: pointer;"
                             onclick="window.location.href='/auth/login'">Login</span> -->
-                        <div class="btn-group">
-                            <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                VISHNU
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <div class="row">
-                                            <div class="col">
-                                                <i class="fa-regular fa-user"></i>
+                            <div class="btn-group">
+                                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <%= currentUser.firstName %>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="/user/profile">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fa-regular fa-user"></i>
+                                                </div>
+                                                <div class="col">
+                                                    Profile
+                                                </div>
                                             </div>
-                                            <div class="col">
-                                                Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fa-solid fa-gear"></i>
+                                                </div>
+                                                <div class="col">
+                                                    Settings
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <div class="row">
-                                            <div class="col">
-                                                <i class="fa-solid fa-gear"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a href="/auth/logout">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                                </div>
+                                                <div class="col" onclick="window.location.href='/auth/logout'">
+                                                    Logout
+                                                </div>
                                             </div>
-                                            <div class="col">
-                                                Settings
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">
-                                        <div class="row">
-                                            <div class="col">
-                                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                            </div>
-                                            <div class="col">
-                                                Logout
-                                            </div>
-                                        </div>
-
-                        </div>
-
-                        </a></li>
-                        </ul>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                     </div>
                 </div>
             </div>

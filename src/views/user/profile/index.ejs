@@ -52,11 +52,11 @@
                         <div class="btn-group">
                             <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                VISHNU
+                                <%= currentUser.firstName %>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="/user/profile">
                                         <div class="row">
                                             <div class="col">
                                                 <i class="fa-regular fa-user"></i>
@@ -83,20 +83,20 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">
+                                <li>
+                                    <a href="/auth/logout">
                                         <div class="row">
                                             <div class="col">
                                                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                             </div>
-                                            <div class="col">
+                                            <div class="col" onclick="window.location.href='/auth/logout'">
                                                 Logout
                                             </div>
                                         </div>
-
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-
-                        </a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -152,7 +152,8 @@
                                 onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>
@@ -338,7 +339,7 @@
         const imageEditIcon = document.getElementById('edit-icon')
 
         document.getElementById('imageUpload').addEventListener('change', function (event) {
-            const file = event.target.files[0]; 
+            const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
@@ -381,10 +382,10 @@
 
             function validatePhone(phone) {
                 if (!/^[0-9]{10}$/.test(phone.trim())) {
-                    return false; 
+                    return false;
                 }
                 if (/^(\d)\1{9}$/.test(phone.trim())) {
-                    return false; 
+                    return false;
                 }
                 return true;
             }
@@ -464,7 +465,7 @@
                     isValid = false;
                 }
 
-                if (!isValid) return; 
+                if (!isValid) return;
 
                 const formData = new FormData();
                 formData.append("firstName", firstName);
