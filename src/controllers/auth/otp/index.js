@@ -100,7 +100,7 @@ async function verifyOtp(req, res) {
         const getOtp = await OTPModel.findOne({ otp:OtpVerify })
         
         if(!getOtp){
-            return res.status(404).render('user/auth/otpVerify',{ alertMessage: 'OTP record not found', alertType: 'Danger', redirectUrl: '' })
+            return res.status(404).render('user/auth/otpVerify',{ alertMessage: 'IN VALID OTP', alertType: 'danger', redirectUrl: '' })
         }
 
         const otpExpires = 5
