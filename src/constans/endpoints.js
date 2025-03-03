@@ -96,7 +96,7 @@ export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
 export const USER_PRODUCT = '/:id'
 export const USER_PRODUCT_FILTER = `/filter/:catagoery`
 export const PRODUCTS_BY_ID = '/catagoery/:id/products'
-
+export const USER_PRODUCT_SEARCH = '/search/:id'
 
 export const USER_CART_BASE = '/user/cart'
 export const GET_CART='/get-cart'
