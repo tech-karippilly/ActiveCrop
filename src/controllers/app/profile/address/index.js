@@ -11,8 +11,8 @@ export async function renderAddressPage(req, res) {
             const userId = jwtDecode.userId
             const user = await User.findById(userId)
             const addressList = await Address.find({ user_id: user })
-    
-            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { addressList })
+            const currentUser = await User.findById(userId)
+            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { currentUser,addressList })
         }
 
     } catch (errr) {
@@ -22,7 +22,12 @@ export async function renderAddressPage(req, res) {
 
 export async function renderCreateAddressPage(req, res) {
     try {
-        res.status(HTTP_SUCCESS).render(USER_ADDRESS_CREATE_PAGE)
+        const access_token = req.session.accessToken
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId
+        const user = await User.findById(userId)
+        const currentUser = await User.findById(userId)
+        res.status(HTTP_SUCCESS).render(USER_ADDRESS_CREATE_PAGE,{currentUser})
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
     }
@@ -109,12 +114,15 @@ export async function renderEditAddressPage(req, res) {
         const { id } = req.params
 
         const address = await Address.findById(id)
-
+        const access_token = req.session.accessToken
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+        const userId = jwtDecode.userId
+        const currentUser = await User.findById(userId)
         if (address) {
-            return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address })
+            return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address,currentUser })
         }
 
-        res.status(HTTP_NOT_FOUND).render(USER_ADDRESS_EDIT_PAGE)
+        res.status(HTTP_NOT_FOUND).render(USER_ADDRESS_EDIT_PAGE,{currentUser})
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_EDIT_PAGE)
     }

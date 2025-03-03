@@ -5,6 +5,39 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import { applyOffers, appyOfferPrice } from "../../../utils/helperfunction.js"
 
+
+async function productSearch (req,res){
+    try {
+        const {query } = req.query
+        const {id} = req.params
+
+        const product = await Product.find({
+            product_name: { $regex: query, $options: 'i' }
+        });
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        const catagories = await Categoery.find()
+        const access_token = req.session.accessToken
+        if (access_token) {
+            const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+            const userId = jwtDecode.userId
+            const currentUser = await User.findById(userId)
+            const cart = await Cart.find({ user_id: userId, status: 'active' })
+
+            let cartLength = 0
+            if (cart.length > 0 && cart[0].items) {
+                cartLength = cart[0].items.length;
+            }
+            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products:product, catagories, activeCata: id, currentUser, cartLength })
+        }
+
+        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products:product, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
+    } catch (err) {
+        res.status(500).json({ error: 'Server Error' });
+    }
+}
+
 async function productsPage(req, res) {
     try {
         const { id } = req.params
@@ -32,6 +65,8 @@ async function productsPage(req, res) {
         res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products: [], catagories: [], activeCata: '', currentUser: {}, cartLength: 0 })
     }
 }
+
+
 
 async function filterProducts(req, res) {
     try {
@@ -67,9 +102,13 @@ async function productDetailsPage(req, res) {
         const access_token = req.session.accessToken
         const getOffers = await ProductOffer.findOne({ "product._id": id })
 
-        const price = appyOfferPrice(products.price, getOffers.discountValue, getOffers.offer_type)
+        console.log(getOffers)
+        if (getOffers){
+            const price = appyOfferPrice(products.price, getOffers.discountValue, getOffers.offer_type)
 
-        products.offerprice = price;
+            products.offerprice = price;
+        }
+
 
         if (access_token) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
@@ -101,7 +140,7 @@ async function productDetailsPage(req, res) {
             currentUser: {}
         })
     } catch (error) {
-
+        console.log(error.message)
     }
 }
 
@@ -110,5 +149,6 @@ async function productDetailsPage(req, res) {
 export {
     productsPage,
     filterProducts,
-    productDetailsPage
+    productDetailsPage,
+    productSearch
 }
