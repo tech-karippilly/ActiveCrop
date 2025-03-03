@@ -5,15 +5,15 @@ import { Order, Product } from "../../models/index.js";
 
 async function renderOrderPage(req, res) {
     try {
-        const page = parseInt(req.query.page, 10) || 1;  
-        const limit = 10;                                   
-        const skip = (page - 1) * limit;                    
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
 
-        const orders = await Order.find().skip(skip).limit(limit).lean(); 
-        const totalOrders = await Order.countDocuments();               
-        const totalPages = Math.ceil(totalOrders / limit);             
+        const orders = await Order.find().skip(skip).limit(limit).lean();
+        const totalOrders = await Order.countDocuments();
+        const totalPages = Math.ceil(totalOrders / limit);
 
-        res.status(200).render(ADMIN_ORDER_LIST_PAGE, {     
+        res.status(200).render(ADMIN_ORDER_LIST_PAGE, {
             orders,
             currentPage: page,
             totalPages
@@ -29,17 +29,17 @@ async function renderOrderPage(req, res) {
     }
 }
 
-async function orderDetailsPage (req,res){
-    try{
+async function orderDetailsPage(req, res) {
+    try {
         const orderId = req.params.id;
         const order = await Order.findById(orderId)
 
         if (!order) {
-            return res.status(404).render(ADMIN_ORDER_DETAILS_PAGE,{order:{}});
+            return res.status(404).render(ADMIN_ORDER_DETAILS_PAGE, { order: {} });
         }
-        res.status(200).render(ADMIN_ORDER_DETAILS_PAGE,{order});
-    }catch(error){
-        return res.status(500).render(ADMIN_ORDER_DETAILS_PAGE,{order:{}});
+        res.status(200).render(ADMIN_ORDER_DETAILS_PAGE, { order });
+    } catch (error) {
+        return res.status(500).render(ADMIN_ORDER_DETAILS_PAGE, { order: {} });
     }
 }
 
@@ -68,7 +68,7 @@ async function orderStatus(req, res) {
             for (const item of order.items) {
                 const product = await Product.findById(item.product.product_id);
                 if (product) {
-                    product.stock_quantity += item.quantity; 
+                    product.stock_quantity += item.quantity;
                     await product.save();
                 }
             }
@@ -84,10 +84,53 @@ async function orderStatus(req, res) {
     }
 }
 
+async function returnOrderStatus(req, res) {
+    try {
+        const orderId = req.params.id;
+        const { status } = req.body;
+
+        const validStatuses = ['Pending', 'Processing', 'Approved', 'Rejected'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ message: "Invalid status value." });
+        }
+
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found." });
+        }
+
+
+        if (order.deliveryStatus === "Rejected" || order.deliveryStatus === "Approved") {
+            return res.status(400).json({ message: "Cannot update status of a Rejected or Approved order." });
+        }
+
+        if (status === 'Approved') {
+            for (const item of order.items) {
+                console.log("item",item)
+                const product = await Product.findById(item.product_id);
+                if (product) {
+                    product.stock_quantity += item.quantity;
+                    await product.save();
+                }
+            }
+            order.deliveryStatus= 'Returned'
+
+        }
+
+        order.orderRetrun = status;
+        await order.save()
+
+        res.status(200).json({ message: "Order retrun status updated successfully.", updatedStatus: order.deliveryStatus });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 export {
     renderOrderPage,
     orderDetailsPage,
-    orderStatus
+    orderStatus,
+    returnOrderStatus
 }

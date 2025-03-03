@@ -42,9 +42,10 @@ async function placeOreder(req, res) {
         const user = await User.findById(userId);
         const cart = await Cart.findById(cartId);
         const address = await Address.findById(addressId);
+
         if (paymentMethod === 'razorpay') {
             const options = {
-                amount: (cart.total_price + 100),
+                amount: cart.total_price * 100,
                 currency: 'INR',
                 receipt: generateReceiptNumber(),
             };
@@ -226,7 +227,7 @@ async function OrderCancel(req, res) {
         }
 
         const wallet = await Wallet.findOne({ userId })
-        wallet.balance = order.totalAmount
+        wallet.balance += order.totalAmount
 
         const transaction = new Transactions({
             walletId: wallet._id,

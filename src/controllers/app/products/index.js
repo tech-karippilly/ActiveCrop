@@ -8,7 +8,6 @@ import { applyOffers, appyOfferPrice } from "../../../utils/helperfunction.js"
 
 async function productSearch (req,res){
     try {
-        console.log(req.query)
         const {query } = req.query
         const {id} = req.params
 
@@ -35,7 +34,6 @@ async function productSearch (req,res){
 
         res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products:product, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
     } catch (err) {
-        console.log(err.message)
         res.status(500).json({ error: 'Server Error' });
     }
 }

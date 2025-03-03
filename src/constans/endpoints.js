@@ -34,6 +34,7 @@ export const ADMIN_UPDATE_CUSTOMER = '/:id'
 
 export const ADMIN_ORDERS_BASE ='/admin/orders'
 export const ADMIN_ORDERS_STATUS ='/:id/status'
+export const ADMIN_RETURN_ORDER_STATUS = '/retrun/:id/status'
 
 export const ADMIN_OFFERS_BASE ='/admin/offers'
 export const ADMIN_OFFER_PRODUCT_CREATE = '/create-product-offer'
