@@ -73,13 +73,11 @@ async function renderCartPage(req, res) {
             cart.total_price = total_price
             cart.discount = discount ?? 0
             await cart.save()
-            console.log(cart)
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })
         }
        
         return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
     } catch (error) {
-        console.log(error.message)
         return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
     }
 }

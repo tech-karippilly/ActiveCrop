@@ -193,7 +193,6 @@ async function createUser(req, res) {
 
         renderPage(res, HTTP_SUCCESS, USER_SIGNUP_PAGE, 'User Created Success fully and OTP send', ALERT_SUCCESS, '/otp/verifyOtp', userName)
     } catch (error) {
-        console.log(error.message)
         return renderPage(res, HTTP_SERVER_ERROR, USER_SIGNUP_PAGE, 'Internal server error', ALERT_DANGER, '')
     }
 }

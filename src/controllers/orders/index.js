@@ -106,7 +106,6 @@ async function returnOrderStatus(req, res) {
 
         if (status === 'Approved') {
             for (const item of order.items) {
-                console.log("item",item)
                 const product = await Product.findById(item.product_id);
                 if (product) {
                     product.stock_quantity += item.quantity;
@@ -124,7 +123,6 @@ async function returnOrderStatus(req, res) {
 
         res.status(200).json({ message: "Order retrun status updated successfully.", updatedStatus: order.deliveryStatus });
     } catch (error) {
-        console.log(error)
     }
 }
 

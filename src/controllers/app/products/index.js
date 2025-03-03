@@ -102,7 +102,6 @@ async function productDetailsPage(req, res) {
         const access_token = req.session.accessToken
         const getOffers = await ProductOffer.findOne({ "product._id": id })
 
-        console.log(getOffers)
         if (getOffers){
             const price = appyOfferPrice(products.price, getOffers.discountValue, getOffers.offer_type)
 
@@ -140,7 +139,6 @@ async function productDetailsPage(req, res) {
             currentUser: {}
         })
     } catch (error) {
-        console.log(error.message)
     }
 }
 
