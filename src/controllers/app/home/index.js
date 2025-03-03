@@ -26,7 +26,34 @@ const renderHomepage = async (req, res) => {
     }
 }
 
+const catagoerySearch = async (req,res)=>{
+    try {
+        const { query } = req.query;
+        const categories = await Categoery.find({
+            catagoery_name: { $regex: query, $options: 'i' }
+        });
+        const access_token = req.session.accessToken
+        if (access_token) {
+            const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
+            const userId = jwtDecode.userId
+            const currentUser = await User.findById(userId)
+            const cart = await Cart.find({ user_id: userId, status: 'active' })
+            let cartLength = 0
+            if (cart.length > 0 && cart[0].items) { 
+                cartLength = cart[0].items.length;
+            }
+            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: true, catagories:categories, currentUser, cartLength })
+        }else{
+            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: false, catagories:categories, currentUser:{}, cartLength:0 })
+        }
+
+    } catch (err) {
+        res.status(500).json({ err: 'Server Error' });
+    }
+}
+
 
 export {
     renderHomepage,
+    catagoerySearch
 }

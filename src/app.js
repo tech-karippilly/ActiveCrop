@@ -34,11 +34,12 @@ import reportRoutes from './routes/reports/index.js'
 import walletRoutes from './routes/app/wallet/index.js'
 
 
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WALLET_BASE, WHISLIST_BASE } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, USER_SEARCH, WALLET_BASE, WHISLIST_BASE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 import { NOT_FOUNT_PAGE } from "./constans/page.js";
 import swaggerSpec from "./utils/swagger.js";
 import swaggerDocument from "./utils/swaggerDocuments.js";
+import { catagoerySearch } from "./controllers/app/home/index.js";
 
 const app = express()
 
@@ -124,6 +125,7 @@ app.use('/page',pageRoute)
 
 // INITIAL ROUTES
 app.get(USER_HOME,homeRoute)
+app.get(USER_SEARCH,catagoerySearch)
 
 app.get('/order-success',OrderSuccess)
 

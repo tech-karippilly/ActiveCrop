@@ -61,6 +61,7 @@ export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
 
 export const USER_HOME ='/'
+export const USER_SEARCH ='/search'
 export const USER_CATAGOERY= '/catagoery'
 
 

@@ -33,6 +33,8 @@ async function productsPage(req, res) {
     }
 }
 
+async function productSearch (req,res){}
+
 async function filterProducts(req, res) {
     try {
         const { catagoery } = req.params
