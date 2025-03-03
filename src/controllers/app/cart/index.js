@@ -76,7 +76,7 @@ async function renderCartPage(req, res) {
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })
         }
        
-        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
+        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart:null, cartLength: 0 })
     } catch (error) {
         return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
     }

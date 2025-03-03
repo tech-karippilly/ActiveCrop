@@ -32,15 +32,7 @@ const renderCheckout = async (req, res) => {
         const categories = await Categoery.find();
         const currentUser = await User.findById(userId);
         
-        for (const item of cart.items) {
-            const product = await Product.findById(item.product_id);
-            if (!product || product.stock_quantity < item.quantity) {
-                return res.status(400).json({ 
-                    message: `Insufficient stock for product: ${item.product_name}`, 
-                    alertType: 'alert-danger' 
-                });
-            }
-        }
+
         
         return res.status(200).render(CHECKOUT_PAGE, { 
             isLogin: true, 
