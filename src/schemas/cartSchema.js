@@ -50,6 +50,11 @@ const cartSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    total_item_price:{
+        type:Number,
+        require:true,
+        default:0
+    },
     shipping:{
         type:Number,
         default:100
@@ -73,9 +78,24 @@ const cartSchema = new mongoose.Schema({
     timestamps:true
 })
 
+// cartSchema.pre('save', function (next) {
+//     this.total_price = this.items.reduce((acc, item) => acc + item.priceAtPurchanse * item.quantity, 0);
+//     this.total_price = Math.max(0, this.total_price - this.discount  + this.shipping);
+//     next();
+// });
+
+cartSchema.pre('save',function(next){
+    this.total_item_price = this.items.reduce((acc, item) => acc + (item.priceAtPurchanse * item.quantity), 0);
+    next()
+})
+
 cartSchema.pre('save', function (next) {
-    this.total_price = this.items.reduce((acc, item) => acc + item.priceAtPurchanse * item.quantity, 0);
-    this.total_price = Math.max(0, this.total_price - this.discount  + this.shipping);
+    let price = this.items.reduce((acc, item) => acc + (item.priceAtPurchanse * item.quantity), 0);
+
+    const discount = this.discount ?? 0; 
+    const shipping = this.shipping ?? 0; 
+
+    this.total_price =(price + shipping) - discount
     next();
 });
 
