@@ -36,6 +36,8 @@ async function renderCartPage(req, res) {
                         item.quantity >= offersItems.min_quantity
                     );
 
+                   
+
                     const cataOffer = catagoeryOffer.find(offersItems=>
                         offersItems.category.id.equals(item.catagoery_id)&&
                         moment(offersItems.valid_from).isSameOrBefore(moment())&&
@@ -65,8 +67,10 @@ async function renderCartPage(req, res) {
                 }
                 
                 total_price = Math.max(cart.total_price - discount, 0);
+                
             }
 
+            cart.total_price = total_price
             cart.discount = discount ?? 0
             await cart.save()
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })

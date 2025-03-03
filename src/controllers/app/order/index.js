@@ -14,23 +14,48 @@ const razorpay = new Razorpay({
 })
 
 const renderCheckout = async (req, res) => {
-
-    const access_token = req.session.accessToken
-    if (access_token) {
-        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
-        const userId = jwtDecode.userId
-
-        const cart = await Cart.findOne({ user_id: userId, status: 'active' })
-        const addressList = await Address.find({ user_id: userId })
-        const catagories = await Categoery.find()
-        const currentUser = await User.findById(userId)
-        let cartLength = 0
-        if (cart && cart.items) {
-            cartLength = cart.items.length;
+    try {
+        const access_token = req.session.accessToken;
+        if (!access_token) {
+            return res.redirect('/login');
         }
-        return res.status(200).render(CHECKOUT_PAGE, { isLogin: true, catagories, addressList, cart, cartLength, currentUser })
+        
+        const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN);
+        const userId = jwtDecode.userId;
+        
+        const cart = await Cart.findOne({ user_id: userId, status: 'active' });
+        if (!cart || !cart.items.length) {
+            return res.status(400).json({ message: 'Your cart is empty.', alertType: 'alert-warning' });
+        }
+        
+        const addressList = await Address.find({ user_id: userId });
+        const categories = await Categoery.find();
+        const currentUser = await User.findById(userId);
+        
+        for (const item of cart.items) {
+            const product = await Product.findById(item.product_id);
+            if (!product || product.stock_quantity < item.quantity) {
+                return res.status(400).json({ 
+                    message: `Insufficient stock for product: ${item.product_name}`, 
+                    alertType: 'alert-danger' 
+                });
+            }
+        }
+        
+        return res.status(200).render(CHECKOUT_PAGE, { 
+            isLogin: true, 
+            categories, 
+            addressList, 
+            cart, 
+            cartLength: cart.items.length, 
+            currentUser 
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal Server Error', error: error.message, alertType: 'alert-danger' });
     }
-}
+};
+
+
 
 async function placeOreder(req, res) {
     try {
@@ -42,7 +67,15 @@ async function placeOreder(req, res) {
         const user = await User.findById(userId);
         const cart = await Cart.findById(cartId);
         const address = await Address.findById(addressId);
-
+        for (const item of cart.items) {
+            const product = await Product.findById(item.product_id);
+            if (!product || product.stock_quantity < item.quantity) {
+                return res.status(400).json({ 
+                    message: `Insufficient stock for product: ${item.product_name}`, 
+                    alertType: 'alert-danger' 
+                });
+            }
+        }
         if (paymentMethod === 'razorpay') {
             const options = {
                 amount: cart.total_price * 100,

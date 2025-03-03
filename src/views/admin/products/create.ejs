@@ -420,7 +420,6 @@
 
         }
         function selectCategory(categoryId, categoryName) {
-            console.log("Selection ",categoryId)
             document.getElementById('catagoery-name').innerText = categoryName
             document.getElementById('catagoery_id').value = categoryId
         }
@@ -444,8 +443,6 @@
         const price = document.getElementById('price').value.trim();
         const stockQuantity = document.getElementById('stock_quantity').value.trim();
         const categoryId = document.getElementById('catagoery_id').value.trim();
-
-        console.log(categoryId)
 
         const nameRegex = /^[A-Za-z ]+$/;
         if (!nameRegex.test(productName) || productName.startsWith(' ')) {
@@ -491,9 +488,7 @@
 
         if (!isValid) {
             event.preventDefault();
-            console.log('form not valid', isValid)
         }else{
-            console.log('form valid', isValid)
             document.getElementById('create-product-form').submit()
             
         }
