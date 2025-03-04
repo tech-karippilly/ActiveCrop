@@ -21,7 +21,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -160,6 +160,13 @@
 
                 <div class="col-8 content-section">
                     <div id="orderDetailsContainer" class="container mt-5">
+                        <div class=" mt-3 mb-3">
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-primary" onclick="generatePDF()">
+                                    <i class="fas fa-download"></i> Download Invoice
+                                </button>
+                            </div>
+                        </div>
                         <!-- Order Information Section -->
                         <div class="row">
                             <div class="col-md-8">
@@ -237,6 +244,8 @@
                                 </div>
                             </div>
                         </div>
+
+
 
                         <!-- Action Buttons -->
                         <div class="mt-3">
@@ -593,7 +602,78 @@
                 })
                 .catch(error => console.error("Error:", error));
         }
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const ordersList = '<%= JSON.stringify(orders) %>'
 
+            const decodedString = ordersList.replace(/&#34;/g, '"');
+            const order = JSON.parse(decodedString);
+
+            let yOffset = 20; // Initial Y position
+
+            // Title
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text("Invoice", 105, yOffset, null, null, "center");
+
+            // Order Details
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            yOffset += 20;
+            doc.text(`Order Number: ${order.orderNumber}`, 20, yOffset);
+            yOffset += 10;
+            const purchaseDate = new Date(order.createdAt).toLocaleDateString("en-IN");
+            doc.text(`Date of Purchase: ${purchaseDate}`, 20, yOffset);
+
+            // Line separator
+            yOffset += 10;
+            doc.line(20, yOffset, 190, yOffset);
+            yOffset += 10;
+
+            // Items Header
+            doc.setFont("helvetica", "bold");
+            doc.text("Items Ordered:", 20, yOffset);
+            yOffset += 10;
+            doc.setFont("helvetica", "normal");
+
+            // Table Header
+            doc.text("Item", 20, yOffset);
+            doc.text("Quantity", 100, yOffset);
+            doc.text("Price", 160, yOffset);
+            yOffset += 10;
+            doc.line(20, yOffset, 190, yOffset);
+            yOffset += 10;
+
+            // Items List
+            order.items.forEach(item => {
+                doc.text(item.product_name, 20, yOffset);
+                doc.text(item.quantity.toString(), 110, yOffset);
+                doc.text(`\u20B9 ${item.priceAtPurchanse}`, 160, yOffset);
+                yOffset += 10;
+            });
+
+            // Line separator
+            yOffset += 5;
+            doc.line(20, yOffset, 190, yOffset);
+            yOffset += 10;
+
+            // Summary
+            doc.setFont("helvetica", "bold");
+            doc.text(`Shipping Charge: \u20B9 100`, 20, yOffset);
+            yOffset += 10;
+
+            if (order.discount) {
+                doc.text(`Discount: - \u20B9 ${order.discount}`, 20, yOffset);
+                yOffset += 10;
+            }
+
+            const finalTotal = order.totalAmount;
+            doc.text(`Total Amount: \u20B9 ${finalTotal}`, 20, yOffset);
+
+            // Download PDF
+            doc.save("invoice.pdf");
+        }
     </script>
 
 
