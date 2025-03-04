@@ -40,6 +40,7 @@ import { NOT_FOUNT_PAGE } from "./constans/page.js";
 import swaggerSpec from "./utils/swagger.js";
 import swaggerDocument from "./utils/swaggerDocuments.js";
 import { catagoerySearch } from "./controllers/app/home/index.js";
+import { Adminprotect } from "./middleware/adminAuthMiddleware.js";
 
 const app = express()
 
@@ -100,13 +101,13 @@ app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(combinedSwaggerSpec))
 app.use(ADMIN_AUTH_BASE, adiminAuthRoute)
 app.use('/api/admin/role', roleAuth)
 app.use('/admin/dashboard',dashboardRoute)
-app.use(ADMIN_CATAGOERY_BASE, categoeryRoute)
-app.use(ADMIN_PRODUCTS_BASE, productRoute)
-app.use(ADMIN_CUSTOMER_BASE,customerRoute)
-app.use(ADMIN_ORDERS_BASE,adminOrderRoute)
-app.use(ADMIN_OFFERS_BASE,offerRoutes)
-app.use(ADMIN_COUPON_BASE,couponRoutes)
-app.use(ADMIN_REPORT_BASE,reportRoutes)
+app.use(ADMIN_CATAGOERY_BASE,Adminprotect, categoeryRoute)
+app.use(ADMIN_PRODUCTS_BASE, Adminprotect,productRoute)
+app.use(ADMIN_CUSTOMER_BASE,Adminprotect,customerRoute)
+app.use(ADMIN_ORDERS_BASE,Adminprotect,adminOrderRoute)
+app.use(ADMIN_OFFERS_BASE,Adminprotect,offerRoutes)
+app.use(ADMIN_COUPON_BASE,Adminprotect,couponRoutes)
+app.use(ADMIN_REPORT_BASE,Adminprotect,reportRoutes)
 
 
 //USER ROUTES
