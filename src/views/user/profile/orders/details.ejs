@@ -50,54 +50,54 @@
                     <div class="col profile-container">
                         <!-- <span class="text-capitalize" style="cursor: pointer;"
                             onclick="window.location.href='/auth/login'">Login</span> -->
-                            <div class="btn-group">
-                                <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <%= currentUser.firstName %>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="/user/profile">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-regular fa-user"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Profile
-                                                </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <%= currentUser.firstName %>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/user/profile">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-regular fa-user"></i>
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-solid fa-gear"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Settings
-                                                </div>
+                                            <div class="col">
+                                                Profile
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                       
-                                            <div class="row">
-                                                <div class="col">
-                                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                                </div>
-                                                <div class="col" onclick="window.location.href='/auth/logout'">
-                                                    Logout
-                                                </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-solid fa-gear"></i>
                                             </div>
-                                        
-                                    </li>
-                                </ul>
-                            </div>
+                                            <div class="col">
+                                                Settings
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </div>
+                                        <div class="col" onclick="window.location.href='/auth/logout'">
+                                            Logout
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,6 +173,28 @@
                                         class="<%= orders.deliveryStatus === 'Pending' ? 'text-warning' : (orders.deliveryStatus === 'Delivered' ? 'text-success' : 'text-danger') %>">
                                         <%= orders.deliveryStatus %>
                                     </span></p>
+                                <h4>Price Summary:</h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>Subtotal:</span>
+                                        <span>₹<%= orders.items.reduce((sum, item)=> sum + (item.priceAtPurchanse *
+                                                item.quantity), 0).toFixed(2) %></span>
+                                    </li>
+                                    <% if (orders.discount && orders.discount> 0) { %>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Discount:</span>
+                                            <span>- ₹<%= orders.discount.toFixed(2) %></span>
+                                        </li>
+                                        <% } %>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Shipping:</span>
+                                            <span>+ ₹100</span>
+                                        </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <strong>Total:</strong>
+                                                <strong>₹<%= orders.totalAmount.toFixed(2) %></strong>
+                                            </li>
+                                </ul>
 
                                 <!-- Product Details Section -->
                                 <h4>Product Details:</h4>
@@ -240,7 +262,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div id="orderTrackingTimeline" class="container mt-5">
                         <h3>
                             <%= orders.orderRetrun !=='Pending' ? 'Return Order Tracking' : 'Order Tracking' %>
