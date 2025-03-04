@@ -47,8 +47,6 @@ const renderCheckout = async (req, res) => {
     }
 };
 
-
-
 async function placeOreder(req, res) {
     try {
 

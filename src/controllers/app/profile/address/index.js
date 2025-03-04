@@ -12,7 +12,7 @@ export async function renderAddressPage(req, res) {
             const user = await User.findById(userId)
             const addressList = await Address.find({ user_id: user })
             const currentUser = await User.findById(userId)
-            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { currentUser,addressList })
+            res.status(HTTP_SUCCESS).render(USER_ADDRESS_PAGE, { currentUser, addressList })
         }
 
     } catch (errr) {
@@ -27,7 +27,7 @@ export async function renderCreateAddressPage(req, res) {
         const userId = jwtDecode.userId
         const user = await User.findById(userId)
         const currentUser = await User.findById(userId)
-        res.status(HTTP_SUCCESS).render(USER_ADDRESS_CREATE_PAGE,{currentUser})
+        res.status(HTTP_SUCCESS).render(USER_ADDRESS_CREATE_PAGE, { currentUser })
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_CREATE_PAGE)
     }
@@ -43,11 +43,11 @@ async function createAddress(req, res) {
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
             const address = await Address.findOne({ nickname, address_line_1, address_line_2 })
-    
+
             if (address) {
                 return res.status(409).json({ message: 'Address already exist', alertype: 'alert-warning' })
             }
-    
+
             const adderssDetails = {
                 address_line_1,
                 address_line_2,
@@ -60,11 +60,11 @@ async function createAddress(req, res) {
                 nickname,
                 user_id: currentUser._id
             }
-    
+
             const newAddress = new Address(adderssDetails)
-    
+
             await newAddress.save()
-    
+
             return res.status(201).json({ message: "Address Created", alertype: 'alert-success', redirect: '/user/profile/address' })
         }
 
@@ -119,10 +119,10 @@ export async function renderEditAddressPage(req, res) {
         const userId = jwtDecode.userId
         const currentUser = await User.findById(userId)
         if (address) {
-            return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address,currentUser })
+            return res.status(HTTP_SUCCESS).render(USER_ADDRESS_EDIT_PAGE, { address, currentUser })
         }
 
-        res.status(HTTP_NOT_FOUND).render(USER_ADDRESS_EDIT_PAGE,{currentUser})
+        res.status(HTTP_NOT_FOUND).render(USER_ADDRESS_EDIT_PAGE, { currentUser })
     } catch (errr) {
         res.status(HTTP_SERVER_ERROR).render(USER_ADDRESS_EDIT_PAGE)
     }
@@ -157,30 +157,41 @@ async function editAddress(req, res) {
 }
 
 
-async function renderOrders(req,res){
+async function renderOrders(req, res) {
     const access_token = req.session.accessToken
     if (access_token) {
         const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
         const userId = jwtDecode.userId
         const currentUser = await User.findById(userId)
-        const orders = await Order.find({user:userId})
 
-        res.status(200).render(USER_ORDER_PAGE,{currentUser,orders})
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+        const skip = (page - 1) * limit;
+        const totalOrders = await Order.countDocuments({ user: userId });
+
+        const orders = await Order.find({ user: userId }).sort({ createdAt: -1 }).skip(skip)
+            .limit(limit);
+
+        res.status(200).render(USER_ORDER_PAGE, { currentUser, orders, pagination: {
+            currentPage: page,
+            totalPages: Math.ceil(totalOrders / limit),
+            totalOrders
+        } })
     }
 }
 
-async function renderOrderDetails  (req,res){
+async function renderOrderDetails(req, res) {
     const access_token = req.session.accessToken
     if (access_token) {
-        const {id}  =req.params
+        const { id } = req.params
         const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
         const userId = jwtDecode.userId
         const currentUser = await User.findById(userId)
         const orders = await Order.findById(id)
-        res.status(200).render(USER_ORDER_DETAILS_PAGE,{currentUser,orders})
+        res.status(200).render(USER_ORDER_DETAILS_PAGE, { currentUser, orders })
     }
 }
 
 
 
-export { createAddress, defaultAddress, deleteAddress, editAddress,renderOrders,renderOrderDetails }
+export { createAddress, defaultAddress, deleteAddress, editAddress, renderOrders, renderOrderDetails }

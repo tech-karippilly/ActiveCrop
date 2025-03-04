@@ -165,7 +165,7 @@
                                 <th>Order ID</th>
                                 <th>Items Count</th>
                                 <th>Total Price</th>
-                                <th>Payamnet Status</th>
+                                <th>Payment Status</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -184,7 +184,7 @@
                                         <td>
                                             <%= order.items.length %>
                                         </td>
-                                        <td>$<%= order.totalAmount.toFixed(2) %>
+                                        <td>₹<%= order.totalAmount.toFixed(2) %>
                                         </td>
                                         <td>
                                             <%= order.paymentStatus %>
@@ -202,8 +202,38 @@
                                     <% }); %>
                         </tbody>
                     </table>
-                </div>
 
+                    <!-- Pagination Controls -->
+                    <nav aria-label="Order Pagination">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item <%= pagination.currentPage === 1 ? 'disabled' : '' %>">
+                                <a class="page-link"
+                                    href="?page=<%= pagination.currentPage - 1 %>&limit=<%= pagination.limit %>">
+                                    Previous
+                                </a>
+                            </li>
+
+                            <!-- Page Numbers -->
+                            <% for(let i=1; i <=pagination.totalPages; i++) { %>
+                                <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&limit=<%= pagination.limit %>">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                    <!-- Next Button -->
+                                    <li
+                                        class="page-item <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>">
+                                        <a class="page-link"
+                                            href="?page=<%= pagination.currentPage + 1 %>&limit=<%= pagination.limit %>">
+                                            Next
+                                        </a>
+                                    </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </section>
 
