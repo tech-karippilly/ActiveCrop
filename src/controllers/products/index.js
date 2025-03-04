@@ -176,20 +176,30 @@ export const getProductByCatagoery = async (req,res) =>{
 
 const removeImageFromProduct = async (req,res) =>{
     try{
-        const {productId,imageIndex} = req.body
-
+        const {productId,imageIndex} = req.query
+        console.log(req.query)
         const product  = await Product.findById(productId)
 
         if (!product){
             return res.status(404).json({message:"Product not Found"})
         }
 
+        const index = Number(imageIndex);
+        if (isNaN(index) || index < 0 || index >= product.images.length) {
+            return res.status(400).json({ message: "Invalid image index" });
+        }
+        let imagesArray = Object.entries(product.images);
+
+        if (imagesArray.length <= 2) {
+            return res.status(400).json({ message: "A product must have at least 3 images." });
+        }
+        console.log(product.images)
+        console.log('imageIndex',imageIndex)
+        delete product.images[imageIndex];
+        product.markModified("images");
+        await product.save();
         console.log(product)
-
-
-        
-
-        res.status(200).json({message:'Processing'})
+        res.status(200).json({message:'Image removed', status:true})
     }catch(error){
         console.log(error.message)
         res.status(500).json({message:"Internal Server Error",error: error.message})
