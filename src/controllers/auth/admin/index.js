@@ -16,21 +16,21 @@ function loginPage(req, res) {
 async function adminLogin(req, res) {
     try {
         const { email, password } = req.body;
-       
+
         // Validate form inputs
         if (!isAdminLoginFormValid(email, password)) {
-            return renderResponse(ADMIN_LOGIN_PAGE,res, HTTP_BAD_REQUEST, 'Invalid username or password. Please try again.', ALERT_DANGER, '');
+            return renderResponse(ADMIN_LOGIN_PAGE, res, HTTP_BAD_REQUEST, 'Invalid username or password. Please try again.', ALERT_DANGER, '');
         }
 
         // Find user by email
         const user = await User.findOne({ email });
         if (!user) {
-            return renderResponse(ADMIN_LOGIN_PAGE,res, HTTP_CONFICT, 'User not found', ALERT_WARNING, '');
+            return renderResponse(ADMIN_LOGIN_PAGE, res, HTTP_CONFICT, 'User not found', ALERT_WARNING, '');
         }
 
         // Check if user is verified
         if (!user.isVerifyed) {
-            return renderResponse(ADMIN_LOGIN_PAGE,res, HTTP_FORBIDDEN, 'User is not verified', ALERT_WARNING, '');
+            return renderResponse(ADMIN_LOGIN_PAGE, res, HTTP_FORBIDDEN, 'User is not verified', ALERT_WARNING, '');
         }
 
         // Validate password
@@ -58,7 +58,7 @@ async function adminLogin(req, res) {
 
         return renderResponse(ADMIN_LOGIN_PAGE, res, HTTP_SUCCESS, 'Login Successful', ALERT_SUCCESS, ADMIN_DASHBOARD);
     } catch (error) {
-        return renderResponse(ADMIN_LOGIN_PAGE,res, HTTP_SERVER_ERROR, 'Internal server error', ALERT_DANGER, '');
+        return renderResponse(ADMIN_LOGIN_PAGE, res, HTTP_SERVER_ERROR, 'Internal server error', ALERT_DANGER, '');
     }
 }
 
@@ -68,20 +68,20 @@ function createpage(req, res) {
 }
 
 async function createAdmin(req, res) {
-    
+
     try {
-        const { firstName, lastName, userEmail, password, userName,phone, confirmPassword } = req.body
+        const { firstName, lastName, userEmail, password, userName, phone, confirmPassword } = req.body
 
         const validationErrors = isAdminSignupFormValid(firstName, lastName, userEmail, password, userName, phone, confirmPassword);
 
         if (validationErrors) {
-            const errorMessage = validationErrors.join(" "); 
+            const errorMessage = validationErrors.join(" ");
             return renderResponse(ADMIN_SIGNUP_PAGE, res, HTTP_BAD_REQUEST, errorMessage, ALERT_DANGER, '');
         }
         const userRole = await Role.findOne({ roleName: 'SuperAdmin' });
-        
-        const existingUser = await User.findOne({ $or: [{ userName }, { email:userEmail }] });
-        
+
+        const existingUser = await User.findOne({ $or: [{ userName }, { email: userEmail }] });
+
         if (existingUser) {
             return renderResponse(ADMIN_SIGNUP_PAGE, res, HTTP_CONFICT, 'Username or email already exists', ALERT_DANGER, '');
         }
@@ -89,7 +89,7 @@ async function createAdmin(req, res) {
         const user = {
             firstName,
             lastName,
-            email:userEmail,
+            email: userEmail,
             password,
             userName,
             phone,
@@ -107,34 +107,18 @@ async function createAdmin(req, res) {
 
 
 
-function renderResponse(pageName,res, status, alertMessage, alertType, redirectUrl) {
+function renderResponse(pageName, res, status, alertMessage, alertType, redirectUrl) {
     res.status(status).render(pageName, { alertMessage, alertType, redirectUrl });
 }
 
 async function adminLogout(req, res) {
-    try {
-        const token = req.session.accessToken  
-        const result = await Token.deleteOne({ access_token: token })
 
-        if (result.deletedCount === 1) {
-            try{
-                req.session.destroy((err) => {
-                    if (err) {
-                      console.error('Error destroying session:', err);
-                      return  res.status(HTTP_SERVER_ERROR).json({message:"Internal Server Error"})
-                    }
-                    res.status(HTTP_SUCCESS).json({message:"Logged out successfully"})
-                  });
-            }catch(error){
-                res.status(HTTP_SERVER_ERROR).json({message:"Internal Server Error"})
-            }
-        } else {
-            return res.status(400).json({ message: "Error in Token" })
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Internal server Error" })
+    try{
+        res.redirect('/admin')
+    }catch(error){
+        console.log(error.message)
+
     }
-
 }
 
 
