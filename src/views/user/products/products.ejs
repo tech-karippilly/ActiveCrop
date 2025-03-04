@@ -126,7 +126,8 @@
                 <div class="d-flex align-items-center  text-white p-2 rounded w-50 justify-content-between">
 
                     <form class="d-flex w-75" method="get" action="/products/search/<%= activeCata %>">
-                        <input class="form-control me-2" type="search" name="query" placeholder="Search..." aria-label="Search">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search..."
+                            aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
 
@@ -369,14 +370,32 @@
         });
 
         document.getElementById('sort-by').addEventListener('change', (event) => {
-            const apiUrl = `/products/filter/<%= activeCata %>?sort=${event.target.value}`;
-            fetch(apiUrl)
-                .then((response) => response.json())
-                .then((data) => {
-                    const productContainer = document.getElementById('product-container');
-                    productContainer.innerHTML = '';
-                    data.products.forEach(product => {
-                        const productCard = `
+            const sortBy = event.target.value;
+
+            const productList = '<%= JSON.stringify(products) %>'
+            
+            const decodedString = productList.replace(/&#34;/g, '"');
+            const product = JSON.parse(decodedString);
+            let sortedProducts = [...product];
+            if (sortBy === 'price-high-low') {
+                sortedProducts.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'price-low-high') {
+                sortedProducts.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'az') {
+                sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name));
+            } else if (sortBy === 'za') {
+                sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name));
+            }else if (sort==='new-arrivals'){
+                 sortedProducts = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            renderProducts(sortedProducts);
+        })
+
+        function renderProducts(productList) {
+            const productContainer = document.getElementById('product-container');
+            productContainer.innerHTML = '';
+            productList.forEach(product => {
+                const productCard = `
             <div class="col-md-3 col-sm-6 col-12 p-2">
                 <div class="card product-card text-center shadow-sm" style="max-width: 250px; font-size: 14px;" onclick="handleCardClick('${product._id}')">
                     <div class="image-container" style="height: 150px; overflow: hidden;">
@@ -395,11 +414,9 @@
                     </div>
                 </div>
             </div>`;
-                        productContainer.innerHTML += productCard;
-                    })
-                })
-        })
-
+                productContainer.innerHTML += productCard;
+            })
+        }
         function handleCardClick(id) {
             window.location.href = `/products/details/${id}/<%= activeCata %>`
         }

@@ -3,13 +3,13 @@ import { USER_PRODUCT_DETAILS_PAGE, USER_PRODUCT_PAGE } from "../../../constans/
 import { Cart, Categoery, Product, ProductOffer, Review, User } from "../../../models/index.js"
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import { applyOffers, appyOfferPrice } from "../../../utils/helperfunction.js"
+import { applyOffers, appyOfferPrice, isOfferValid } from "../../../utils/helperfunction.js"
 
 
-async function productSearch (req,res){
+async function productSearch(req, res) {
     try {
-        const {query } = req.query
-        const {id} = req.params
+        const { query } = req.query
+        const { id } = req.params
 
         const product = await Product.find({
             product_name: { $regex: query, $options: 'i' }
@@ -29,14 +29,16 @@ async function productSearch (req,res){
             if (cart.length > 0 && cart[0].items) {
                 cartLength = cart[0].items.length;
             }
-            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products:product, catagories, activeCata: id, currentUser, cartLength })
+            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products: product, catagories, activeCata: id, currentUser, cartLength })
         }
 
-        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products:product, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
+        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products: product, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
     } catch (err) {
         res.status(500).json({ error: 'Server Error' });
     }
 }
+
+
 
 async function productsPage(req, res) {
     try {
@@ -45,6 +47,17 @@ async function productsPage(req, res) {
         const getOffers = await ProductOffer.find()
         const catagories = await Categoery.find()
         const access_token = req.session.accessToken
+
+        const newProductList  =applyOffers(products,getOffers)
+
+        newProductList.forEach( async (product)=>{
+            const currentProduct = await Product.findById(product._id)
+            currentProduct.price=product.price
+            currentProduct.offer_price =product.offer_price
+            await currentProduct.save()
+        })
+
+
         if (access_token) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
@@ -56,11 +69,12 @@ async function productsPage(req, res) {
                 cartLength = cart[0].items.length;
             }
 
-            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products, catagories, activeCata: id, currentUser, cartLength })
+            return res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: true, products:newProductList, catagories, activeCata: id, currentUser, cartLength })
         }
 
 
-        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
+
+        res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products:newProductList, catagories, activeCata: id, currentUser: {}, cartLength: 0 })
     } catch (error) {
         res.status(HTTP_SUCCESS).render(USER_PRODUCT_PAGE, { isLogin: false, products: [], catagories: [], activeCata: '', currentUser: {}, cartLength: 0 })
     }
@@ -102,7 +116,7 @@ async function productDetailsPage(req, res) {
         const access_token = req.session.accessToken
         const getOffers = await ProductOffer.findOne({ "product._id": id })
 
-        if (getOffers){
+        if (getOffers) {
             const price = appyOfferPrice(products.price, getOffers.discountValue, getOffers.offer_type)
 
             products.offerprice = price;
@@ -142,7 +156,28 @@ async function productDetailsPage(req, res) {
     }
 }
 
+async function updateProductPrices(newProductList,) {
+    for (const offerProduct of newProductList) {
+        try {
+            const currentProduct = await Product.findById(offerProduct._id);
+            if (!currentProduct) {
+                console.log(`Product with ID ${offerProduct._id} not found`);
+                continue;
+            }
 
+            console.log("currentProduct", currentProduct);
+            console.log("offerProducts", offerProduct);
+
+            const newPrice = Number(currentProduct.price) - Number(offerProduct.offerprice);
+            console.log("offerPrice", newPrice);
+
+            currentProduct.price = newPrice; 
+            await currentProduct.save();
+        } catch (error) {
+            console.log(`Error updating product ${offerProduct._id}:`, error.message);
+        }
+    }
+}
 
 export {
     productsPage,

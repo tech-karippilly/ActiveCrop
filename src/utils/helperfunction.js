@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import { Referal } from '../models/index.js';
+import moment from 'moment';
 function generateReceiptNumber(prefix = "REC", length = 10) {
     const randomBytes = crypto.randomBytes(length);
     const receiptNumber = randomBytes.toString('hex').toUpperCase().slice(0, length);
@@ -13,7 +14,7 @@ function applyOffers(productList, offers) {
             const value = appyOfferPrice(product.price, ProductOffer.discountValue, ProductOffer.offer_type)
             return {
                 ...product._doc,
-                offerprice: `${value}`
+                offer_price: `${value}`
             }
         }
 
@@ -63,9 +64,26 @@ const generateUniqueReferralCode = async () => {
     }
     return code;
 };
+
+function isOfferValid(offer) {
+    try{
+        const currentDate = moment();
+        const validFrom = moment(offer.valid_from);
+        const validUntil = moment(offer.valid_until);
+        console.log("validFrom",validFrom)
+        console.log("validUntil",validUntil)
+        console.log("currentDate",currentDate)
+        console.log("condition",currentDate.isBetween(validFrom, validUntil, null, '[)'))
+        return currentDate.isBetween(validFrom, validUntil, null, '[)');
+    }catch(error){
+        console.log(error.message)
+    }
+
+}
 export {
     generateReceiptNumber,
     applyOffers,
     generateReferralCode,
-    generateUniqueReferralCode
+    generateUniqueReferralCode,
+    isOfferValid
 }
