@@ -236,7 +236,8 @@
                     <div class="card mb-4">
                         <div class="card-header">Apply Coupon</div>
                         <div class="card-body d-flex">
-                            <input type="text" id="couponCode" class="form-control me-2" placeholder="Enter coupon code">
+                            <input type="text" id="couponCode" class="form-control me-2"
+                                placeholder="Enter coupon code">
                             <button class="btn btn-success" onclick="applyCoupon()">Apply</button>
                         </div>
                     </div>
@@ -245,14 +246,17 @@
                     <div class="card mb-4">
                         <div class="card-header">Payment Method</div>
                         <div class="card-body">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentMethod" id="cod" checked>
-                                <label class="form-check-label" for="cod">Cash on Delivery (COD)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="paymentMethod" id="razorpay" checked>
-                                <label class="form-check-label" for="razorpay">Razor Pay</label>
-                            </div>
+                            <% if(cart.total_price <= 1000){ %>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="paymentMethod" id="cod" checked>
+                                    <label class="form-check-label" for="cod">Cash on Delivery (COD)</label>
+                                </div>
+                                <%}%>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="razorpay"
+                                            checked>
+                                        <label class="form-check-label" for="razorpay">Razor Pay</label>
+                                    </div>
                         </div>
                     </div>
 
@@ -376,13 +380,13 @@
         function initializePayment(optionsRazorPay) {
             const razorPayOptions = {
                 key: optionsRazorPay.key,
-                amount: optionsRazorPay.amount * 100 ,
+                amount: optionsRazorPay.amount * 100,
                 currency: optionsRazorPay.currency,
                 description: optionsRazorPay.description,
                 order_id: optionsRazorPay.order_id, // Correct order_id
                 prefill: {
                     name: optionsRazorPay.user.name,
-                    email:  optionsRazorPay.user.email,
+                    email: optionsRazorPay.user.email,
                     contact: optionsRazorPay.user.contact
                 },
 
@@ -451,33 +455,33 @@
         }
 
         function applyCoupon() {
-        const couponCode = document.getElementById("couponCode").value;
-        const cartId ="<%= cart._id %>"; 
+            const couponCode = document.getElementById("couponCode").value;
+            const cartId = "<%= cart._id %>";
 
-        if (!couponCode) {
-            alert("Please enter a coupon code.");
-            return;
-        }
+            if (!couponCode) {
+                alert("Please enter a coupon code.");
+                return;
+            }
 
-        fetch(`/coupon/${couponCode}?cartId=${cartId}`, {
-        headers: {
-            "Content-Type": "application/json",
+            fetch(`/coupon/${couponCode}?cartId=${cartId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw new Error(err.message); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("Coupon applied successfully!");
+                    window.location.reload()
+                })
+                .catch(error => {
+                    alert("Failed to apply coupon: " + error.message);
+                });
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw new Error(err.message); });
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert("Coupon applied successfully!");
-        window.location.reload()
-    })
-    .catch(error => {
-        alert("Failed to apply coupon: " + error.message);
-    });
-    }
 
     </script>
 
