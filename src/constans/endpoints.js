@@ -25,6 +25,7 @@ export const ADMIN_UPDATE_PRODUCTS = '/:id'
 export const ADMIN_DELETE_PRODUCTS = '/:id'
 export const ADMIN_PRODUCT_SEARCH ='/search'
 export const ADMIN_PRODUCT_DETAILS='/:id'
+export const ADMIN_PRODUCT_IMAGE_REMOVE ='/:id'
 
 export const ADMIN_CUSTOMER_BASE = '/admin/customers'
 export const ADMIN_CUSTOMER_SEARCH = '/search'
