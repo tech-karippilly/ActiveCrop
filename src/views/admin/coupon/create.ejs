@@ -52,6 +52,10 @@
                         <a href="/admin/coupons" class="link-text-active">Coupons</a>
                     </div>
                     <div class="link-container">
+                        <a href="/admin/report" class="link-text">Report</a>
+                    </div>
+    
+                    <div class="link-container">
                         <a href="#" class="link-text">Banner</a>
                     </div>
                     <div class="link-container">
@@ -212,18 +216,20 @@
                 alertBox.classList.add("d-none");
             }, 3000);
         }
+
+
     </script>
 
 
     <script>
 
         function logoutUser() {
-            fetch('/api/admin/auth/logout', {
+            fetch('/admin/auth/logout', {
                 method: 'GET'
             })
                 .then((data) => {
-                    if (data.ok) {
-                        window.location.href = '/admin'
+                    if(data.ok){
+                        window.location.href='/admin'
                     }
                 }).catch(error => {
                 })
