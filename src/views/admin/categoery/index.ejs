@@ -137,13 +137,13 @@
         setTimeout(() => {
             alertBox.classList = '';
             alertBox.innerHTML = '';
-        }, 3000);
+        }, 1000);
 
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
             setTimeout(() => {
                 window.location.href = redirectUrl;
-            }, 2000)
+            }, 1000)
 
         }
 

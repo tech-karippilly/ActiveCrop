@@ -410,13 +410,13 @@
         setTimeout(() => {
             alertBox.classList = '';
             alertBox.innerHTML = '';
-        }, 5000);
+        }, 1000);
 
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
             setTimeout(() => {
                 window.location.href = redirectUrl;
-            }, 2000)
+            }, 1000)
 
         }
         function selectCategory(categoryId, categoryName) {

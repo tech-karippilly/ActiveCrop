@@ -170,14 +170,14 @@
                             alertBox.classList.remove('alert')
                             alertBox.classList.remove('alert-success')
                             window.location.reload()
-                        }, 3000)
+                        }, 1000)
                     } else {
                         alertBox.classList.add('alert-danger')
                         setTimeout(() => {
                             alertdiv.innerHTML = ''
                             alertBox.classList.remove('alert')
                             alertBox.classList.remove('alert-danger')
-                        }, 3000)
+                        }, 1000)
                     }
 
                 }).catch(error => {
@@ -188,7 +188,7 @@
                         alertdiv.innerHTML = ''
                         alertBox.classList.remove('alert')
                         alertBox.classList.remove('alert-danger')
-                    }, 3000)
+                    }, 1000)
                 })
         }
         //         function deleteCatagoery(id) {

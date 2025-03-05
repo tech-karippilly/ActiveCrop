@@ -132,13 +132,13 @@
         setTimeout(() => {
             alertBox.classList = '';
             alertBox.innerHTML = '';
-        }, 3000);
+        }, 1000);
 
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
             setTimeout(() => {
                 window.location.href = redirectUrl;
-            }, 2000)
+            }, 1000)
 
         }
 
@@ -178,7 +178,7 @@
                     setTimeout(() => {
                         alertBox.innerHTML = ''; 
                         window.location.href = result.redirectUrl;
-                    }, 3000); 
+                    }, 1000); 
                 } else {
                     const alertBox = document.getElementById('alert-box');
                     alertBox.innerHTML = `
