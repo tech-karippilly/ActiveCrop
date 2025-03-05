@@ -50,7 +50,7 @@ async function orderStatus(req, res) {
         const { status } = req.body;
 
         // Validate Status Options
-        const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+        const validStatuses = ["Pending", "Processing", "Shipped", "Delivered","Cancelation Requested", "Arroved","Rejected","Cancelled"];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: "Invalid status value." });
         }
@@ -62,6 +62,26 @@ async function orderStatus(req, res) {
 
         if (order.deliveryStatus === "Cancelled") {
             return res.status(400).json({ message: "Cannot update status of a cancelled order." });
+        }
+
+        if (order.deliveryStatus === 'Cancelation Requested'){
+            if (status==='Arroved'){
+                for (const item of order.items) {
+                    console.log(item)    
+                    const product = await Product.findById(item.product_id);
+                    if (product) {
+                        product.stock_quantity += item.quantity;
+                        await product.save();
+                    }
+                }
+                order.deliveryStatus = 'Cancelled';
+                await order.save();
+                return res.status(200).json({ message: "Order status updated successfully.", updatedStatus: order.deliveryStatus });
+            }else if (status==='Rejected'){
+                order.deliveryStatus = 'Cancelation Rejected';
+                await order.save();
+                return res.status(200).json({ message: "Order status updated successfully.", updatedStatus: order.deliveryStatus });
+            }
         }
 
         if (status === "Cancelled") {

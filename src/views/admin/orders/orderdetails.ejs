@@ -169,39 +169,62 @@
                             <% }else {%>
                                 <div>
 
-                                    <% if (order.deliveryStatus !=='Cancelled' && order.deliveryStatus !=='Delivered' &&
-                                        order.deliveryStatus !=='Returned' ) { %>
-                                        <h4 class="mt-4">Update Order Status</h4>
+                                    <% if(order.deliveryStatus==='Cancelation Requested' ){%>
+                                        <h4 class="mt-4">Cancelation Request </h4>
                                         <form onsubmit="updateOrderStatus(event, '<%= order._id %>')">
                                             <div class="mb-3">
                                                 <select name="status" class="form-select" required>
-                                                    <option value="Pending" <%=order.deliveryStatus==='Pending'
-                                                        ? 'selected' : '' %>>Pending</option>
-                                                    <option value="Shipped" <%=order.deliveryStatus==='Shipped'
-                                                        ? 'selected' : '' %>>Shipped</option>
-                                                    <option value="Delivered" <%=order.deliveryStatus==='Delivered'
-                                                        ? 'selected' : '' %>>Delivered</option>
-                                                    <option value="Cancelled" <%=order.deliveryStatus==='Cancelled'
-                                                        ? 'selected' : '' %>>Cancelled</option>
+                                                    <option value="Cancelation Requested"
+                                                        <%=order.deliveryStatus==='Cancelation Requested' ? 'selected'
+                                                        : '' %>>Cancelation Requested</option>
+                                                    <option value="Arroved">Approved</option>
+                                                    <option value="Rejected">Rejected</option>
                                                 </select>
                                             </div>
-                                            <button type="submit" class="btn btn-success">Update Status</button>
+                                            <button type="submit" class="btn btn-success">Update Cancelation
+                                                Status</button>
                                         </form>
-                                        <% } else { %>
-                                            <% if (order.deliveryStatus==='Cancelled' ) { %>
-                                                <div class="alert alert-danger" role="alert">
-                                                    This order has been <strong>Cancelled</strong>.
-                                                </div>
-                                                <% } else if (order.deliveryStatus==='Delivered' ) { %>
-                                                    <div class="alert alert-success" role="alert">
-                                                        This order has been <strong>Delivered</strong>.
+                                        <%}else{%>
+                                            <% if (order.deliveryStatus !=='Cancelled' && order.deliveryStatus
+                                                !=='Delivered' && order.deliveryStatus !=='Returned' && order.deliveryStatus !== 'Cancelation Rejected' ) { %>
+                                                <h4 class="mt-4">Update Order Status</h4>
+                                                <form onsubmit="updateOrderStatus(event, '<%= order._id %>')">
+                                                    <div class="mb-3">
+                                                        <select name="status" class="form-select" required>
+                                                            <option value="Pending" <%=order.deliveryStatus==='Pending'
+                                                                ? 'selected' : '' %>>Pending</option>
+                                                            <option value="Shipped" <%=order.deliveryStatus==='Shipped'
+                                                                ? 'selected' : '' %>>Shipped</option>
+                                                            <option value="Delivered"
+                                                                <%=order.deliveryStatus==='Delivered' ? 'selected' : ''
+                                                                %>>Delivered</option>
+                                                            <option value="Cancelled"
+                                                                <%=order.deliveryStatus==='Cancelled' ? 'selected' : ''
+                                                                %>>Cancelled</option>
+                                                        </select>
                                                     </div>
-                                                    <%}else if (order.deliveryStatus==='Returned'){%>
+                                                    <button type="submit" class="btn btn-success">Update Status</button>
+                                                </form>
+                                                <% } else { %>
+                                                    <% if (order.deliveryStatus === 'Cancelled') { %>
+                                                        <div class="alert alert-danger" role="alert">
+                                                            This order has been <strong>Cancelled</strong>.
+                                                        </div>
+                                                    <% } else if (order.deliveryStatus === 'Delivered') { %>
+                                                        <div class="alert alert-success" role="alert">
+                                                            This order has been <strong>Delivered</strong>.
+                                                        </div>
+                                                    <% } else if (order.deliveryStatus === 'Returned') { %>
                                                         <div class="alert alert-success" role="alert">
                                                             This order has been <strong>Returned</strong>.
                                                         </div>
-                                                        <%}%>
-                                                        <%}%>
+                                                    <% } else if (order.deliveryStatus === 'Cancelation Rejected') { %>
+                                                        <div class="alert alert-danger" role="alert">
+                                                            This order cancellation has been <strong>Rejected</strong>.
+                                                        </div>
+                                                    <% } %>
+                                                                    <%}%>
+                                                                        <%}%>
                                 </div>
                                 <%}%>
         </section>
