@@ -122,7 +122,7 @@ async function createUser(req, res) {
             isBlocked: false,
             role: userRole._id
         }
-        const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
+        const existingUser = await User.findOne({ $or: [{ userName:{$regex:userName,$options:'i'} }, { email }] });
 
         if (existingUser) {
             return renderPage(res, HTTP_CONFICT, USER_SIGNUP_PAGE, 'Username or email already exists', ALERT_DANGER, '')

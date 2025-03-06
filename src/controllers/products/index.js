@@ -27,13 +27,13 @@ export const getProducts = async (req, res) => {
     try {
 
         let page = parseInt(req.query.page) || 1;
-        let limit =10 ;
+        let limit = 10;
         let skip = (page - 1) * limit;
 
         let totalItems = await Product.countDocuments();
         let data = await Product.find().skip(skip).limit(limit);
-        
-       return res.status(HTTP_SUCCESS).render(ADMIN_PRODUCT_LIST_PAGE,{alertMessage:'',alertType:'',redirectUrl:'',currentPage:page,totalPages:Math.ceil(totalItems/limit),data})
+
+        return res.status(HTTP_SUCCESS).render(ADMIN_PRODUCT_LIST_PAGE, { alertMessage: '', alertType: '', redirectUrl: '', currentPage: page, totalPages: Math.ceil(totalItems / limit), data })
     } catch (error) {
         return renderPage(ADMIN_PRODUCT_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', [])
     }
@@ -88,7 +88,7 @@ export const createProducts = async (req, res) => {
 
         if (category) {
             const data = category.toObject()
-            const product = await Product.find({ product_name })
+            const product = await Product.find({ product_name: { $regex: product_name, $options: 'i' } })
             if (product.length) {
                 return renderPage(ADMIN_PRODUCT_CREATE_PAGE, res, HTTP_CONFICT, 'Product Already Exists', ALERT_DANGER, '', catagoerys)
             }
@@ -127,7 +127,7 @@ export const updateProduct = async (req, res) => {
 
         if (isProductFormValid !== true) {
             return res.status(400).json({ message: isProductFormValid, status: 400 })
-            
+
         }
         let product_images = new Array(4).fill(null);
 
@@ -162,26 +162,26 @@ export const updateProduct = async (req, res) => {
     }
 }
 
-export const getProductByCatagoery = async (req,res) =>{
-    try{
-        const {id}  = req.params
+export const getProductByCatagoery = async (req, res) => {
+    try {
+        const { id } = req.params
 
         const products = await Product.find({ catagoery_id: id })
-        res.status(200).json({message:'success',products})
-    }catch(error){
-        res.status(500).json({message:'Internal Server Error',error:error.message})
+        res.status(200).json({ message: 'success', products })
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error', error: error.message })
     }
 }
 
 
-const removeImageFromProduct = async (req,res) =>{
-    try{
-        const {productId,imageIndex} = req.query
+const removeImageFromProduct = async (req, res) => {
+    try {
+        const { productId, imageIndex } = req.query
         console.log(req.query)
-        const product  = await Product.findById(productId)
+        const product = await Product.findById(productId)
 
-        if (!product){
-            return res.status(404).json({message:"Product not Found"})
+        if (!product) {
+            return res.status(404).json({ message: "Product not Found" })
         }
 
         const index = Number(imageIndex);
@@ -194,15 +194,15 @@ const removeImageFromProduct = async (req,res) =>{
             return res.status(400).json({ message: "A product must have at least 3 images." });
         }
         console.log(product.images)
-        console.log('imageIndex',imageIndex)
+        console.log('imageIndex', imageIndex)
         delete product.images[imageIndex];
         product.markModified("images");
         await product.save();
         console.log(product)
-        res.status(200).json({message:'Image removed', status:true})
-    }catch(error){
+        res.status(200).json({ message: 'Image removed', status: true })
+    } catch (error) {
         console.log(error.message)
-        res.status(500).json({message:"Internal Server Error",error: error.message})
+        res.status(500).json({ message: "Internal Server Error", error: error.message })
     }
 }
 

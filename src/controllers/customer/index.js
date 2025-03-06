@@ -44,7 +44,7 @@ export const createCustomer = async (req, res) => {
             profileImage: fileName
         }
 
-        const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
+        const existingUser = await User.findOne({ $or: [{ userName:{$regex:{userName,option:'i'}} }, { email }] });
 
         if (existingUser) {
             return renderPage(ADMIN_CUSTOMER_CREATE_PAGE, res, HTTP_BAD_REQUEST, 'Username or email already exists', ALERT_WARNING, '')

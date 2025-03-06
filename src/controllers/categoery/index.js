@@ -29,7 +29,7 @@ export const createCatagoeryPage = (req, res) => {
 const createCategoery = async (req, res) => {
     try {
         const { cataName, description } = req.body
-        const cataDetails = await Categoery.findOne({ catagoery_name: cataName })
+        const cataDetails = await Categoery.findOne({ catagoery_name: {$regex: cataName,$options:'i'}})
         if (cataDetails) {
             return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_CONFICT,'Categoery Already Exits',ALERT_WARNING,'',[])
         }
