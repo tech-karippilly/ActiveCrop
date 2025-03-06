@@ -1,6 +1,6 @@
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js";
 import { ADMIN_ORDER_DETAILS_PAGE, ADMIN_ORDER_LIST_PAGE } from "../../constans/page.js";
-import { Order, Product } from "../../models/index.js";
+import { Order, Product, Transactions, Wallet } from "../../models/index.js";
 
 
 async function renderOrderPage(req, res) {
@@ -9,7 +9,7 @@ async function renderOrderPage(req, res) {
         const limit = 10;
         const skip = (page - 1) * limit;
 
-        const orders = await Order.find().skip(skip).limit(limit).lean().sort({createdAt: -1});
+        const orders = await Order.find().skip(skip).limit(limit).lean().sort({ createdAt: -1 });
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
 
@@ -50,7 +50,7 @@ async function orderStatus(req, res) {
         const { status } = req.body;
 
         // Validate Status Options
-        const validStatuses = ["Pending", "Processing", "Shipped", "Delivered","Cancelation Requested", "Arroved","Rejected","Cancelled"];
+        const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelation Requested", "Arroved", "Rejected", "Cancelled"];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: "Invalid status value." });
         }
@@ -64,10 +64,10 @@ async function orderStatus(req, res) {
             return res.status(400).json({ message: "Cannot update status of a cancelled order." });
         }
 
-        if (order.deliveryStatus === 'Cancelation Requested'){
-            if (status==='Arroved'){
+        if (order.deliveryStatus === 'Cancelation Requested') {
+            if (status === 'Arroved') {
                 for (const item of order.items) {
-                    console.log(item)    
+                    console.log(item)
                     const product = await Product.findById(item.product_id);
                     if (product) {
                         product.stock_quantity += item.quantity;
@@ -77,7 +77,7 @@ async function orderStatus(req, res) {
                 order.deliveryStatus = 'Cancelled';
                 await order.save();
                 return res.status(200).json({ message: "Order status updated successfully.", updatedStatus: order.deliveryStatus });
-            }else if (status==='Rejected'){
+            } else if (status === 'Rejected') {
                 order.deliveryStatus = 'Cancelation Rejected';
                 await order.save();
                 return res.status(200).json({ message: "Order status updated successfully.", updatedStatus: order.deliveryStatus });
@@ -132,10 +132,39 @@ async function returnOrderStatus(req, res) {
                     await product.save();
                 }
             }
-            
 
-            order.deliveryStatus= 'Returned'
+            order.deliveryStatus = 'Returned'
 
+            const wallet = await Wallet.findOne({ userId: order.user })
+
+            if (wallet) {
+                wallet.balance += order.totalAmount
+                await wallet.save()
+                const transaction = new Transactions({
+                    walletId: wallet._id,
+                    amount: order.totalAmount,
+                    type: 'debit',
+                    description: "Order Cancelation",
+                    status: 'completed'
+                })
+                await transaction.save()
+            }else{
+                const newWallet = new Wallet({
+                    userId:order.user,
+                    balance:order.totalAmount
+                })
+                
+                await newWallet.save()
+
+                const transaction = new Transactions({
+                    walletId: newWallet._id,
+                    amount: order.totalAmount,
+                    type: 'debit',
+                    description: "Order Cancelation",
+                    status: 'completed'
+                })
+                await transaction.save()
+            }
         }
 
         order.orderRetrun = status;
