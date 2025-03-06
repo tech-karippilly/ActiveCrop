@@ -239,29 +239,8 @@ async function OrderCancel(req, res) {
         const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
         const userId = jwtDecode.userId;
 
-        order.deliveryStatus = 'Cancelled';
+        order.deliveryStatus = 'Cancelation Requested';
 
-        for (const item of order.items) {
-            const product = await Product.findById(item.product_id);
-            if (product) {
-                product.stock_quantity = Number(product.stock_quantity) + Number(item.quantity);
-                await product.save();
-            }
-        }
-
-        const wallet = await Wallet.findOne({ userId })
-        wallet.balance += order.totalAmount
-
-        const transaction = new Transactions({
-            walletId: wallet._id,
-            amount: order.totalAmount,
-            type: 'debit',
-            description: "Order Cancelation",
-            status: 'completed'
-        })
-
-        await wallet.save()
-        await transaction.save()
         await order.save()
         res.status(200).json({ message: "Order Cancled", alertType: 'alert-success' })
     } catch (error) {
