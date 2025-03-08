@@ -217,11 +217,13 @@ const blockProduct = async (req, res) => {
 
         product.isBlocked = !product.isBlocked
 
+        console.log(product.isBlocked)
         if (product.isBlocked === true) {
             product.status = 'Blocked'
         } else {
             product.status = 'Available'
         }
+        await product.save()
 
         res.status(200).json({ message: "Product Status Updated", product })
 
