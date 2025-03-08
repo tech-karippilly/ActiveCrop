@@ -27,7 +27,6 @@ async function renderCartPage(req, res) {
             let total_price = cart ? cart.total_price : 0;
 
 
-
             if (cart && cart.items) {
                 cartLength = cart.items.length;
                 cart.items.forEach(item => {
@@ -47,8 +46,6 @@ async function renderCartPage(req, res) {
                         item.quantity >= offersItems.min_quantity
                     )
 
-                    console.log("offer",offer)
-                    console.log("cataOffer",cataOffer)
                     if (cataOffer) {
                         const price = appyOfferPrice(item.priceAtPurchanse, cataOffer.discountValue, cataOffer.offer_type)
                         const discountPrice = Number(item.priceAtPurchanse) - price
@@ -75,6 +72,16 @@ async function renderCartPage(req, res) {
                 cart.discount = discount ?? 0
                 await cart.save()
             }
+            const filteredItems = await Promise.all(
+                cart.items.map(async (item) => {
+                    const product = await Product.findById(item.product_id);
+                    return product.status !== 'Blocked'; // Keep only non-blocked products
+                })
+            );
+            
+            cart.items = cart.items.filter((_, index) => filteredItems[index]);
+
+            await cart.save()
 
             return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart: cart ? cart : {items:[]}, cartLength })
         }

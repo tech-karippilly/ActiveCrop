@@ -25,9 +25,42 @@ const renderCheckout = async (req, res) => {
         
         const cart = await Cart.findOne({ user_id: userId, status: 'active' });
         if (!cart || !cart.items.length) {
+
+            const filteredItems = await Promise.all(
+                cart.items.map(async (item) => {
+                    const product = await Product.findById(item.product_id);
+                    return product.status !== 'Blocked'; 
+                })
+            );
+            
+            cart.items = cart.items.filter((_, index) => filteredItems[index]);
+
+            await cart.save()
+
+            if (cart.length ===0){
+               return res.redirect('user/cart')
+            }   
+
             return res.status(400).json({ message: 'Your cart is empty.', alertType: 'alert-warning' });
         }
         
+        
+        const filteredItems = await Promise.all(
+            cart.items.map(async (item) => {
+                const product = await Product.findById(item.product_id);
+                return product.status !== 'Blocked'; // Keep only non-blocked products
+            })
+        );
+        
+        cart.items = cart.items.filter((_, index) => filteredItems[index]);
+
+        await cart.save()
+
+        if (cart.items.length ===0){
+            return res.redirect('/user/cart')
+        }
+
+
         const addressList = await Address.find({ user_id: userId });
         const categories = await Categoery.find();
         const currentUser = await User.findById(userId);
