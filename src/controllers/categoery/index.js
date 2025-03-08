@@ -3,14 +3,13 @@ import { ADMIN_CATAGOERY_CREATE_PAGE, ADMIN_CATAGOERY_EDIT_PAGE, ADMIN_CATAGOERY
 import { Categoery } from '../../models/index.js'
 import dotenv from 'dotenv';
 import { ALERT_DANGER, ALERT_SUCCESS, ALERT_WARNING } from '../../utils/alert.js';
-import { ADMIN_CATAGOERY, ADMIN_CATAGOERY_BASE, ADMIN_CREATE_CATAGOERY } from '../../constans/endpoints.js';
-import { ADMIN_CATAGOERY_ROUTE } from '../../constans/index.js';
+import { ADMIN_CATAGOERY_BASE } from '../../constans/endpoints.js';
 dotenv.config();
 
 
 
 export const catagoeryPage = (req, res) => {
-    res.status(200).render('admin/categoery/index', { alertMessage: '', alertType: '', redirectUrl: '', data: [] })
+    res.status(200).render('admin/categoery/index', {activePage:"Categoery", alertMessage: '', alertType: '', redirectUrl: '', data: [] })
 }
 
 const getCategoery = async (req, res) => {
@@ -102,7 +101,7 @@ const searchCategoery = async (req, res) => {
 }
 
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, data) => {
-    res.status(status).render(pageName, { alertMessage, alertType, redirectUrl, data })
+    res.status(status).render(pageName, {activePage:"Categoery", alertMessage, alertType, redirectUrl, data })
 }
 
 export { createCategoery, getCategoery, updateCategoery, deletCategoery, searchCategoery }
