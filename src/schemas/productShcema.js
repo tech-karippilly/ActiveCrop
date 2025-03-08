@@ -47,4 +47,15 @@ const productSchema = mongoose.Schema({
 }
 )
 
+productSchema.pre("save", function (next) {
+    if (parseInt(this.stock_quantity) === 0) {
+      this.isBlocked = true;
+      this.status = "Blocked";
+    } else {
+      this.isBlocked = false;
+      this.status = "Available";
+    }
+    next();
+  });
+
 export default productSchema
