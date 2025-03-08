@@ -29,11 +29,33 @@ const productSchema = mongoose.Schema({
     offer_price:{
         type:String,
         default:0
+    },
+    status:{
+        type:String,
+        enum:['Blocked','Available'],
+        required:true,
+        default:'Available'
+    },
+    isBlocked:{
+        type:Boolean,
+        required:true,
+        default:false
     }
 },
 {
     timestamps: true
 }
 )
+
+productSchema.pre("save", function (next) {
+    if (parseInt(this.stock_quantity) === 0) {
+      this.isBlocked = true;
+      this.status = "Blocked";
+    } else {
+      this.isBlocked = false;
+      this.status = "Available";
+    }
+    next();
+  });
 
 export default productSchema
