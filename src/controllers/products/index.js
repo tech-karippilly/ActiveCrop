@@ -7,7 +7,7 @@ import { productFormValid } from "../../utils/formValidations.js"
 
 
 export const productPage = (req, res) => {
-    res.status(200).render('admin/products/index', { alertMessage: '', alertType: '', redirectUrl: '' })
+    res.status(200).render('admin/products/index', { activePage:'Products',alertMessage: '', alertType: '', redirectUrl: '' })
 }
 
 export const deleteProduct = async (req, res) => {
@@ -33,7 +33,7 @@ export const getProducts = async (req, res) => {
         let totalItems = await Product.countDocuments();
         let data = await Product.find().skip(skip).limit(limit);
 
-        return res.status(HTTP_SUCCESS).render(ADMIN_PRODUCT_LIST_PAGE, { alertMessage: '', alertType: '', redirectUrl: '', currentPage: page, totalPages: Math.ceil(totalItems / limit), data })
+        return res.status(HTTP_SUCCESS).render(ADMIN_PRODUCT_LIST_PAGE, {activePage:'Products', alertMessage: '', alertType: '', redirectUrl: '', currentPage: page, totalPages: Math.ceil(totalItems / limit), data })
     } catch (error) {
         return renderPage(ADMIN_PRODUCT_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', [])
     }
@@ -238,7 +238,7 @@ export {
     blockProduct
 }
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, data, catagories, activeCatagoery) => {
-    res.status(status).render(pageName, { alertMessage, alertType, redirectUrl, data, catagories, activeCatagoery })
+    res.status(status).render(pageName, {activePage:'Products', alertMessage, alertType, redirectUrl, data, catagories, activeCatagoery })
 }
 
 
