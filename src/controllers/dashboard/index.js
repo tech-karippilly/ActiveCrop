@@ -72,7 +72,7 @@ async function dasboardPage(req, res) {
             }
         ]);
         
-        res.status(200).render('admin/dashboard/dasbboard',{totalOrders,totalDiscoutAmount,totalAmount,successOrders,pendingOrders})
+        res.status(200).render('admin/dashboard/dasbboard',{activePage:'Dashboard',totalOrders,totalDiscoutAmount,totalAmount,successOrders,pendingOrders})
     } catch (error) {
 
     }

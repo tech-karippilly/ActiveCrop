@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Dashboard</title>
+    <title>Dashboard | Active Crop</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
     <link href="/public/styles/dashboard.css" rel="stylesheet" type="text/css">
@@ -21,50 +21,9 @@
 </head>
 
 <body>
-
     <div class="contianer-fluid " style="overflow-x: hidden;">
         <div class="row">
-            <section class="side-bar col-3">
-                <div class="side-bar-heading">
-                    <h1>ADMIN</h1>
-                </div>
-                <div class="side-bar-menu" id="menuId">
-                    <div class="link-container">
-                        <a href="/admin/dashboard" class="link-text-active">Dashboard</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/catagoery" class="link-text">Categoery</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/products" class="link-text">Products</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/customers" class="link-text">Customers</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/orders" class="link-text">Orders</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/offers" class="link-text">Offers</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/coupons" class="link-text">Coupons</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="/admin/report" class="link-text">Report</a>
-                    </div>
-    
-                    <div class="link-container">
-                        <a href="#" class="link-text">Banner</a>
-                    </div>
-                    <div class="link-container">
-                        <a href="#" class="link-text">Transactions</a>
-                    </div>
-                    <div class="link-container">
-                        <a onclick="logoutUser()" class="button-link">Logout</a>
-                    </div>
-                </div>
-            </section>
+            <%- include('../../partials/adminSideBar') %>
             <section class="container-section  col-9">
                 <div class="container-fluid mt-5">
                     <div class="row">
