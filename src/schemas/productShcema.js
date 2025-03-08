@@ -29,6 +29,17 @@ const productSchema = mongoose.Schema({
     offer_price:{
         type:String,
         default:0
+    },
+    status:{
+        type:String,
+        enum:['Blocked','Available'],
+        required:true,
+        default:'Available'
+    },
+    isBlocked:{
+        type:Boolean,
+        required:true,
+        default:false
     }
 },
 {
