@@ -29,13 +29,18 @@ const walletSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
-      type: {
+      paymenType: {
         type: String,
-        enum: ['credit', 'debit'], // 'credit' for adding funds, 'debit' for spending
+        enum: ['credit', 'debit'], 
         required: true,
       },
       description: {
         type: String,
+      },
+      transactionType:{
+        type:String,
+        enum:['wallet','order'],
+        required: true,
       },
       status: {
         type: String,
