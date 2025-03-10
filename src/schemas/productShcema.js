@@ -40,6 +40,16 @@ const productSchema = mongoose.Schema({
         type:Boolean,
         required:true,
         default:false
+    },
+    rating: {
+        type: Number,
+        min: 0,
+        max: 5,
+        default: 0
+    },
+    sales_count: {
+        type: Number,
+        default: 0
     }
 },
 {
