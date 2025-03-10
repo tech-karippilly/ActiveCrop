@@ -71,8 +71,38 @@ async function dasboardPage(req, res) {
                 }
             }
         ]);
-        
-        res.status(200).render('admin/dashboard/dasbboard',{activePage:'Dashboard',totalOrders,totalDiscoutAmount,totalAmount,successOrders,pendingOrders})
+
+        const sales = await Order.aggregate([
+            {
+                $match: {
+                    deliveryStatus: 'Delivered',
+                    paymentStatus: 'Paid'
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    totalSales: {
+                        $sum: "$totalAmount",
+                    },
+                    orderCount: { $sum: 1 },
+                    date: { $first: "$createdAt" }
+                }
+            },
+            {
+                $sort: {
+                    _id: 1
+                }
+            }
+        ])
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+
+        const formattedSales = sales.map(sale => ({
+            month: monthNames[sale._id - 1],  // Convert month number to name
+            totalSales: sale.totalSales
+        }));
+        res.status(200).render('admin/dashboard/dasbboard', { activePage: 'Dashboard', totalOrders, totalDiscoutAmount, totalAmount, successOrders, pendingOrders, sales:formattedSales })
     } catch (error) {
 
     }

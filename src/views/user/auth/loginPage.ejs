@@ -59,10 +59,10 @@
                     <div class=" btn-contianer mb-3 ">
                         <a class="link " href="/auth/signup">Don't have account?create account</a>
                     </div>
-  
+
                 </form>
                 <div class="iconContainer">
-                    <a href="/auth/google"  class="authButton">
+                    <a href="/auth/google" class="authButton">
                         <i class='fa fa-google' style="color: white;"></i>
                     </a>
                 </div>
@@ -70,8 +70,8 @@
         </div>
     </section>
 
-    <script >
-                const alertBox = document.getElementById('alert-box')
+    <script>
+        const alertBox = document.getElementById('alert-box')
         setTimeout(() => {
             alertBox.classList = '';
             alertBox.innerHTML = '';
@@ -79,15 +79,12 @@
 
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
-            setTimeout(() => {
-                window.location.href = redirectUrl;
-            }, 2000)
-
+            window.location.href = redirectUrl;
         }
 
-      async  function googleLogin(){
-            const response = await fetch('/api/auth/google',{
-                method:'GET'
+        async function googleLogin() {
+            const response = await fetch('/api/auth/google', {
+                method: 'GET'
             })
         }
     </script>
