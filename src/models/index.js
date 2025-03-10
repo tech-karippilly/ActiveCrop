@@ -15,7 +15,7 @@ import WhishlistSchema from "../schemas/whishlistSchema.js";
 import CouponSchema from "../schemas/CouponSchema.js";
 import walletSchema from "../schemas/walletSchema.js";
 import referralSchema, { referralHistorySchema } from "../schemas/referalSchema.js";
-import transactionSchema from "../schemas/transactonsSchena.js";
+import transactionSchema from "../schemas/transactonsSchema.js";
 
 const Role = mongoose.model('Role',roleSchema)
 const User = mongoose.model('Users',userSchema)
@@ -36,7 +36,7 @@ const Wallet = mongoose.model("Wallet",walletSchema)
 // const Transactions = mongoose.model("Transactions",transactionSchema)
 const Referal = mongoose.model("Referal",referralSchema)
 const ReferalHistory = mongoose.model("ReferalHistory",referralHistorySchema)
-const Transaction = mongoose.model('Transaction', transactionSchema);
+const Transactions = mongoose.model('Transaction', transactionSchema);
 export {
     Role,
     User,
@@ -54,7 +54,7 @@ export {
     Whishlist,
     Coupons,
     Wallet,
-    Transactions,
     Referal,
-    ReferalHistory
+    ReferalHistory,
+    Transactions
 }

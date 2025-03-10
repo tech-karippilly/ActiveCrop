@@ -16,8 +16,6 @@ async function renderTransactionPage(req, res) {
 
         let totalPages = Math.ceil(totalTransactions / limit);
 
-        console.log("transactions", transactions)
-
         res.status(200).render(ADMIN_TRANSACTION_PAGE, {
             activePage: 'Transactions',
             transactions: transactions,
