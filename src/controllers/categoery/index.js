@@ -14,12 +14,28 @@ export const catagoeryPage = (req, res) => {
 
 const getCategoery = async (req, res) => {
     try {
-        const catagoery = await Categoery.find({})
-        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SUCCESS, '', '', '', catagoery)
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+        let skip = (page - 1) * limit;
+
+        const total = await Categoery.countDocuments();
+        const catagoery = await Categoery.find({}).skip(skip).limit(limit);
+
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SUCCESS, '', '', '', {
+            catagoery,
+            total,
+            page,
+            limit
+        });
     } catch (error) {
-        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', '', '', [])
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', '', '', {
+            catagoery: [],
+            total: 0,
+            page: 1,
+            limit: 10
+        });
     }
-}
+};
 
 export const createCatagoeryPage = (req, res) => {
     renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'','','',[])
@@ -33,7 +49,8 @@ const createCategoery = async (req, res) => {
             return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_CONFICT,'Categoery Already Exits',ALERT_WARNING,'',[])
         }
         const filePath = JSON.parse(JSON.stringify(req.file))
-        const fileName = `${process.env.HOST_URL}/${filePath.path}`
+        const cleanedPath = filePath.path.replace(/^src\//, "");
+        const fileName = `${process.env.HOST_URL}/${cleanedPath}`
         const catagoery = new Categoery({ catagoery_name: cataName, description: description, image: fileName })
         await catagoery.save()
         return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'Categoery Created Successfully',ALERT_SUCCESS,ADMIN_CATAGOERY_BASE,[])
