@@ -67,7 +67,6 @@ async function orderStatus(req, res) {
         if (order.deliveryStatus === 'Cancelation Requested') {
             if (status === 'Arroved') {
                 for (const item of order.items) {
-                    console.log(item)
                     const product = await Product.findById(item.product_id);
                     if (product) {
                         product.stock_quantity += item.quantity;

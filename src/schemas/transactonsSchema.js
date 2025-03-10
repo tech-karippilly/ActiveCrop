@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
 const transactionSchema = new mongoose.Schema({
-  transactionId: { type: String, required: true, unique: true },
   transactionType: { type: String, required: true, enum: ['purchase', 'refund', 'withdrawal', 'deposit','Referal'] },
   type: {
     type: String,

@@ -148,7 +148,7 @@ async function placeOreder(req, res) {
                     contact: user.phone
                 },
                 order_id: razorPayOrder.id,
-                redirect: `http://localhost:3000/orders/order-success/${razorPayOrder.id}`,
+                redirect: `http://localhost:3002/orders/order-success/${razorPayOrder.id}`,
                 redirect: true,
             }
 
@@ -201,6 +201,7 @@ async function placeOreder(req, res) {
         }
 
     } catch (error) {
+        console.log(error.message)
         res.status(500).json({ message: 'Internal Server Error', error: error.message, alertType: 'alert-danger' });
     }
 }
@@ -230,7 +231,26 @@ async function verifyPayment(req, res) {
         if (generatedSignature === razorpay_signature) {
             order.paymentStatus = "Paid";
             order.deliveryStatus = 'Pending'
+
+            for (const item of order.items) {
+                const currentProduct = await Product.findById(item.product_id);
+                if (currentProduct) {
+                    currentProduct.sales_count += item.quantity;
+                    await currentProduct.save();
+                }
+            }
+            
+            const newTransactions = await Transactions({
+                transactionType:'purchase',
+                type:'order',
+                orderId:order._id,
+                transactionMode:'credit',
+                source:'Razorpay',
+                amount:order.totalAmount
+            })
+            
             await order.save();
+            await newTransactions.save()
             return res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
         } else {
             order.paymentStatus = 'Failed'
@@ -239,6 +259,7 @@ async function verifyPayment(req, res) {
             return res.status(400).json({ message: 'Order Failed', alertType: 'alert-danger', redirect: `/orders/order-failed/${order._id}` });
         }
     } catch (error) {
+        console.log(error.message)
         res.status(500).json({ message: 'Internal Server Error', error: error.message })
     }
 }
@@ -300,7 +321,7 @@ async function RetryOrder(req, res) {
                 contact: user.phone
             },
             order_id: order.orderNumber,
-            redirect: `http://localhost:3000/orders/order-success/${order.orderNumber}`,
+            redirect: `http://localhost:3002/orders/order-success/${order.orderNumber}`,
             redirect: true,
         }
 

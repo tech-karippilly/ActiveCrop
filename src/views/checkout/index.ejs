@@ -391,7 +391,7 @@
                 },
 
                 handler: function (response) {
-                    fetch("http://localhost:3000/orders/payment/verify", {
+                    fetch("http://localhost:3002/orders/payment/verify", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -404,6 +404,7 @@
                     })
                         .then(res => res.json())
                         .then(data => {
+                            console.log('data',data)
                             if (data.redirect) {
                                 window.location.href = data.redirect;
                             } else {
@@ -431,7 +432,7 @@
         }
 
         function verifyPayment(order_id) {
-            fetch("http://localhost:3000/orders/payment/verify", {
+            fetch("http://localhost:3002/orders/payment/verify", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -442,6 +443,7 @@
             })
                 .then(res => res.json())
                 .then(data => {
+                    console.log('data',data)
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     } else {
