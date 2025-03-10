@@ -40,7 +40,7 @@ export async function updateProfileDetails(req, res) {
 
                 if (req.file) {
                     const newPath = req.file.path.replace(/^src[\\/]/, '');
-                    const filePath = `http://localhost:3000/${newPath}`
+                    const filePath = `http://localhost:3002/${newPath}`
                     currentUser.profileImage = filePath
                 }
 
