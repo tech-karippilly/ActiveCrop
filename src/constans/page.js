@@ -33,6 +33,8 @@ export const ADMIN_COUPON_UPDATE_PAGE ='admin/coupon/edit'
 
 export const ADMIN_REPORT_PAGE = 'admin/report/index'
 
+export const ADMIN_TRANSACTION_PAGE = 'admin/transactions/index'
+
 export const USER_LOGIN_PAGE = 'user/auth/loginPage'
 export const USER_SIGNUP_PAGE ='user/auth/signup'
 export const USER_FORGOT_EMAIL_SEND_PAGE = 'user/auth/forgotEmail'

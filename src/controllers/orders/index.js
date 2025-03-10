@@ -141,11 +141,14 @@ async function returnOrderStatus(req, res) {
                 wallet.balance += order.totalAmount
                 await wallet.save()
                 const transaction = new Transactions({
+                    transactionType:'refund',
+                    type:'wallet',
                     walletId: wallet._id,
+                    orderId:order._id,
                     amount: order.totalAmount,
-                    type: 'debit',
+                    transactionMode:'credit',
                     description: "Order Cancelation",
-                    status: 'completed'
+                    status: 'completed',
                 })
                 await transaction.save()
             }else{
@@ -157,11 +160,14 @@ async function returnOrderStatus(req, res) {
                 await newWallet.save()
 
                 const transaction = new Transactions({
+                    transactionType:'refund',
+                    type:'wallet',
                     walletId: newWallet._id,
+                    orderId:order._id,
                     amount: order.totalAmount,
-                    type: 'debit',
+                    transactionMode:'credit',
                     description: "Order Cancelation",
-                    status: 'completed'
+                    status: 'completed',
                 })
                 await transaction.save()
             }

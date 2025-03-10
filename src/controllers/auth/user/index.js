@@ -160,11 +160,13 @@ async function createUser(req, res) {
             if (referalDetails) {
                 const referdUserWallet = await Wallet.findOne({ userId: referalDetails.userId })
                 const newTransaction = new Transactions({
+                    transactionType:'Referal',
+                    type:'wallet',
                     walletId: referdUserWallet._id,
                     amount: 50,
-                    type: 'credit',
-                    description: "Referal",
-                    status: 'completed'
+                    transactionMode:'credit',
+                    description: "Earn Referal",
+                    status: 'completed',
                 })
                 await newTransaction.save()
                 referdUserWallet.balance += newTransaction.amount
@@ -178,11 +180,13 @@ async function createUser(req, res) {
 
                     await newWallet.save()
                     const currentUserTransaction = new Transactions({
+                        transactionType:'Referal',
+                        type:'wallet',
                         walletId: newWallet._id,
                         amount: 100,
-                        type: 'credit',
+                        transactionMode:'credit',
                         description: "Earn Referal",
-                        status: 'completed'
+                        status: 'completed',
                     })
                     await currentUserTransaction.save()
                     newWallet.balance += currentUserTransaction.amount
