@@ -3,8 +3,8 @@ import { Transactions } from "../../models/index.js"
 
 async function renderTransactionPage(req, res) {
     try {
-        let page = parseInt(req.query.page) || 1; // Default page is 1
-        let limit = 10; // Number of transactions per page
+        let page = parseInt(req.query.page) || 1; 
+        let limit = 10; 
         let skip = (page - 1) * limit;
 
         const totalTransactions = await Transactions.countDocuments();
