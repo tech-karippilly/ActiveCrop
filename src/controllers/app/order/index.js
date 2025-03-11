@@ -99,6 +99,7 @@ async function placeOreder(req, res) {
                 });
             }
         }
+
         if (paymentMethod === 'razorpay') {
             const options = {
                 amount: cart.total_price * 100,
@@ -196,7 +197,164 @@ async function placeOreder(req, res) {
                 await cart.save();
                 const newOrder = new Order(newOrderDetails);
                 await newOrder.save();
+                const newTransactions = await Transactions({
+                    transactionType:'purchase',
+                    type:'order',
+                    orderId:newOrder._id,
+                    walletId:currentWallet._id,
+                    transactionMode:'credit',
+                    source:'COD',
+                    description:'Cash on Delivery',
+                    amount:newOrder.totalAmount
+                })
+                await newTransactions.save()
                 return res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${newOrder._id}` });
+            }
+        }else if (paymentMethod === 'wallet') {
+            try {
+                const currentWallet = await Wallet.findOne({ userId });
+        
+                if (!currentWallet) {
+                    return res.status(400).json({ message: 'Wallet Error. Please try another method.', alertType: 'alert-danger' });
+                }
+        
+                let totalPrice = Math.max(cart.total_price - currentWallet.balance, 0);
+                let remainingAmount = Math.max(cart.total_price - currentWallet.balance, 0);
+                let walletDeduction = Math.min(currentWallet.balance, cart.total_price);
+        
+                let newOrderDetails = {
+                    orderNumber: totalPrice !== 0 ? null : generateOrderNumber(),
+                    user: user._id,
+                    items: cart.items,
+                    shippingAddress: {
+                        fullName: user.getFullName(),
+                        address_1: address.address_line_1,
+                        address_2: address.address_line_2,
+                        city: address.city,
+                        postalCode: address.pincode,
+                        landmark: address.landmark,
+                        country: 'India',
+                        phone: address.phone,
+                        state: address.state
+                    },
+                    paymentMethod,
+                    paymentStatus: 'Pending',
+                    totalAmount: cart.total_price,
+                    receipt: generateReceiptNumber(),
+                    discount: cart.discount,
+                    appliedCoupon: cart.appliedCoupon
+                };
+        
+                if (totalPrice !== 0) {
+                    const options = {
+                        amount: totalPrice * 100,
+                        currency: 'INR',
+                        receipt: generateReceiptNumber(),
+                    };
+        
+                    const razorPayOrder = await razorpay.orders.create(options);
+                    newOrderDetails.orderNumber = razorPayOrder.id;
+                    newOrderDetails.receipt = razorPayOrder.receipt;
+        
+                    const newOrder = new Order(newOrderDetails);
+                    await newOrder.save();
+        
+                    cart.status = 'ordered';
+                    await cart.save();
+        
+                    for (const item of cart.items) {
+                        const product = await Product.findById(item.product_id);
+                        if (product.stock_quantity >= item.quantity) {
+                            product.stock_quantity -= item.quantity;
+                            await product.save();
+                        }
+                    }
+
+                    const newTransaction = new Transactions({
+                        transactionType: 'purchase',
+                        type: 'wallet',
+                        orderId: newOrder._id,
+                        walletId: currentWallet._id,
+                        transactionMode: 'debit',
+                        source: 'Wallet',
+                        description:'Order Purchase',
+                        amount: walletDeduction
+                    });
+                    const newOrderTransaction = new Transactions({
+                        transactionType: 'purchase',
+                        type: 'order',
+                        orderId: newOrder._id,
+                        walletId: currentWallet._id,
+                        transactionMode: 'debit',
+                        source: 'Razorpay',
+                        description:'Order Purchase',
+                        amount: remainingAmount
+                    });
+
+                    currentWallet.balance -= walletDeduction
+                    await currentWallet.save()
+                    await newTransaction.save()
+                    await newOrderTransaction.save()
+        
+                    return res.status(200).json({
+                        message: "Razorpay Order Created",
+                        alertType: 'alert-success',
+                        optionsRazorPay: {
+                            key: process.env.KEY_ID,
+                            amount: totalPrice,
+                            currency: "INR",
+                            description: "Active Corp",
+                            user: {
+                                name: user.getFullName(),
+                                email: user.email || user.user,
+                                contact: user.phone
+                            },
+                            order_id: razorPayOrder.id,
+                            redirect: `http://localhost:3002/orders/order-success/${razorPayOrder.id}`,
+                        }
+                    });
+                }
+        
+                // If wallet covers full price, process payment
+                const newOrder = new Order(newOrderDetails);
+                await newOrder.save();
+        
+                for (const item of cart.items) {
+                    const product = await Product.findById(item.product_id);
+                    if (product.stock_quantity >= item.quantity) {
+                        product.stock_quantity -= item.quantity;
+                        product.sales_count += item.quantity;
+                        await product.save();
+                    }
+                }
+        
+                currentWallet.balance -= cart.total_price;
+                await currentWallet.save();
+        
+                const newTransaction = new Transactions({
+                    transactionType: 'purchase',
+                    type: 'wallet',
+                    orderId: newOrder._id,
+                    walletId: currentWallet._id,
+                    transactionMode: 'debit',
+                    source: 'Wallet',
+                    description:'Order Purchase',
+                    amount: newOrder.totalAmount
+                });
+        
+                await newTransaction.save();
+                cart.status = 'ordered';
+                await cart.save();
+        
+                return res.status(200).json({ 
+                    message: 'Order placed successfully', 
+                    alertType: 'alert-success', 
+                    redirect: `/orders/order-success/${newOrder._id}` 
+                });
+        
+            } catch (error) {
+                console.error("Error processing wallet payment:", error);
+                return res.status(500).json({ message: "Internal Server Error", alertType: 'alert-danger' });
             }
         }
 
