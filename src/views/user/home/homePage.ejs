@@ -120,7 +120,8 @@
                 <div class="d-flex align-items-center  text-white p-2 rounded w-50 justify-content-between">
 
                     <form class="d-flex w-75" method="get" action="/search">
-                        <input class="form-control me-2" type="search" name="query" placeholder="Search..." aria-label="Search">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search..."
+                            aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
 
@@ -155,6 +156,7 @@
             </div>
             <section class="category py-4 ">
                 <div class="container">
+                    <h3 class="text-center mb-4">Catagories</h3>
                     <div class="row g-3">
                         <% catagories.forEach((category)=> { %>
                             <div class="col-6 col-md-4 col-lg-3 text-center">
@@ -166,6 +168,29 @@
                                 <h5>
                                     <%=category.catagoery_name %>
                                 </h5>
+                            </div>
+                            <% }); %>
+                    </div>
+                </div>
+            </section>
+
+            <section class="top-products-section py-4">
+                <div class="container">
+                    <h3 class="text-center mb-4">Top 10 Products</h3>
+                    <div class="row g-3">
+                        <% topProducts.forEach((product)=> { %>
+                            <div class="col-6 col-md-4 col-lg-3 text-center">
+                                <a href="/products/<%= product.catagoery_id %>">
+                                    <img src="<%= product.images[0] %>" alt="<%= product.name %>"
+                                        class="img-fluid rounded shadow-sm product-image"
+                                        style="height: 150px; object-fit: cover;" />
+                                </a>
+                                <h5>
+                                    <%= product.product_name %>
+                                </h5>
+                                <p>
+                                    <%= product.price %> INR
+                                </p>
                             </div>
                             <% }); %>
                     </div>
@@ -235,12 +260,12 @@
     </main>
 
     <script>
-        function onCartClick(){
-            const isLoggedIn = '<%= isLogin %>' ==='true'
-            if (isLoggedIn){
-                window.location.href ='/user/cart'
-            }else{
-                 window.location.href ='/auth/login'
+        function onCartClick() {
+            const isLoggedIn = '<%= isLogin %>' === 'true'
+            if (isLoggedIn) {
+                window.location.href = '/user/cart'
+            } else {
+                window.location.href = '/auth/login'
             }
         }
     </script>
