@@ -70,9 +70,48 @@ async function orderStatus(req, res) {
                     const product = await Product.findById(item.product_id);
                     if (product) {
                         product.stock_quantity += item.quantity;
+                        product.sales_count -=item.quantity
                         await product.save();
                     }
                 }
+
+                const wallet = await Wallet.findOne({ userId: order.user })
+
+                if (wallet) {
+                    wallet.balance += order.totalAmount
+                    await wallet.save()
+                    const transaction = new Transactions({
+                        transactionType:'refund',
+                        type:'wallet',
+                        walletId: wallet._id,
+                        orderId:order._id,
+                        amount: order.totalAmount,
+                        transactionMode:'credit',
+                        description: "Order Cancelation",
+                        status: 'completed',
+                    })
+                    await transaction.save()
+                }else{
+                    const newWallet = new Wallet({
+                        userId:order.user,
+                        balance:order.totalAmount
+                    })
+                    
+                    await newWallet.save()
+    
+                    const transaction = new Transactions({
+                        transactionType:'refund',
+                        type:'wallet',
+                        walletId: newWallet._id,
+                        orderId:order._id,
+                        amount: order.totalAmount,
+                        transactionMode:'credit',
+                        description: "Order Cancelation",
+                        status: 'completed',
+                    })
+                    await transaction.save()
+                }
+
                 order.deliveryStatus = 'Cancelled';
                 await order.save();
                 return res.status(200).json({ message: "Order status updated successfully.", updatedStatus: order.deliveryStatus });
@@ -146,7 +185,7 @@ async function returnOrderStatus(req, res) {
                     orderId:order._id,
                     amount: order.totalAmount,
                     transactionMode:'credit',
-                    description: "Order Cancelation",
+                    description: "Order Retrun",
                     status: 'completed',
                 })
                 await transaction.save()
@@ -165,7 +204,7 @@ async function returnOrderStatus(req, res) {
                     orderId:order._id,
                     amount: order.totalAmount,
                     transactionMode:'credit',
-                    description: "Order Cancelation",
+                    description: "Order Retrun",
                     status: 'completed',
                 })
                 await transaction.save()

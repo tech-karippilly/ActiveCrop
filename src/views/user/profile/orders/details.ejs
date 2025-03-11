@@ -444,14 +444,64 @@
                 <h5 class="text-center text-white">Copyrights@activeCrop</h5>
             </div>
         </section>
+
+        <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelOrderModalLabel">Confirm Cancellation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to cancel this order?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-danger" id="confirmCancelOrder">Yes, Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="returnOrderModal" tabindex="-1" aria-labelledby="returnOrderModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="returnOrderModalLabel">Confirm Return Request</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to submit a return request for this order?</p>
+                        <strong>Reason:</strong> <span id="returnReasonText"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmSubmitReturn">Submit Return</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </mian>
+
+
 
     <script>
         const alertBox = document.getElementById('alert-box')
         const alertMessage = document.getElementById('alert')
+        let orderIdToCancel = null;
+
         function cancelOrder(orderId) {
-            if (confirm('Are you sure you want to cancel this order?')) {
-                fetch(`/orders/order-cancel/${orderId}`, {
+            orderIdToCancel = orderId;
+            let cancelModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
+            cancelModal.show();
+        }
+
+        document.getElementById('confirmCancelOrder').addEventListener('click', function () {
+            if (orderIdToCancel) {
+                fetch(`/orders/order-cancel/${orderIdToCancel}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -459,26 +509,30 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        alertMessage.innerText = data.message
-                        alertMessage.classList.add(data.alertType)
+
+                        alertMessage.innerText = data.message;
+                        alertMessage.classList.add(data.alertType);
 
                         setTimeout(() => {
-                            alertMessage.innerText = ''
-                            alertMessage.classList.remove(data.alertType)
-                            window.location.reload()
-                        }, 2000)
+                            alertMessage.innerText = '';
+                            alertMessage.classList.remove(data.alertType);
+                            window.location.reload();
+                        }, 2000);
                     })
                     .catch(error => {
-                        alertMessage.innerText = data.message
-                        alertMessage.classList.add(data.alertType)
+                        alertMessage.innerText = "An error occurred";
+                        alertMessage.classList.add('alert-danger');
 
                         setTimeout(() => {
-                            alertMessage.innerText = ''
-                            alertMessage.classList.remove(data.alertType)
-                        }, 3000)
+                            alertMessage.innerText = '';
+                            alertMessage.classList.remove('alert-danger');
+                        }, 3000);
                     });
+
+                let cancelModal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
+                cancelModal.hide();
             }
-        }
+        });
 
 
         function retryPayment(orderId) {
@@ -569,6 +623,9 @@
                 });
         }
 
+        let returnOrderId = null;
+        let returnReasonText = '';
+
         function showReturnForm(orderId) {
             document.getElementById(`returnForm_${orderId}`).style.display = 'block';
         }
@@ -585,23 +642,47 @@
 
             errorMsg.style.display = 'none';
 
-            fetch('/orders/order-return', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ orderId, reason })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.order) {
-                        alert("Return request submitted successfully!");
-                        document.getElementById(`returnForm_${orderId}`).style.display = 'none';
-                        window.location.reload()
-                    } else {
-                        alert("Failed to submit return request. Try again!");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
+            // Store order ID and reason for later use
+            returnOrderId = orderId;
+            returnReasonText = reason;
+
+            // Show the reason inside the modal
+            document.getElementById('returnReasonText').innerText = reason;
+
+            // Open Bootstrap Modal
+            let returnModal = new bootstrap.Modal(document.getElementById('returnOrderModal'));
+            returnModal.show();
         }
+
+        // Handle confirmation inside the modal
+        document.getElementById('confirmSubmitReturn').addEventListener('click', function () {
+            if (returnOrderId && returnReasonText) {
+                fetch('/orders/order-return', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: returnOrderId, reason: returnReasonText })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.order) {
+
+                            alertMessage.innerText = "Return request submitted successfully!";
+                            alertMessage.classList.add('alert-success');
+                            
+                            document.getElementById(`returnForm_${returnOrderId}`).style.display = 'none';
+                            window.location.reload();
+                        } else {
+                            alertMessage.innerText = "Failed to submit return request. Try again!";
+                            alertMessage.classList.add('alert-danget');
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+
+                // Hide the modal after submitting
+                let returnModal = bootstrap.Modal.getInstance(document.getElementById('returnOrderModal'));
+                returnModal.hide();
+            }
+        });
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();

@@ -21,6 +21,7 @@ const transactionSchema = new mongoose.Schema({
   source: { type: String,},
   userName: { type: String, },
   amount: { type: Number, required: true, min: 0 },
+  description:{type:String,required:false}
 }, { timestamps: true });
 
 
