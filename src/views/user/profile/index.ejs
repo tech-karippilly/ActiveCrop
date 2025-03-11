@@ -328,9 +328,44 @@
                 <h5 class="text-center text-white">Copyrights@activeCrop</h5>
             </div>
         </section>
+
+        <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alertModalLabel">Alert</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMessage">Your message goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </mian>
 
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alertModalLabel">Alert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">Your message goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+
 
         let cropper;
         const alertBox = document.getElementById('alert-box')
@@ -347,6 +382,7 @@
                 reader.readAsDataURL(file);
             }
         });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             const editButton = document.getElementById('edit-button');
@@ -485,12 +521,22 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
-                            alert(`${data.message}`);
-                            window.location.reload();
+                            alertMessage.innerText = data.message
+                            alertMessage.classList.add('alert-success')
+
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000)
+
+
                         }
                     })
                     .catch(() => {
-                        alert("Something went wrong!");
+                        alertMessage.innerText = 'Something went wrong'
+                        alertMessage.classList.add('alert-danger')
+                        setTimeout(() => {
+                            alertMessage.classList.remove('alert-danger')
+                        }, 2000)
                     });
             });
         });
