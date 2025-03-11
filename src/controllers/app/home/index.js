@@ -53,6 +53,21 @@ const catagoerySearch = async (req,res)=>{
             catagoery_name: { $regex: query, $options: 'i' }
         });
         const access_token = req.session.accessToken
+
+        const topProducts = await Product.aggregate([
+            {
+              $match: {
+                status:'Available',isBlocked:false
+              }
+            },
+            {
+              $sort:{sales_count:-1}
+            },
+            {
+              $limit: 10
+            },
+            
+          ])
         if (access_token) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
@@ -62,9 +77,10 @@ const catagoerySearch = async (req,res)=>{
             if (cart.length > 0 && cart[0].items) { 
                 cartLength = cart[0].items.length;
             }
-            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: true, catagories:categories, currentUser, cartLength })
+
+            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: true, catagories:categories, currentUser, cartLength ,topProducts})
         }else{
-            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: false, catagories:categories, currentUser:{}, cartLength:0 })
+            return res.status(HTTP_SUCCESS).render(USER_HOME_PAGE, { isLogin: false, catagories:categories, currentUser:{},topProducts, cartLength:0 })
         }
 
     } catch (err) {
