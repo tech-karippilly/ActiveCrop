@@ -172,9 +172,9 @@
                                 <ul class="list-group" id="transaction-list">
                                     <% transactions.forEach(transaction => { %>
                                         <li class="list-group-item d-flex justify-content-between">
-                                            <span><%= transaction.description %></span>
-                                            <span class="<%= transaction.amount > 0 ? 'text-success' : 'text-danger' %>">
-                                                <%= transaction.amount > 0 ? '+' : '' %>₹<%= transaction.amount %>
+                                            <span class="text-capitalize"><%= transaction.description %></span>
+                                            <span class="<%= transaction.transactionMode === 'debit' ? 'text-danger' : 'text-success' %>">
+                                                <%= transaction.transactionMode === 'debit' ? '-' : '+' %>₹<%= Math.abs(transaction.amount) %>
                                             </span>
                                         </li>
                                     <% }) %>
