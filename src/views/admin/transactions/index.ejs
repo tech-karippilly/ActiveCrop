@@ -32,13 +32,7 @@
                 <section class="container-section  col-9">
                     <h2>Transactions</h2>
 
-                    <div class="w-100 d-flex justify-content-center align-items-center">
-                        <form class="d-flex justify-content-center shadow p-3 rounded w-80">
-                            <input class="form-control me-2 w-75" type="search" placeholder="Search here..."
-                                aria-label="Search">
-                            <button class="btn btn-primary" type="submit">Search</button>
-                        </form>
-                    </div>
+
 
                     <% if (transactions.length > 0) { %>
                         <div class="mt-5">
@@ -49,7 +43,6 @@
                                         <th>Transaction Date</th>
                                         <th>Transaction Type</th>
                                         <th>Amount</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -59,9 +52,6 @@
                                             <td><%= new Date(transaction.createdAt).toLocaleString() %></td>
                                             <td class="text-capitalize"><%= transaction.type %></td>
                                             <td>₹<%= transaction.amount %></td>
-                                            <td>
-                                                <button class="btn btn-primary" onclick="">View</button>
-                                            </td>
                                         </tr>
                                     <% }); %>
                                 </tbody>

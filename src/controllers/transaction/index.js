@@ -28,6 +28,14 @@ async function renderTransactionPage(req, res) {
 
 }
 
+async function searchTransactions(req,res){
+    try{
+        
+    }catch(error){
+
+    }
+}
+
 
 export {
     renderTransactionPage
