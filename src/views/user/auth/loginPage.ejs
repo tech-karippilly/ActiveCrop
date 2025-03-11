@@ -44,7 +44,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label lable-text">Password</label>
-                        <input type="password" class="form-control" name="password" id="exampleInputPassword1" required>
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="password" id="exampleInputPassword1"
+                                required>
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa fa-eye-slash" id="eyeIconConfirm"
+                                    onclick="togglePassword('exampleInputPassword1', 'eyeIconConfirm')"></i>
+                            </span>
+                        </div>
                     </div>
                     <div class="mb-3 forgot-container">
                         <a class="link " href="/auth/reset-mail">forgot password?</a>
@@ -86,6 +93,21 @@
             const response = await fetch('/api/auth/google', {
                 method: 'GET'
             })
+        }
+
+        function togglePassword(inputId, iconId) {
+            let inputField = document.getElementById(inputId);
+            let eyeIcon = document.getElementById(iconId);
+
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            } else {
+                inputField.type = "password";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            }
         }
     </script>
     <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
