@@ -92,6 +92,7 @@
                             </div>
                         </div>
                         <canvas id="salesChart"></canvas>
+
                     </div>
                 </section>
         </div>
@@ -104,13 +105,11 @@
         const decodedString = salesDataStrings.replace(/&#34;/g, '"');
         const salesData = JSON.parse(decodedString);
 
-        console.log('salesData',salesData)
+        console.log('salesData', salesData)
 
         const labels = salesData.map(sale => sale.month);
         const data = salesData.map(sale => sale.totalSales);
 
-        console.log('labels',labels)
-        console.log('data',data)
 
         new Chart(ctx, {
             type: 'line',
@@ -125,6 +124,7 @@
             }
         });
     </script>
+
 
     <script>
 
