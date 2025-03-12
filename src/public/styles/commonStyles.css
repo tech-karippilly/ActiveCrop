@@ -1,0 +1,77 @@
+:root{
+    --primary:#F2F3F4;
+    --primaryButton:#52BE80;
+    --white:#FDFEFE;
+    --label-text:#1E1E2C;
+    --plceholderText:#000000;
+}
+
+.lable-text{
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+body{
+    background-color: var(--primary);
+    position: relative;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.alert-box{
+    width: auto;
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.alert-box-show{
+    display: block;
+}
+.alert-box-hide{
+    display: none;
+}
+
+.login-form-section{
+    width: 80%;
+    height: 90vh;
+    padding: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card{
+    width: 'auto';
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-body{
+    width: 100%;
+
+}
+.card-image{
+    width: 30%;
+    height: 30%;
+}
+.btn-contianer{
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn{
+    width: 80%;
+    background-color: var(--primaryButton) !important;
+    color:  var(--white) !important;
+    outline: none;
+}

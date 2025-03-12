@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Crop | Order Page</title>
+    <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
+
+    <link rel="stylesheet" href="../../../public/styles/profile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <mian>
+        <div class="alert-box" id="alert-box">
+            <div class="alert ">
+
+            </div>
+        </div>
+
+        <section class="header-section">
+            <div class="container-fluid d-flex justify-content-end">
+                <div class="row">
+                    <div class="col d-flex align-items-center">
+                        <i class="fa fa-whatsapp  icon"></i>
+                        <span class="text-lowercase  ">8078599537</span>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-headset  icon"></i>
+                        <span class="text-lowercase">8078599537</span>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <i class="fas fa-comment-alt icon"></i>
+                        <span class="text-capitalize">Chat</span>
+                    </div>
+                    <div class="col profile-container">
+                        <!-- <span class="text-capitalize" style="cursor: pointer;"
+                            onclick="window.location.href='/auth/login'">Login</span> -->
+                        <div class="btn-group">
+                            <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <%= currentUser.firstName %>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/user/profile">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-regular fa-user"></i>
+                                            </div>
+                                            <div class="col">
+                                                Profile
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa-solid fa-gear"></i>
+                                            </div>
+                                            <div class="col">
+                                                Settings
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                        </div>
+                                        <div class="col" onclick="window.location.href='/auth/logout'">
+                                            Logout
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="logo-section">
+            <div class="container-fluid d-flex justify-content-end-start w-100 h-100">
+                <div class="row w-25 h-100 ">
+                    <div class="col h-100">
+                        <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
+                    </div>
+                    <div class="col h-100 logo-text-container">
+                        <a href="/" class="logo-text-container" style="text-decoration: none;">
+                            <h5>ACTIVE CROP</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container mt-5">
+            <div class="row gap-2">
+                <div class="col-3 side-menu-section">
+                    <div class="header">
+                        <h1>Profile</h1>
+                    </div>
+                    <div class="links-container">
+                        <ul class="list-group list-group-flush">
+                            <button type="button" class="list-group-item list-group-item-action " aria-current="true"
+                                onclick='window.location.href="/user/profile"'>
+                                User Details
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick='window.location.href="/user/profile/address"'>
+                                Address Management
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action active"
+                                onclick="window.location.href='/user/profile/order'">
+                                Orders
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/wallet'">
+                                Wallets
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/user-referal'">
+                                Referal
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
+                                Password
+                            </button>
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
+                                Logout
+                            </button>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8 content-section">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Items Count</th>
+                                <th>Total Price</th>
+                                <th>Payment Status</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <% orders.forEach(order=> { %>
+                                <% let statusClass='' ; switch (order.deliveryStatus) { case 'Pending' :
+                                    statusClass='text-warning' ; break; case 'Shipped' : statusClass='text-info' ;
+                                    break; case 'Delivered' : statusClass='text-success' ; break; case 'Processing' :
+                                    statusClass='text-info' ; break; case 'Cancelled' : statusClass='text-danger' ;
+                                    break; default: statusClass='text-muted' ; } %>
+                                    <tr>
+                                        <td>
+                                            <%= order.orderNumber %>
+                                        </td>
+                                        <td>
+                                            <%= order.items.length %>
+                                        </td>
+                                        <td>₹<%= order.totalAmount.toFixed(2) %>
+                                        </td>
+                                        <td>
+                                            <%= order.paymentStatus %>
+                                        </td>
+                                        <td class="<%= statusClass %>">
+                                            <%= order.deliveryStatus %>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-success btn-sm"
+                                                onclick="window.location.href='/user/profile/order/<%= order._id %>'">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination Controls -->
+                    <nav aria-label="Order Pagination">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item <%= pagination.currentPage === 1 ? 'disabled' : '' %>">
+                                <a class="page-link"
+                                    href="?page=<%= pagination.currentPage - 1 %>&limit=<%= pagination.limit %>">
+                                    Previous
+                                </a>
+                            </li>
+
+                            <!-- Page Numbers -->
+                            <% for(let i=1; i <=pagination.totalPages; i++) { %>
+                                <li class="page-item <%= pagination.currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>&limit=<%= pagination.limit %>">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                    <!-- Next Button -->
+                                    <li
+                                        class="page-item <%= pagination.currentPage === pagination.totalPages ? 'disabled' : '' %>">
+                                        <a class="page-link"
+                                            href="?page=<%= pagination.currentPage + 1 %>&limit=<%= pagination.limit %>">
+                                            Next
+                                        </a>
+                                    </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <section class="footer-section">
+            <div class="footer-container">
+                <div class="contianer">
+                    <div class="row">
+                        <div class="col aboutus-container">
+                            <p>
+                                Active Crop is an e-commerce platform designed to connect farmers directly with
+                                customers, enabling
+                                the sale of fresh vegetables and fruits. The core idea is to source produce directly
+                                from farmers,
+                                ensuring freshness and fair pricing. Customers can browse and purchase products online,
+                                while
+                                farmers earn 85% of each sale, with 15% retained by the platform as commission (plus
+                                delivery
+                                charges).
+                                The project emphasizes sustainability, farmer empowerment, and customer satisfaction,
+                                offering
+                                transparent pricing, fast delivery, and eco-friendly practices. With features like
+                                user-friendly
+                                dashboards for both farmers and customers, secure payment systems, and a reliable
+                                delivery network,
+                                Active Crop aims to revolutionize the way people access fresh produce while supporting
+                                the farming
+                                community.
+                            </p>
+                        </div>
+                        <div class="col col-items">
+                            <h5>Get To Know Us</h5>
+                            <ul>
+                                <li>About Us</li>
+                                <li>Our Farmers</li>
+                                <li>Gallery</li>
+                                <li>Media</li>
+                                <li>Blog</li>
+                            </ul>
+
+                        </div>
+                        <div class="col col-items ">
+                            <h5>Useful Links</h5>
+                            <ul>
+                                <li>Privacy Policy</li>
+                                <li>Refun & Refund Policy</li>
+                                <li>Ship and Delivery policy</li>
+                                <li>Terms & Condtitions</li>
+                                <li>Disclaimer</li>
+                                <li>Carrers</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right-contianer">
+                <h5 class="text-center text-white">Copyrights@activeCrop</h5>
+            </div>
+        </section>
+    </mian>
+
+    <script>
+        const alertBox = document.getElementById('alert-box')
+
+    </script>
+
+
+    <script src="https://kit.fontawesome.com/88f2b93054.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

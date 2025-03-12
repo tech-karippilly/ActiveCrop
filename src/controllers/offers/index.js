@@ -1,0 +1,132 @@
+import { HTTP_CREATE, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
+import { ADMIN_OFFERS_CATAGOERY_CREATE, ADMIN_OFFERS_CATAGOERY_UPDATE, ADMIN_OFFERS_CREATE_PAGE, ADMIN_OFFERS_EDIT_PAGE, ADMIN_OFFERS_PAGE } from "../../constans/page.js"
+import { Categoery, CategoryOffer, Product, ProductOffer, ReferralOffer } from "../../models/index.js"
+
+
+async function renderOfferPage(req, res) {
+    try {
+        const catagoeryOffers = await CategoryOffer.find()
+        const products = await ProductOffer.find()
+        const referal = await ReferralOffer.find()
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_PAGE, { catagoeryOffers, products,referal });
+    } catch (error) {
+        res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_PAGE)
+    }
+}
+
+async function renderCreatePage(req, res) {
+    try {
+        const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
+        const catagoery = await Categoery.find()
+        const offerTypes = ['percentage', 'flat_discount'];
+        res.status(HTTP_SUCCESS).render(ADMIN_OFFERS_CREATE_PAGE, { catagoery, products, offerTypes, });
+    } catch (error) {
+        res.status(HTTP_SERVER_ERROR).render(ADMIN_OFFERS_CREATE_PAGE, { catagoery: [], products: [], offerTypes: [] });
+    }
+}
+
+async function renderEditPage(req, res) {
+    try {
+        const { id } = req.params
+        const existingOffer = await ProductOffer.findById(id)
+        const catagoery = await Categoery.find()
+        const offerTypes = ['percentage', 'flat_discount'];
+        const products = await Product.find({ catagoery_id: '6793fd0029c4fd78c2423e98' })
+        res.status(200).render(ADMIN_OFFERS_EDIT_PAGE, { offerTypes, catagoery, products, existingOffer })
+    } catch (error) {
+        res.status(500).render(ADMIN_OFFERS_EDIT_PAGE, { existingOffers: {}, catagoery: [], products: [], offerTypes: [] })
+    }
+}
+
+async function editProductOffer(req, res) {
+    try {
+        const { id } = req.params
+        const { offer_type, discountValue, min_quantity, max_discount,valid_from,valid_until } = req.body;
+        const existingOffer = await ProductOffer.findById(id)
+
+        existingOffer.offer_type = offer_type ?? existingOffer.offer_type;
+        existingOffer.discountValue = discountValue ?? existingOffer.discountValue;
+        existingOffer.min_quantity = min_quantity ?? existingOffer.min_quantity;
+        existingOffer.max_discount = max_discount ?? existingOffer.max_discount;
+        existingOffer.valid_from = valid_from ??  existingOffer.valid_from;
+        existingOffer.valid_until = valid_until ?? existingOffer.valid_until;
+
+        await existingOffer.save();
+        res.status(200).json({ message: "Offer updated successfully", alertType: 'alert-success', redirect: '/admin/offers', offer: existingOffer, });
+
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+}
+
+async function deleteProductOffer(req, res) {
+    try {
+        const { id } = req.params
+        const existingOffer = await ProductOffer.findOneAndDelete({ _id: id });
+
+        if (!existingOffer) {
+            return res.status(404).json({ message: "Offer not found" });
+        }
+
+        res.status(HTTP_SUCCESS).json({ message: "Offer deleted successfully" });
+    } catch (error) {
+        res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", error: error.message });
+    }
+
+}
+
+async function createProductOffer(req, res) {
+    try {
+        const { productId, offer_type, discountValue, valid_from, valid_until, min_quantity, max_discount } = req.body;
+
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found", alertType: "alert-danger" });
+        }
+
+        const existingOffer = await ProductOffer.findOne({
+            "product._id": productId,
+            valid_until: { $gte: new Date() }
+        });
+
+        if (existingOffer) {
+            return res.status(400).json({ message: "Product already has an active offer", alertType: "alert-warning" });
+        }
+
+        const productDetails = {
+            product_name: product.product_name,
+            _id: product._id,
+        };
+
+        const offer = new ProductOffer({
+            product: productDetails,
+            offer_type,
+            discountValue: Number(discountValue),
+            valid_from,
+            valid_until,
+            min_quantity: Number(min_quantity),
+            max_discount: Number(max_discount)
+        });
+
+        await offer.save();
+
+        res.status(HTTP_CREATE).json({ message: 'Offer created successfully', alertType: 'alert-success', redirect: '/admin/offers' });
+    } catch (error) {
+        res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", error: error.message });
+    }
+}
+
+
+
+
+
+
+export {
+    renderOfferPage,
+    renderCreatePage,
+    createProductOffer,
+    renderEditPage,
+    editProductOffer,
+    deleteProductOffer,
+
+}
