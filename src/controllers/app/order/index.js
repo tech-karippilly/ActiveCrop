@@ -412,7 +412,7 @@ async function verifyPayment(req, res) {
             return res.status(200).json({ message: 'Order placed successfully', alertType: 'alert-success', redirect: `/orders/order-success/${order._id}` });
         } else {
             order.paymentStatus = 'Failed'
-            order.deliveryStatus = 'Cancelled'
+            order.deliveryStatus = 'Pending'
             await order.save();
             return res.status(400).json({ message: 'Order Failed', alertType: 'alert-danger', redirect: `/orders/order-failed/${order._id}` });
         }
