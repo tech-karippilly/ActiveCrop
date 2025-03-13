@@ -44,7 +44,7 @@ export const createCustomer = async (req, res) => {
             profileImage: fileName
         }
 
-        const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
+        const existingUser = await User.findOne({ $or: [{ userName:{$regex:{userName,option:'i'}} }, { email }] });
 
         if (existingUser) {
             return renderPage(ADMIN_CUSTOMER_CREATE_PAGE, res, HTTP_BAD_REQUEST, 'Username or email already exists', ALERT_WARNING, '')
@@ -91,7 +91,7 @@ export const searchCustomers = async (req, res) => {
 }
 
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, customers) => {
-    res.status(status).render(pageName, { alertMessage, alertType, redirectUrl, customers })
+    res.status(status).render(pageName, {activePage:"Customers", alertMessage, alertType, redirectUrl, customers })
 }
 
 export const getCustomerDetails = async (req, res) => {
@@ -115,6 +115,7 @@ export const updateCustomer = async (req, res) => {
 
         if (!existingUser) {
             return res.status(404).render('admin/customers/update', { 
+                activePage:"Customers",
                 alertMessage: 'User Not found', 
                 alertType: 'warning', 
                 redirectUrl: '', 
@@ -139,6 +140,7 @@ export const updateCustomer = async (req, res) => {
 
         await existingUser.save();
         return res.status(200).render('admin/customers/update', { 
+            activePage:"Customers",
             alertMessage: 'User Updated successfully', 
             alertType: 'success', 
             redirectUrl: '/admin/customers', 
@@ -146,8 +148,8 @@ export const updateCustomer = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error updating user:', error);
         res.status(500).render('admin/customers/update', { 
+            activePage:"Customers",
             alertMessage: 'Internal server error', 
             alertType: 'danger', 
             redirectUrl: '', 

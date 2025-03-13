@@ -11,9 +11,9 @@ const ObjectId = mongoose.Types.ObjectId;
 async function renderCartPage(req, res) {
     try {
         const access_token = req.session.accessToken
-       
+
         if (access_token) {
-           
+
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
@@ -26,27 +26,30 @@ async function renderCartPage(req, res) {
             let catagoeryDiscount = 0;
             let total_price = cart ? cart.total_price : 0;
 
+
             if (cart && cart.items) {
                 cartLength = cart.items.length;
                 cart.items.forEach(item => {
+                   
                     const offer = offers.find(offersItems =>
                         offersItems.product._id.equals(item.product_id) &&
                         moment(offersItems.valid_from).isSameOrBefore(moment()) &&
                         moment(offersItems.valid_until).isSameOrAfter(moment()) &&
                         item.quantity >= offersItems.min_quantity
                     );
+                   
 
-                    const cataOffer = catagoeryOffer.find(offersItems=>
-                        offersItems.category.id.equals(item.catagoery_id)&&
-                        moment(offersItems.valid_from).isSameOrBefore(moment())&&
-                        moment(offersItems.valid_until).isSameOrAfter(moment())&&
+                    const cataOffer = catagoeryOffer.find(offersItems =>
+                        offersItems.category.id.equals(item.catagoery_id) &&
+                        moment(offersItems.valid_from).isSameOrBefore(moment()) &&
+                        moment(offersItems.valid_until).isSameOrAfter(moment()) &&
                         item.quantity >= offersItems.min_quantity
                     )
-                    
-                    if (cataOffer){
+
+                    if (cataOffer) {
                         const price = appyOfferPrice(item.priceAtPurchanse, cataOffer.discountValue, cataOffer.offer_type)
                         const discountPrice = Number(item.priceAtPurchanse) - price
-                        catagoeryDiscount +=discountPrice
+                        catagoeryDiscount += discountPrice
                     }
 
                     if (offer) {
@@ -58,23 +61,35 @@ async function renderCartPage(req, res) {
                     productDiscount *= item.quantity
                 })
 
-                if (productDiscount > 0){
+                if (productDiscount > 0) {
                     discount = productDiscount
-                }else if (catagoeryDiscount>0){
+                } else if (catagoeryDiscount > 0) {
                     discount = catagoeryDiscount
                 }
-                
-                total_price = Math.max(cart.total_price - discount, 0);
-            }
 
-            cart.discount = discount ?? 0
+                total_price = Math.max(cart.total_price - discount, 0);
+                cart.total_price = total_price ? cart.total_price: 0
+                cart.discount = discount ?? 0
+                await cart.save()
+            }
+            const filteredItems = await Promise.all(
+                cart.items.map(async (item) => {
+                    const product = await Product.findById(item.product_id);
+                    return product.status !== 'Blocked'; // Keep only non-blocked products
+                })
+            );
+            
+            cart.items = cart.items.filter((_, index) => filteredItems[index]);
+
             await cart.save()
-            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser,cart:cart?cart:[], cartLength })
+
+            return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart: cart ? cart : {items:[]}, cartLength })
         }
-       
-        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
+
+        return res.status(HTTP_SUCCESS).render(USER_CART_PAGE, { isLogin: true, currentUser, cart: {items:[]}, cartLength: 0 })
     } catch (error) {
-        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart:null, cartLength: 0 })
+        console.log(error.message)
+        return res.status(HTTP_SERVER_ERROR).render(USER_CART_PAGE, { isLogin: false, currentUser: {}, cart: {items:[]}, cartLength: 0 })
     }
 }
 
@@ -116,7 +131,7 @@ async function addToCart(req, res) {
             } else {
 
 
-                cart.items.push({ catagoery_id:product.catagoery_id, product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity, offer_price: product.offer_price });
+                cart.items.push({ catagoery_id: product.catagoery_id, product_name: product.product_name, product_id: productId, quantity: quantity, priceAtPurchanse: product.price, product_image: product.images[0], product_stock: product.stock_quantity, offer_price: product.offer_price });
             }
 
             await cart.save();

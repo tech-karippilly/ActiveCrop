@@ -61,16 +61,13 @@
 
     <script>
         const alertBox = document.getElementById('alert-box')
-        setTimeout(() => {
-            alertBox.classList = '';
-            alertBox.innerHTML = '';
-        }, 3000);
-
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
             setTimeout(() => {
+                alertBox.classList = '';
+                alertBox.innerHTML = '';
                 window.location.href = redirectUrl;
-            }, 2000)
+            }, 1000)
 
         }
     </script>

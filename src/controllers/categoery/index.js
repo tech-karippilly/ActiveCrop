@@ -3,24 +3,39 @@ import { ADMIN_CATAGOERY_CREATE_PAGE, ADMIN_CATAGOERY_EDIT_PAGE, ADMIN_CATAGOERY
 import { Categoery } from '../../models/index.js'
 import dotenv from 'dotenv';
 import { ALERT_DANGER, ALERT_SUCCESS, ALERT_WARNING } from '../../utils/alert.js';
-import { ADMIN_CATAGOERY, ADMIN_CATAGOERY_BASE, ADMIN_CREATE_CATAGOERY } from '../../constans/endpoints.js';
-import { ADMIN_CATAGOERY_ROUTE } from '../../constans/index.js';
+import { ADMIN_CATAGOERY_BASE } from '../../constans/endpoints.js';
 dotenv.config();
 
 
 
 export const catagoeryPage = (req, res) => {
-    res.status(200).render('admin/categoery/index', { alertMessage: '', alertType: '', redirectUrl: '', data: [] })
+    res.status(200).render('admin/categoery/index', {activePage:"Categoery", alertMessage: '', alertType: '', redirectUrl: '', data: [] })
 }
 
 const getCategoery = async (req, res) => {
     try {
-        const catagoery = await Categoery.find({})
-        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SUCCESS, '', '', '', catagoery)
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+        let skip = (page - 1) * limit;
+
+        const total = await Categoery.countDocuments();
+        const catagoery = await Categoery.find({}).skip(skip).limit(limit);
+
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SUCCESS, '', '', '', {
+            catagoery,
+            total,
+            page,
+            limit
+        });
     } catch (error) {
-        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', '', '', [])
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', '', '', {
+            catagoery: [],
+            total: 0,
+            page: 1,
+            limit: 10
+        });
     }
-}
+};
 
 export const createCatagoeryPage = (req, res) => {
     renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'','','',[])
@@ -29,12 +44,13 @@ export const createCatagoeryPage = (req, res) => {
 const createCategoery = async (req, res) => {
     try {
         const { cataName, description } = req.body
-        const cataDetails = await Categoery.findOne({ catagoery_name: cataName })
+        const cataDetails = await Categoery.findOne({ catagoery_name: {$regex: cataName,$options:'i'}})
         if (cataDetails) {
             return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_CONFICT,'Categoery Already Exits',ALERT_WARNING,'',[])
         }
         const filePath = JSON.parse(JSON.stringify(req.file))
-        const fileName = `${process.env.HOST_URL}/${filePath.path}`
+        const cleanedPath = filePath.path.replace(/^src\//, "");
+        const fileName = `${process.env.HOST_URL}/${cleanedPath}`
         const catagoery = new Categoery({ catagoery_name: cataName, description: description, image: fileName })
         await catagoery.save()
         return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'Categoery Created Successfully',ALERT_SUCCESS,ADMIN_CATAGOERY_BASE,[])
@@ -102,7 +118,7 @@ const searchCategoery = async (req, res) => {
 }
 
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, data) => {
-    res.status(status).render(pageName, { alertMessage, alertType, redirectUrl, data })
+    res.status(status).render(pageName, {activePage:"Categoery", alertMessage, alertType, redirectUrl, data })
 }
 
 export { createCategoery, getCategoery, updateCategoery, deletCategoery, searchCategoery }

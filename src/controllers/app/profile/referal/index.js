@@ -1,21 +1,37 @@
 import { USER_REFERAL_PAGE } from "../../../../constans/page.js"
+import { Referal, ReferalHistory, User } from "../../../../models/index.js"
+import { generateUniqueReferralCode } from "../../../../utils/helperfunction.js"
+import jwt from 'jsonwebtoken'
 
-async function renderReferalPage (req,res){
+async function renderReferalPage(req, res) {
     const access_token = req.session.accessToken
-    try{
+    try {
         if (access_token) {
             const jwtDecode = jwt.verify(access_token, process.env.JWT_SECRET_ACCESS_TOKEN)
             const userId = jwtDecode.userId
             const currentUser = await User.findById(userId)
-            res.status(200).render(USER_REFERAL_PAGE,{currentUser})
+            const referal = await Referal.findOne({ userId })
+            if (!referal) {
+                const referralCode = await generateUniqueReferralCode()
+                const newReferal = new Referal({
+                    userId,
+                    referralCode
+                })
+                await newReferal.save()
+            }
+            const referalDetails = await Referal.findOne({ userId })
+            const referralCode = referalDetails.referralCode
+            const referralHistory = await ReferalHistory.find({ referralCode })
+            const referalLink = `${process.env.HOST_URL}/auth/signup?referalCode=${referralCode}`
+           return res.status(200).render(USER_REFERAL_PAGE, { currentUser, referalDetails, referralHistory, referalLink })
         }
-       
-
-    }catch(error){
-        res.status(500).render(USER_REFERAL_PAGE,{currentUser:{}})
+    } catch (error) {
+       return  res.status(500).render(USER_REFERAL_PAGE, { currentUser: {} })
     }
 }
 
-export{
+
+
+export {
     renderReferalPage
 }

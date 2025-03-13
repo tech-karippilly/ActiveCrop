@@ -58,7 +58,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['Credit Card', 'PayPal', 'cod','razorpay']
+    enum: ['Credit Card', 'PayPal', 'cod','razorpay','wallet']
   },
   paymentStatus: {
     type: String,
@@ -67,7 +67,7 @@ const orderSchema = new mongoose.Schema({
   },
   deliveryStatus: {
     type: String,
-    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelled','Retrun Order Processing','Returned'],
+    enum: ['Pending', 'Shipped', 'Delivered', 'Cancelation Requested','Cancelation Rejected','Cancelled', 'Retrun Order Processing','Returned'],
     default: 'Pending'
   },
   totalAmount: {

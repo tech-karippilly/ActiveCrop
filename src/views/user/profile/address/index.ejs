@@ -52,11 +52,11 @@
                         <div class="btn-group">
                             <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                VISHNU
+                                <%= currentUser.firstName %>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="/user/profile">
                                         <div class="row">
                                             <div class="col">
                                                 <i class="fa-regular fa-user"></i>
@@ -83,20 +83,20 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">
-                                        <div class="row">
-                                            <div class="col">
-                                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                            </div>
-                                            <div class="col">
-                                                Logout
-                                            </div>
+                                <li>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         </div>
+                                        <div class="col" onclick="window.location.href='/auth/logout'">
+                                            Logout
+                                        </div>
+                                    </div>
 
+                                </li>
+                            </ul>
                         </div>
-
-                        </a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                         <img src="../../public/asstes/images/logo.jpg" class="logo-image" />
                     </div>
                     <div class="col h-100 logo-text-container">
-                        <a href="/"  class="logo-text-container" style="text-decoration: none;">
+                        <a href="/" class="logo-text-container" style="text-decoration: none;">
                             <h5>ACTIVE CROP</h5>
                         </a>
                     </div>
@@ -134,19 +134,24 @@
                                 class="list-group-item list-group-item-action active">
                                 Address Management
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/order'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/order'">
                                 Orders
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/wallet'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/wallet'">
                                 Wallets
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action " onclick="window.location.href='/user/profile/user-referal'">
+                            <button type="button" class="list-group-item list-group-item-action "
+                                onclick="window.location.href='/user/profile/user-referal'">
                                 Referal
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/user/profile/password'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>

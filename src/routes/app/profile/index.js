@@ -43,11 +43,11 @@ route.get(USER_ADDRESS_DYNAMIC,protect,renderEditAddressPage)
 route.put(USER_ADDRESS_DYNAMIC,upload.none(),editAddress)
 
 route.get(USER_ORDER_DETAILS,protect,renderOrderDetails)
-route.get(USER_ORDERS,renderOrders)
+route.get(USER_ORDERS,protect,renderOrders)
 
-route.get(USER_WALLET,renderWalletPage)
+route.get(USER_WALLET,protect,renderWalletPage)
 
-route.get(USER_REFERAL,renderReferalPage)
+route.get(USER_REFERAL,protect,renderReferalPage)
 
 route.get(USER_REST_PASSWORD,protect,resetPasswordPage)
 route.patch(USER_REST_PASSWORD,protect,upload.none(),resetPassword)

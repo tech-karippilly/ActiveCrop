@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Products</title>
+    <title>Product Details | Active Crop </title>
     <link rel="stylesheet" href="../../../public/styles/homePage.css">
     <link rel="stylesheet" href="../../../public/styles/productStyles.css">
     <link rel="stylesheet" href="../../../public/styles/productDetails.css">
@@ -119,8 +119,8 @@
 
                 <div class="d-flex align-items-center  text-white p-2 rounded w-50 justify-content-between">
 
-                    <form class="d-flex w-75" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                    <form class="d-flex w-75" method="get" action="/products/search/<%= activeCata %>">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search..." aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
 

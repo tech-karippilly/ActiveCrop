@@ -97,7 +97,7 @@ const moveToCart = async (req, res) => {
             cart = new Cart({ user_id: userId, items: [] });
         }
         const itemIndex = cart.items.findIndex(item =>
-            item.product_id.equals(new ObjectId(productId))
+            item.product_id.equals(productId)
         );
         if (itemIndex > -1) {
             const newQuantity = cart.items[itemIndex].quantity + wishlistProduct.quantity;

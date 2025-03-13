@@ -1,4 +1,4 @@
-import { OTPModel, Role, User } from '../../../models/index.js'
+import { OTPModel, Referal, Role, Transactions, User, Wallet } from '../../../models/index.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
 import { sendresetMail } from '../../../utils/mailSender.js';
@@ -67,8 +67,8 @@ async function loginUser(req, res) {
 async function googleLogin(req, res) {
     try {
         const user = req.user
-        
-        if (user.isBlocked){
+
+        if (user.isBlocked) {
             return renderPage(res, HTTP_FORBIDDEN, USER_LOGIN_PAGE, 'Access Denied Please contact admin', ALERT_DANGER, '/auth/login')
         }
 
@@ -104,7 +104,7 @@ function createUserPage(req, res) {
 
 async function createUser(req, res) {
     try {
-        const { firstName, lastName, email, password, userName, phone, confirmPassword } = req.body
+        const { firstName, lastName, email, password, userName, phone, confirmPassword, referal } = req.body
         const validation = signUpFormValid(firstName, lastName, email, password, userName, phone, confirmPassword);
 
         if (validation !== true) {
@@ -122,29 +122,30 @@ async function createUser(req, res) {
             isBlocked: false,
             role: userRole._id
         }
-        const existingUser = await User.findOne({ $or: [{ userName }, { email }] });
+        const existingUser = await User.findOne({ $or: [{ userName:{$regex:userName,$options:'i'} }, { email }] });
 
         if (existingUser) {
             return renderPage(res, HTTP_CONFICT, USER_SIGNUP_PAGE, 'Username or email already exists', ALERT_DANGER, '')
         }
+
         const newUser = new User(user);
 
 
         let otp = otpGenerator.generate(6, {
-            digits: true,              
-                upperCaseAlphabets: false,  
-                lowerCaseAlphabets: false, 
-                specialChars: false 
+            digits: true,
+            upperCaseAlphabets: false,
+            lowerCaseAlphabets: false,
+            specialChars: false
         });
 
         let result = OTPModel.findOne({ otp: otp })
 
         while (result) {
             otp = otpGenerator.generate(6, {
-                digits: true,              
-                upperCaseAlphabets: false,  
-                lowerCaseAlphabets: false, 
-                specialChars: false 
+                digits: true,
+                upperCaseAlphabets: false,
+                lowerCaseAlphabets: false,
+                specialChars: false
             })
             result = await OTPModel.findOne({ otp: otp });
         }
@@ -154,9 +155,48 @@ async function createUser(req, res) {
         await otpBody.save();
         await newUser.save();
 
+        if (referal) {
+            const referalDetails = await Referal.findOne({ referralCode: referal })
+            if (referalDetails) {
+                const referdUserWallet = await Wallet.findOne({ userId: referalDetails.userId })
+                const newTransaction = new Transactions({
+                    transactionType:'Referal',
+                    type:'wallet',
+                    walletId: referdUserWallet._id,
+                    amount: 50,
+                    transactionMode:'credit',
+                    description: "Earn Referal",
+                    status: 'completed',
+                })
+                await newTransaction.save()
+                referdUserWallet.balance += newTransaction.amount
+                await referdUserWallet.save()
+
+                const currentUserWallet = await Wallet.findOne({ userId: newUser._id })
+                if (!currentUserWallet) {
+                    const newWallet = new Wallet({
+                        userId: newUser._id,
+                    })
+
+                    await newWallet.save()
+                    const currentUserTransaction = new Transactions({
+                        transactionType:'Referal',
+                        type:'wallet',
+                        walletId: newWallet._id,
+                        amount: 100,
+                        transactionMode:'credit',
+                        description: "Earn Referal",
+                        status: 'completed',
+                    })
+                    await currentUserTransaction.save()
+                    newWallet.balance += currentUserTransaction.amount
+                    await newWallet.save()
+                }
+            }
+        }
+
         renderPage(res, HTTP_SUCCESS, USER_SIGNUP_PAGE, 'User Created Success fully and OTP send', ALERT_SUCCESS, '/otp/verifyOtp', userName)
     } catch (error) {
-
         return renderPage(res, HTTP_SERVER_ERROR, USER_SIGNUP_PAGE, 'Internal server error', ALERT_DANGER, '')
     }
 }
@@ -175,7 +215,7 @@ async function forgotEmailSend(req, res) {
             return renderPage(res, HTTP_CONFICT, USER_FORGOT_EMAIL_SEND_PAGE, 'User not Found', ALERT_DANGER, '')
         }
 
-        const forgotPasswrodPage = `http://localhost:3000/auth/reset-password?email=${email}`
+        const forgotPasswrodPage = `http://localhost:3002/auth/reset-password?email=${email}`
 
         sendresetMail(email, forgotPasswrodPage)
         renderPage(res, HTTP_SUCCESS, USER_FORGOT_EMAIL_SEND_PAGE, 'Email send sucessfully', ALERT_SUCCESS, '/auth/login')
@@ -206,13 +246,13 @@ async function resetPassword(req, res) {
         if (!user) {
             return renderPage(res, HTTP_NOT_FOUND, USER_REST_EMAIL_PAGE, 'User not Found', ALERT_DANGER, '')
         }
-        
+
         user.password = password
         await user.save()
 
-        res.status(HTTP_SUCCESS).json({message:"Password Changed",redirect:'/auth/login'})
+        res.status(HTTP_SUCCESS).json({ message: "Password Changed", redirect: '/auth/login' })
     } catch (error) {
-        renderPage(res,HTTP_SERVER_ERROR,USER_REST_EMAIL_PAGE,'Internal Server Error',ALERT_DANGER,'')
+        renderPage(res, HTTP_SERVER_ERROR, USER_REST_EMAIL_PAGE, 'Internal Server Error', ALERT_DANGER, '')
     }
 }
 
@@ -221,17 +261,17 @@ const googelAuth = async (req, res) => {
     res.redirect(url);
 }
 
-const logoutUser = async(req,res)=>{
-    try{
+const logoutUser = async (req, res) => {
+    try {
         req.session.destroy(err => {
             if (err) {
-                return res.redirect('/'); 
+                return res.redirect('/');
             }
-           
-            res.redirect('/'); 
+
+            res.redirect('/');
         });
-    }catch(error){
-        return res.redirect('/'); 
+    } catch (error) {
+        return res.redirect('/');
     }
 }
 

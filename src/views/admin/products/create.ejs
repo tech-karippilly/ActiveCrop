@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Crop | Category</title>
+    <title>Active Crop | Product</title>
     <link rel="shortcut icon" href="../../../public/asstes/images/logo.jpg" type="image/x-icon">
 
     <link href="/public/styles/dashboard.css" rel="stylesheet" type="text/css">
@@ -25,166 +25,131 @@
 
 
     <div class="main-container">
-        <section class="side-bar">
-            <div class="side-bar-heading">
-                <h1>ADMIN</h1>
-            </div>
-            <div class="side-bar-menu" id="menuId">
-                <div class="link-container">
-                    <a href="/admin/dashboard" class="link-text">Dashboard</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/catagoery" class="link-text">Categoery</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/products" class="link-text-active">Products</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/customers" class="link-text">Customers</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Orders</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Coupons</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Banner</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Transactions</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="button-link">Logout</a>
-                </div>
-            </div>
-        </section>
+        <%- include('../../partials/adminSideBar') %>
         <section class="container-section p-5  w-100">
-            <div class="alert-box" id="alert-box">
-                <% if (alertMessage) { %>
-                    <div class="alert alert-<%= alertType %>" id="alert">
-                        <%= alertMessage %>
-                    </div>
-                    <% }%>
-                        <div id="alert">
 
-                        </div>
-            </div>
             <div class="container-fluid w-100">
-                <div>
-                    <h1>Create Product</h1>
+                <div class="alert-box" id="alert-box">
+                    <% if (alertMessage) { %>
+                        <div class="alert alert-<%= alertType %>" id="alert">
+                            <%= alertMessage %>
+                        </div>
+                        <% }%>
+                            <div id="alert">
+    
+                            </div>
                 </div>
-
-                <div class="category-form">
-                    <div class="row" id="image-preview-container">
-                        <div class="col">
-                            <div class="img-container">
-                                <img alt="Image" id="croppable-image-one" style="width: 100%; height: 100%;" />
+                <div class="d-flex justify-content-center">
+                    <div class="card p-4 " style="width: 90%">
+                        <div class="card-body">
+                            <h3 class="card-title text-center">Create Product</h3>
+                            <div class="row mb-3" id="image-preview-container">
+                                <div class="col">
+                                    <div class="img-container">
+                                        <img alt="Image" id="croppable-image-one" style="width: 100%; height: 100%;" />
+                                    </div>
+                                    <button type="button" class="btn btn-primary mt-2" id="crop-button">Crop Image</button>
+                                </div>
+                                <div class="col">
+                                    <div class="img-container">
+                                        <img alt="Image" id="croppable-image-two" style="width: 100%; height: 100%;" />
+                                    </div>
+                                    <button type="button" class="btn btn-primary mt-2" id="crop-button-two">Crop Image</button>
+                                </div>
+                                <div class="col">
+                                    <div class="img-container">
+                                        <img alt="Image" id="croppable-image-three" style="width: 100%; height: 100%;" />
+                                    </div>
+                                    <button type="button" class="btn btn-primary mt-2" id="crop-button-three">Crop Image</button>
+                                </div>
+                                <div class="col">
+                                    <div class="img-container">
+                                        <img alt="Image" id="croppable-image-four" style="width: 100%; height: 100%;" />
+                                    </div>
+                                    <button type="button" class="btn btn-primary mt-2" id="crop-button-four">Crop Image</button>
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-primary mt-2" id="crop-button">Crop Image</button>
-                        </div>
-                        <div class="col">
-                            <div class="img-container">
-                                <img alt="Image" id="croppable-image-two" style="width: 100%; height: 100%;" />
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2" id="crop-button-two">Crop Image</button>
-                        </div>
-                        <div class="col">
-                            <div class="img-container">
-                                <img alt="Image" id="croppable-image-three" style="width: 100%; height: 100%;" />
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2" id="crop-button-three">Crop
-                                Image</button>
-                        </div>
-                        <div class="col">
-                            <div class="img-container">
-                                <img alt="Image" id="croppable-image-four" style="width: 100%; height: 100%;" />
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2" id="crop-button-four">Crop Image</button>
+                           
+                            <form id="create-product-form" method="POST" action="/admin/products/createProducts" enctype="multipart/form-data">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="formFile1" class="form-label">Select Product Image 1</label>
+                                        <input class="form-control" type="file" name="product_image" id="formFile1" accept="image/*" >
+                                        <span class="text-danger" id="image1-error"></span>
+                                    </div>
+                                    <div class="col">
+                                        <label for="formFile2" class="form-label">Select Product Image 2</label>
+                                        <input class="form-control" type="file" name="product_image" id="formFile2" accept="image/*" >
+                                        <span class="text-danger" id="image2-error"></span>
+                                    </div>
+                                    <div class="col">
+                                        <label for="formFile3" class="form-label">Select Product Image 3</label>
+                                        <input class="form-control" type="file" name="product_image" id="formFile3" accept="image/*" >
+                                        <span class="text-danger" id="image3-error"></span>
+                                    </div>
+                                    <div class="col">
+                                        <label for="formFile4" class="form-label">Select Product Image 4</label>
+                                        <input class="form-control" type="file" name="product_image" id="formFile4" accept="image/*" >
+                                        <span class="text-danger" id="image4-error"></span>
+                                    </div>
+                                    <span class="text-danger" id="image-error"></span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" name="product_name" id="product_name" >
+                                    <span class="text-danger" id="product-name-error"></span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Product Price</label>
+                                    <input type="text" class="form-control" name="price" id="price" >
+                                    <span class="text-danger" id="price-error"></span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="stock_quantity" class="form-label">Stock Quantity</label>
+                                    <input type="text" class="form-control" name="stock_quantity" id="stock_quantity" >
+                                    <span class="text-danger" id="stock-quantity-error"></span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="catagoery">Select Category</label>
+                                    <div class="dropdown">
+                                        <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="catagoery-name">Select Category</button>
+                                        <ul class="dropdown-menu dropdown-menu-dark">
+                                            <% data.forEach((catagoery) => { %>
+                                                <li><a class="dropdown-item" onclick="selectCategory('<%= catagoery._id %>', '<%= catagoery.catagoery_name %>')">
+                                                    <%= catagoery.catagoery_name %>
+                                                </a></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                    <input type="text" class="form-control visually-hidden" name="catagoery_id" id="catagoery_id" >
+                                    <span class="text-danger" id="category-error"></span>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave description" name="description" id="description" style="height: 100px" ></textarea>
+                                        <label for="description">Description</label>
+                                    </div>
+                                    <span class="text-danger" id="description-error"></span>
+                                </div>
+                                
+                                <div class="btn-container text-center">
+                                    <button type="submit" class="btn btn-primary">Create Product</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-
-                    <form id="create-product-form" method="POST" action="/admin/products/createProducts"
-                        enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col">
-                                <label for="formFile1" class="form-label">Select Product Image 1</label>
-                                <input class="form-control" type="file" name="product_image" id="formFile1"
-                                    accept="image/*" required>
-                                <input type="hidden" name="croppedImage" id="croppedImage">
-                            </div>
-                            <div class="col">
-                                <label for="formFile2" class="form-label">Select Product Image 2</label>
-                                <input class="form-control" type="file" name="product_image" id="formFile2"
-                                    accept="image/*" required>
-                            </div>
-                            <div class="col">
-                                <label for="formFile3" class="form-label">Select Product Image 3</label>
-                                <input class="form-control" type="file" name="product_image" id="formFile3"
-                                    accept="image/*" required>
-                            </div>
-                            <div class="col">
-                                <label for="formFile4" class="form-label">Select Product Image 4</label>
-                                <input class="form-control" type="file" name="product_image" id="formFile4"
-                                    accept="image/*" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="product_name" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" name="product_name" id="product_name" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="price" class="form-label">Product Price</label>
-                            <input type="text" class="form-control" name="price" id="price" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="stock_quantity" class="form-label">Stock Quantity</label>
-                            <input type="text" class="form-control" name="stock_quantity" id="stock_quantity" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="catagoery">Select Catagoery</label>
-                            <div class="dropdown">
-                                <button class="btn border dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false" id="catagoery-name">
-                                    Select Catagoery
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-
-                                    <% data.forEach((catagoery)=>{ %>
-                                        <li><a class="dropdown-item "
-                                                onclick="selectCategory('<%= catagoery._id %>','<%= catagoery.catagoery_name %>')">
-                                                <%= catagoery.catagoery_name %>
-                                            </a></li>
-                                        <% }); %>
-
-                                </ul>
-                            </div>
-                            <input type="text" class="form-control visually-hidden" name="catagoery_id"
-                                id="catagoery_id" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave description" name="description"
-                                    id="description" style="height: 100px" required></textarea>
-                                <label for="floatingTextarea2">Description</label>
-                            </div>
-                        </div>
-
-                        <div class="btn-container">
-                            <button type="submit" class="btn button-style">Create Product</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
+        handleElementDisplay('image-preview-container','none')
         let cropper, cropper2, cropper3, cropper4;
         const imageInputOne = document.getElementById('formFile1')
         const imageInputTwo = document.getElementById('formFile2')
@@ -195,14 +160,30 @@
         const croppableImagetwo = document.getElementById('croppable-image-two')
         const croppableImagethree = document.getElementById('croppable-image-three')
         const croppableImageFour = document.getElementById('croppable-image-four')
-
+        handleElementDisplay('croppable-image-one','none')
+        handleElementDisplay('croppable-image-two','none')
+        handleElementDisplay('croppable-image-three','none')
+        handleElementDisplay('croppable-image-four','none')
         const cropButton = document.getElementById('crop-button')
         const cropButtonTwo = document.getElementById('crop-button-two')
         const cropButtonThree = document.getElementById('crop-button-three')
         const cropButtonFour = document.getElementById('crop-button-four')
+
+        handleElementDisplay('crop-button','none')
+        handleElementDisplay('crop-button-two','none')
+        handleElementDisplay('crop-button-three','none')
+        handleElementDisplay('crop-button-four','none')
+
         const reader = new FileReader();
 
+        function handleElementDisplay(elementId,displayType){
+            document.getElementById(elementId).style.display=displayType
+        }
+
         imageInputOne.addEventListener('change', (event) => {
+            handleElementDisplay('croppable-image-one','flex')
+            handleElementDisplay('crop-button','flex')
+            handleElementDisplay('image-preview-container','flex')
             const file = event.target.files[0]
             if (file) {
                 reader.onload = (e) => {
@@ -250,6 +231,9 @@
         imageInputTwo.addEventListener('change', (event) => {
             const file = event.target.files[0]
             if (file) {
+                handleElementDisplay('croppable-image-two','flex')
+                handleElementDisplay('crop-button-two','flex')
+                handleElementDisplay('image-preview-container','flex')
                 reader.onload = (e) => {
                     if (e.target.result) {
                         croppableImagetwo.src = e.target.result;
@@ -295,6 +279,9 @@
         imageInputThree.addEventListener('change', (event) => {
             const file = event.target.files[0]
             if (file) {
+                handleElementDisplay('croppable-image-three','flex')
+                handleElementDisplay('crop-button-three','flex')
+                handleElementDisplay('image-preview-container','flex')
                 reader.onload = (e) => {
                     if (e.target.result) {
                         croppableImagethree.src = e.target.result;
@@ -340,6 +327,9 @@
         imageInputFour.addEventListener('change', (event) => {
             const file = event.target.files[0]
             if (file) {
+                handleElementDisplay('croppable-image-four','flex')
+                handleElementDisplay('crop-button-four','flex')
+                handleElementDisplay('image-preview-container','flex')
                 reader.onload = (e) => {
                     if (e.target.result) {
                         croppableImageFour.src = e.target.result;
@@ -387,13 +377,13 @@
         setTimeout(() => {
             alertBox.classList = '';
             alertBox.innerHTML = '';
-        }, 5000);
+        }, 1000);
 
         const redirectUrl = "<%= redirectUrl %>";
         if (redirectUrl && redirectUrl.trim() !== "") {
             setTimeout(() => {
                 window.location.href = redirectUrl;
-            }, 2000)
+            }, 1000)
 
         }
         function selectCategory(categoryId, categoryName) {
@@ -410,6 +400,67 @@
             }
             return new Blob([bytes], { type: 'image/png' });
         }
+
+        document.getElementById('create-product-form').addEventListener('submit', function(event) {
+            event.preventDefault()
+            event.stopPropagation()
+        let isValid = true;
+
+        const productName = document.getElementById('product_name').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const stockQuantity = document.getElementById('stock_quantity').value.trim();
+        const categoryId = document.getElementById('catagoery_id').value.trim();
+
+        const nameRegex = /^[A-Za-z ]+$/;
+        if (!nameRegex.test(productName) || productName.startsWith(' ')) {
+            document.getElementById('product-name-error').textContent = 'Invalid product name';
+            isValid = false;
+        } else {
+            document.getElementById('product-name-error').textContent = '';
+        }
+
+        if (!/^[0-9]+$/.test(price) || parseInt(price) <= 0) {
+            document.getElementById('price-error').textContent = 'Price must be a valid number';
+            isValid = false;
+        } else {
+            document.getElementById('price-error').textContent = '';
+        }
+
+        if (!/^[0-9]+$/.test(stockQuantity) || parseInt(stockQuantity) <= 0) {
+            document.getElementById('stock-quantity-error').textContent = 'Stock quantity must be a valid number';
+            isValid = false;
+        } else {
+            document.getElementById('stock-quantity-error').textContent = '';
+        }
+
+        if (categoryId === '') {
+            document.getElementById('category-error').textContent = 'Please select a category';
+            isValid = false;
+        }
+
+        const imageInputs = [
+            document.getElementById('formFile1').files.length,
+            document.getElementById('formFile2').files.length,
+            document.getElementById('formFile3').files.length,
+            document.getElementById('formFile4').files.length
+        ];
+        
+        const selectedImages = imageInputs.filter(count => count > 0).length;
+        if (selectedImages < 3) {
+            document.getElementById('image-error').textContent = 'Please select at least 3 images';
+            isValid = false;
+        } else {
+            document.getElementById('image-error').textContent = '';
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }else{
+            document.getElementById('create-product-form').submit()
+            
+        }
+    });
+        
 
     </script>
 

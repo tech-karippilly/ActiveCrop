@@ -32,13 +32,15 @@ import couponRoutes from './routes/coupon/index.js'
 import userCouponRoutes from './routes/app/coupon/index.js'
 import reportRoutes from './routes/reports/index.js'
 import walletRoutes from './routes/app/wallet/index.js'
+import transactionRoutes from './routes/transaction/index.js'
 
-
-import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, WALLET_BASE, WHISLIST_BASE } from "./constans/endpoints.js";
+import { ADMIN_AUTH_BASE, ADMIN_CATAGOERY_BASE, ADMIN_COUPON_BASE, ADMIN_CUSTOMER_BASE, ADMIN_OFFERS_BASE, ADMIN_ORDERS_BASE, ADMIN_PRODUCTS_BASE, ADMIN_REPORT_BASE, ADMIN_TRANSACTION_BASE, ORDERS_BASE, USER_CART_BASE, USER_COUPON_BASE, USER_HOME, USER_LOGIN_BASE, USER_OTP_BASE, USER_PRODUCTS, USER_PROFILE, USER_SEARCH, WALLET_BASE, WHISLIST_BASE } from "./constans/endpoints.js";
 import { OrderSuccess } from "./controllers/app/order/index.js";
 import { NOT_FOUNT_PAGE } from "./constans/page.js";
 import swaggerSpec from "./utils/swagger.js";
 import swaggerDocument from "./utils/swaggerDocuments.js";
+import { catagoerySearch } from "./controllers/app/home/index.js";
+import { Adminprotect } from "./middleware/adminAuthMiddleware.js";
 
 const app = express()
 
@@ -84,10 +86,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// app.use((req,res,next)=>{
-//     console.log('working')
-//     res.status(404).render(NOT_FOUNT_PAGE)
-// })
 
 // SWAGGER DOCS
 const combinedSwaggerSpec = {
@@ -103,14 +101,14 @@ app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(combinedSwaggerSpec))
 app.use(ADMIN_AUTH_BASE, adiminAuthRoute)
 app.use('/api/admin/role', roleAuth)
 app.use('/admin/dashboard',dashboardRoute)
-app.use(ADMIN_CATAGOERY_BASE, categoeryRoute)
-app.use(ADMIN_PRODUCTS_BASE, productRoute)
-app.use(ADMIN_CUSTOMER_BASE,customerRoute)
-app.use(ADMIN_ORDERS_BASE,adminOrderRoute)
-app.use(ADMIN_OFFERS_BASE,offerRoutes)
-app.use(ADMIN_COUPON_BASE,couponRoutes)
-app.use(ADMIN_REPORT_BASE,reportRoutes)
-
+app.use(ADMIN_CATAGOERY_BASE,Adminprotect, categoeryRoute)
+app.use(ADMIN_PRODUCTS_BASE, Adminprotect,productRoute)
+app.use(ADMIN_CUSTOMER_BASE,Adminprotect,customerRoute)
+app.use(ADMIN_ORDERS_BASE,Adminprotect,adminOrderRoute)
+app.use(ADMIN_OFFERS_BASE,Adminprotect,offerRoutes)
+app.use(ADMIN_COUPON_BASE,Adminprotect,couponRoutes)
+app.use(ADMIN_REPORT_BASE,Adminprotect,reportRoutes)
+app.use(ADMIN_TRANSACTION_BASE,Adminprotect,transactionRoutes)
 
 //USER ROUTES
 app.use(USER_LOGIN_BASE, userRoute)
@@ -128,6 +126,7 @@ app.use('/page',pageRoute)
 
 // INITIAL ROUTES
 app.get(USER_HOME,homeRoute)
+app.get(USER_SEARCH,catagoerySearch)
 
 app.get('/order-success',OrderSuccess)
 

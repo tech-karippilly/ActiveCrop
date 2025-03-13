@@ -25,6 +25,8 @@ export const ADMIN_UPDATE_PRODUCTS = '/:id'
 export const ADMIN_DELETE_PRODUCTS = '/:id'
 export const ADMIN_PRODUCT_SEARCH ='/search'
 export const ADMIN_PRODUCT_DETAILS='/:id'
+export const ADMIN_PRODUCT_IMAGE_REMOVE ='/remove-image'
+export const ADMIN_PRODUCT_BLOCK = '/block/:productId'
 
 export const ADMIN_CUSTOMER_BASE = '/admin/customers'
 export const ADMIN_CUSTOMER_SEARCH = '/search'
@@ -34,6 +36,7 @@ export const ADMIN_UPDATE_CUSTOMER = '/:id'
 
 export const ADMIN_ORDERS_BASE ='/admin/orders'
 export const ADMIN_ORDERS_STATUS ='/:id/status'
+export const ADMIN_RETURN_ORDER_STATUS = '/retrun/:id/status'
 
 export const ADMIN_OFFERS_BASE ='/admin/offers'
 export const ADMIN_OFFER_PRODUCT_CREATE = '/create-product-offer'
@@ -55,12 +58,14 @@ export const ADMIN_COUPON_DYNAMIC='/:id'
 export const ADMIN_REPORT_BASE ='/admin/report'
 export const GENERATE_REPORT = '/generate-report'
 
+export const ADMIN_TRANSACTION_BASE ='/admin/transaction'
 
 export const USER_AUTH_BASE ='/auth'
 export const USER_AUTH_GOOGLE ='/google'
 export const USER_ATUH_GOOGLE_CALLBACK = '/google/callback'
 
 export const USER_HOME ='/'
+export const USER_SEARCH ='/search'
 export const USER_CATAGOERY= '/catagoery'
 
 
@@ -95,7 +100,7 @@ export const USER_PRODUCT_DETAILS = '/details/:id/:cataid'
 export const USER_PRODUCT = '/:id'
 export const USER_PRODUCT_FILTER = `/filter/:catagoery`
 export const PRODUCTS_BY_ID = '/catagoery/:id/products'
-
+export const USER_PRODUCT_SEARCH = '/search/:id'
 
 export const USER_CART_BASE = '/user/cart'
 export const GET_CART='/get-cart'

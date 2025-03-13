@@ -125,8 +125,9 @@
 
                 <div class="d-flex align-items-center  text-white p-2 rounded w-50 justify-content-between">
 
-                    <form class="d-flex w-75" method="get">
-                        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                    <form class="d-flex w-75" method="get" action="/products/search/<%= activeCata %>">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search..."
+                            aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
 
@@ -209,10 +210,12 @@
 
             <div class="product-display">
                 <div class="row justify-content-center" id="product-container">
-                    <% if (products.length > 0) { %>
-                        <% products.forEach((items, index) => { %>
+                    <% if (products.length> 0) { %>
+                        <% products.forEach((items, index)=> { %>
                             <div class="col-md-3 col-sm-6 col-12 p-2">
-                                <div class="card product-card text-center shadow-sm" style="max-width: 250px; font-size: 14px;" onclick="handleCardClick('<%= items._id %>')">
+                                <div class="card product-card text-center shadow-sm"
+                                    style="max-width: 250px; font-size: 14px;"
+                                    onclick="handleCardClick('<%= items._id %>')">
                                     <div class="image-container" style="height: 150px; overflow: hidden;">
                                         <img src="/<%= items.images[0] %>" class="card-img-top product-image"
                                             alt="<%= items.product_name %>"
@@ -225,37 +228,42 @@
                                         <p class="card-text description text-truncate" style="font-size: 12px;">
                                             <%= items.description %>
                                         </p>
-                    
+
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <% if (items.offer_price  && items.offer_price > 0) { %>
+                                            <% if (items.offer_price && items.offer_price> 0) { %>
                                                 <div class="fw-bold text-success">
-                                                    ₹<%= items.offer_price %> 
-                                                    <span class="text-muted text-decoration-line-through fs-6">₹<%= items.price %></span>
+                                                    ₹<%= items.offer_price %>
+                                                        <span class="text-muted text-decoration-line-through fs-6">₹<%=
+                                                                items.price %></span>
                                                 </div>
-                                            <% } else { %>
-                                                <div class="fw-bold text-success">₹<%= items.price %></div>
-                                            <% } %>
-                                            <div class="text-muted" style="font-size: 12px;">1kg / pack</div>
+                                                <% } else { %>
+                                                    <div class="fw-bold text-success">₹<%= items.price %>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="text-muted" style="font-size: 12px;">1kg / pack
+                                                        </div>
                                         </div>
-                    
+
                                         <div class="button-container mt-2">
-                                            <% if (items.stock_quantity > 0) { %>
-                                                <button class="btn add-to-cart-btn text-white w-100 p-1" id="cart-button"
-                                                    onclick="addToCart(event, '<%= items._id %>')" style="font-size: 12px;">Add to Cart</button>
-                                            <% } else { %>
-                                                <button class="btn btn-danger w-100 p-1" disabled style="font-size: 12px;">Out of Stock</button>
-                                            <% } %>
+                                            <% if (items.stock_quantity> 0) { %>
+                                                <button class="btn add-to-cart-btn text-white w-100 p-1"
+                                                    id="cart-button" onclick="addToCart(event, '<%= items._id %>')"
+                                                    style="font-size: 12px;">Add to Cart</button>
+                                                <% } else { %>
+                                                    <button class="btn btn-danger w-100 p-1" disabled
+                                                        style="font-size: 12px;">Out of Stock</button>
+                                                    <% } %>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        <% }) %>
-                    
-                    <% } else { %>
-                        <div class="col text-center" id="noProductsMessage">
-                            <h5 class="text-danger">Products Not Added</h5>
-                        </div>
-                    <% } %>
+                            <% }) %>
+
+                                <% } else { %>
+                                    <div class="col text-center" id="noProductsMessage">
+                                        <h5 class="text-danger">Products Not Added</h5>
+                                    </div>
+                                    <% } %>
                 </div>
             </div>
 
@@ -362,14 +370,32 @@
         });
 
         document.getElementById('sort-by').addEventListener('change', (event) => {
-            const apiUrl = `/products/filter/<%= activeCata %>?sort=${event.target.value}`;
-            fetch(apiUrl)
-                .then((response) => response.json())
-                .then((data) => {
-                    const productContainer = document.getElementById('product-container');
-                    productContainer.innerHTML = '';
-                    data.products.forEach(product => {
-                        const productCard = `
+            const sortBy = event.target.value;
+
+            const productList = '<%= JSON.stringify(products) %>'
+            
+            const decodedString = productList.replace(/&#34;/g, '"');
+            const product = JSON.parse(decodedString);
+            let sortedProducts = [...product];
+            if (sortBy === 'price-high-low') {
+                sortedProducts.sort((a, b) => a.price - b.price);
+            } else if (sortBy === 'price-low-high') {
+                sortedProducts.sort((a, b) => b.price - a.price);
+            } else if (sortBy === 'az') {
+                sortedProducts.sort((a, b) => a.product_name.localeCompare(b.product_name));
+            } else if (sortBy === 'za') {
+                sortedProducts.sort((a, b) => b.product_name.localeCompare(a.product_name));
+            }else if (sort==='new-arrivals'){
+                 sortedProducts = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            }
+            renderProducts(sortedProducts);
+        })
+
+        function renderProducts(productList) {
+            const productContainer = document.getElementById('product-container');
+            productContainer.innerHTML = '';
+            productList.forEach(product => {
+                const productCard = `
             <div class="col-md-3 col-sm-6 col-12 p-2">
                 <div class="card product-card text-center shadow-sm" style="max-width: 250px; font-size: 14px;" onclick="handleCardClick('${product._id}')">
                     <div class="image-container" style="height: 150px; overflow: hidden;">
@@ -388,11 +414,9 @@
                     </div>
                 </div>
             </div>`;
-                        productContainer.innerHTML += productCard;
-                    })
-                })
-        })
-
+                productContainer.innerHTML += productCard;
+            })
+        }
         function handleCardClick(id) {
             window.location.href = `/products/details/${id}/<%= activeCata %>`
         }

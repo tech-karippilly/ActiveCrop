@@ -52,11 +52,11 @@
                         <div class="btn-group">
                             <button type="button" class="btn  dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                VISHNU
+                                <%= currentUser.firstName %>
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="/user/profile">
                                         <div class="row">
                                             <div class="col">
                                                 <i class="fa-regular fa-user"></i>
@@ -83,20 +83,19 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">
-                                        <div class="row">
-                                            <div class="col">
-                                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                                            </div>
-                                            <div class="col">
-                                                Logout
-                                            </div>
+                                <li>
+                                    <div class="row">
+                                        <div class="col">
+                                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
                                         </div>
+                                        <div class="col" onclick="window.location.href='/auth/logout'">
+                                            Logout
+                                        </div>
+                                    </div>
 
+                                </li>
+                            </ul>
                         </div>
-
-                        </a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -152,7 +151,8 @@
                                 onclick="window.location.href='/user/profile/password'">
                                 Password
                             </button>
-                            <button type="button" class="list-group-item list-group-item-action" onclick="window.location.href='/auth/logout'">
+                            <button type="button" class="list-group-item list-group-item-action"
+                                onclick="window.location.href='/auth/logout'">
                                 Logout
                             </button>
                         </ul>
@@ -328,9 +328,44 @@
                 <h5 class="text-center text-white">Copyrights@activeCrop</h5>
             </div>
         </section>
+
+        <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alertModalLabel">Alert</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMessage">Your message goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </mian>
 
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alertModalLabel">Alert</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">Your message goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+
 
         let cropper;
         const alertBox = document.getElementById('alert-box')
@@ -338,7 +373,7 @@
         const imageEditIcon = document.getElementById('edit-icon')
 
         document.getElementById('imageUpload').addEventListener('change', function (event) {
-            const file = event.target.files[0]; 
+            const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
@@ -347,6 +382,7 @@
                 reader.readAsDataURL(file);
             }
         });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             const editButton = document.getElementById('edit-button');
@@ -381,10 +417,10 @@
 
             function validatePhone(phone) {
                 if (!/^[0-9]{10}$/.test(phone.trim())) {
-                    return false; 
+                    return false;
                 }
                 if (/^(\d)\1{9}$/.test(phone.trim())) {
-                    return false; 
+                    return false;
                 }
                 return true;
             }
@@ -464,7 +500,7 @@
                     isValid = false;
                 }
 
-                if (!isValid) return; 
+                if (!isValid) return;
 
                 const formData = new FormData();
                 formData.append("firstName", firstName);
@@ -484,14 +520,23 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data)
                         if (data.message) {
-                            alert(`${data.message}`);
-                            window.location.reload();
+                            alertMessage.innerText = data.message
+                            alertMessage.classList.add('alert-success')
+
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000)
+
+
                         }
                     })
                     .catch(() => {
-                        alert("Something went wrong!");
+                        alertMessage.innerText = 'Something went wrong'
+                        alertMessage.classList.add('alert-danger')
+                        setTimeout(() => {
+                            alertMessage.classList.remove('alert-danger')
+                        }, 2000)
                     });
             });
         });

@@ -21,42 +21,8 @@
 </head>
 
 <body>
-
     <div class="main-container">
-        <section class="side-bar">
-            <div class="side-bar-heading">
-                <h1>ADMIN</h1>
-            </div>
-            <div class="side-bar-menu" id="menuId">
-                <div class="link-container">
-                    <a href="/admin/dashboard" class="link-text">Dashboard</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/catagoery" class="link-text">Categoery</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/products" class="link-text-active">Products</a>
-                </div>
-                <div class="link-container">
-                    <a href="/admin/customers" class="link-text">Customers</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Orders</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Coupons</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Banner</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="link-text">Transactions</a>
-                </div>
-                <div class="link-container">
-                    <a href="#" class="button-link">Logout</a>
-                </div>
-            </div>
-        </section>
+        <%- include('../../partials/adminSideBar') %>
         <section class="container-section p-5  w-100">
             <div class="alert-box" id="alert-box">
                 <% if (alertMessage) { %>
@@ -98,6 +64,7 @@
                                 <th>Name</th>
                                 <th>Price</th>
                                 <th>Stock</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -118,14 +85,46 @@
                                         </p>
                                     </td>
                                     <td>
+                                        <p class="<%= item.status == 'Available' ? 'text-success' : item.status == 'Blocked' ? 'text-danger' : 'text-muted' %>" style="font-size: 13px;">
+                                            <%= item.status %>
+                                        </p>
+                                    </td>
+                                    <td>
                                         <a href="/admin/products/<%= item._id %>"
                                             class="btn btn-warning btn-sm">Edit</a>
                                         <a onclick="deleteCatagoery('<%= item.id %>')"
                                             class="btn btn-danger btn-sm">Delete</a>
+                                        <a onclick="blockProduct('<%= item.id %>')"
+                                            class="btn btn-danger btn-sm">Block Product</a>
                                     </td>
                                 </tr>
                                 <% }); %>
                         </tbody>
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <% if (currentPage> 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="/admin/products?page=<%= currentPage - 1 %>">Previous</a>
+                                </li>
+                                <% } %>
+
+                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="/admin/products?page=<%= i %>">
+                                                <%= i %>
+                                            </a>
+                                        </li>
+                                        <% } %>
+
+                                            <% if (currentPage < totalPages) { %>
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                        href="/admin/products?page=<%= currentPage + 1 %>">Next</a>
+                                                </li>
+                                                <% } %>
+                        </ul>
+                    </nav>
                 </div>
         </section>
     </div>
@@ -149,14 +148,14 @@
                             alertBox.classList.remove('alert')
                             alertBox.classList.remove('alert-success')
                             window.location.reload()
-                        }, 3000)
+                        }, 1000)
                     } else {
                         alertBox.classList.add('alert-danger')
                         setTimeout(() => {
                             alertdiv.innerHTML = ''
                             alertBox.classList.remove('alert')
                             alertBox.classList.remove('alert-danger')
-                        }, 3000)
+                        }, 1000)
                     }
 
                 }).catch(error => {
@@ -167,9 +166,24 @@
                         alertdiv.innerHTML = ''
                         alertBox.classList.remove('alert')
                         alertBox.classList.remove('alert-danger')
-                    }, 3000)
+                    }, 1000)
                 })
         }
+
+        function blockProduct(id) {
+            fetch(`/admin/products/block/${id}`, {
+                method: 'PUT'
+            }).then((response) => response.json())
+                .then((data) => {
+                    console.log(data)
+                    if (data.product){
+                        window.location.reload()
+                    }
+                }).catch((error) => {
+                    console.log(error.message)
+                })
+        }
+
         //         function deleteCatagoery(id) {
 
         //             fetch(`/api/categoery/${id}`, {

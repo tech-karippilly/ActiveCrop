@@ -40,7 +40,7 @@ export async function updateProfileDetails(req, res) {
 
                 if (req.file) {
                     const newPath = req.file.path.replace(/^src[\\/]/, '');
-                    const filePath = `http://localhost:3000/${newPath}`
+                    const filePath = `http://localhost:3002/${newPath}`
                     currentUser.profileImage = filePath
                 }
 
@@ -55,7 +55,6 @@ export async function updateProfileDetails(req, res) {
         return res.status(HTTP_NOT_FOUND).json({ message: "Log in to continue" })
 
     } catch (error) {
-        console.log('error',error.message)
         return res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error" })
     }
 }
