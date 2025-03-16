@@ -1,6 +1,4 @@
 import express from "express";
-import multer from "multer";
-import fs from 'fs';
 
 import { BASE_URL, USER_ADDRESS_BASE, USER_ADDRESS_CREATE, USER_ADDRESS_DYNAMIC, USER_ORDER_DETAILS, USER_ORDERS, USER_PROFILE_EDIT, USER_REFERAL, USER_REST_PASSWORD, USER_WALLET } from "../../../constans/endpoints.js";
 import { renderProfilePage, updateProfileDetails } from "../../../controllers/app/profile/index.js";
