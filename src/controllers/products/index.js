@@ -179,8 +179,7 @@ export const getProductByCatagoery = async (req, res) => {
 const removeImageFromProduct = async (req, res) => {
     try {
         const { productId, imageIndex } = req.query;
-        console.log(req.query);
-
+        
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ message: "Product not Found" });
@@ -191,7 +190,6 @@ const removeImageFromProduct = async (req, res) => {
             return res.status(400).json({ message: "Invalid image index" });
         }
 
-        // Convert images object to an array
         let imagesArray = Object.values(product.images);
 
         if (index < 0 || index >= imagesArray.length) {
@@ -202,31 +200,24 @@ const removeImageFromProduct = async (req, res) => {
             return res.status(400).json({ message: "A product must have at least 3 images." });
         }
 
-        console.log("Current Images:", imagesArray);
-        console.log("Deleting image at index:", imageIndex);
-
-        // Get the image object and Cloudinary publicId
         const imageToDelete = imagesArray[index];
-        const publicId = imageToDelete.publicId; // Ensure images store a `publicId`
+        const publicId = imageToDelete.publicId;
 
-        // Remove the image from the array
         imagesArray.splice(index, 1);
 
-        // Convert array back to an object and update product images
+
         product.images = Object.assign({}, imagesArray);
 
         product.markModified("images");
         await product.save();
 
-        // Delete the image from Cloudinary if a valid `publicId` exists
+
         if (publicId) {
             await deleteImageFromCloudinary(publicId);
         }
 
-        console.log("Updated Product:", product);
         res.status(200).json({ message: "Image removed successfully", status: true });
     } catch (error) {
-        console.error(error.message);
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 };
