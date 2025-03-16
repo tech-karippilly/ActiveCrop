@@ -139,8 +139,8 @@ export const updateProduct = async (req, res) => {
         let fileIndex = 0;
         for (let i = 0; i < 4; i++) {
             if (!product_images[i] && req.files[fileIndex]) {
-                const filePath = req.files[fileIndex].path.replace('src/', '');
-                product_images[i] = filePath;
+                const cloudinaryResponse = await uploadImage(req.files[fileIndex].path,'products');
+                product_images[i] =  cloudinaryResponse.secure_url
                 fileIndex++;
             }
         }
@@ -178,35 +178,58 @@ export const getProductByCatagoery = async (req, res) => {
 
 const removeImageFromProduct = async (req, res) => {
     try {
-        const { productId, imageIndex } = req.query
-        console.log(req.query)
-        const product = await Product.findById(productId)
+        const { productId, imageIndex } = req.query;
+        console.log(req.query);
 
+        const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not Found" })
+            return res.status(404).json({ message: "Product not Found" });
         }
 
         const index = Number(imageIndex);
-        if (isNaN(index) || index < 0 || index >= product.images.length) {
+        if (isNaN(index)) {
             return res.status(400).json({ message: "Invalid image index" });
         }
-        let imagesArray = Object.entries(product.images);
+
+        // Convert images object to an array
+        let imagesArray = Object.values(product.images);
+
+        if (index < 0 || index >= imagesArray.length) {
+            return res.status(400).json({ message: "Invalid image index" });
+        }
 
         if (imagesArray.length <= 2) {
             return res.status(400).json({ message: "A product must have at least 3 images." });
         }
-        console.log(product.images)
-        console.log('imageIndex', imageIndex)
-        delete product.images[imageIndex];
+
+        console.log("Current Images:", imagesArray);
+        console.log("Deleting image at index:", imageIndex);
+
+        // Get the image object and Cloudinary publicId
+        const imageToDelete = imagesArray[index];
+        const publicId = imageToDelete.publicId; // Ensure images store a `publicId`
+
+        // Remove the image from the array
+        imagesArray.splice(index, 1);
+
+        // Convert array back to an object and update product images
+        product.images = Object.assign({}, imagesArray);
+
         product.markModified("images");
         await product.save();
-        console.log(product)
-        res.status(200).json({ message: 'Image removed', status: true })
+
+        // Delete the image from Cloudinary if a valid `publicId` exists
+        if (publicId) {
+            await deleteImageFromCloudinary(publicId);
+        }
+
+        console.log("Updated Product:", product);
+        res.status(200).json({ message: "Image removed successfully", status: true });
     } catch (error) {
-        console.log(error.message)
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        console.error(error.message);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
-}
+};
 
 const blockProduct = async (req, res) => {
     try {
