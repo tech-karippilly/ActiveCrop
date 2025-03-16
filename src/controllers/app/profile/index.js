@@ -2,6 +2,7 @@ import { HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../consta
 import { USER_PROFILE_PAGE } from "../../../constans/page.js";
 import { User } from "../../../models/index.js";
 import jwt from 'jsonwebtoken'
+import { uploadImage } from "../../../services/cloudinary.js";
 
 export async function renderProfilePage(req, res) {
     try {
@@ -39,9 +40,13 @@ export async function updateProfileDetails(req, res) {
 
 
                 if (req.file) {
-                    const newPath = req.file.path.replace(/^src[\\/]/, '');
-                    const filePath = `http://localhost:3002/${newPath}`
-                    currentUser.profileImage = filePath
+                    try {
+                        const cloudinaryResponse = await uploadImage(req.file.path);
+                        currentUser.profileImage = cloudinaryResponse.secure_url; 
+                    } catch (error) {
+                        console.error("Cloudinary upload failed:", error);
+                        return res.status(500).json({ message: "Failed to upload image" });
+                    }
                 }
 
                 await currentUser.save()

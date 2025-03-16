@@ -9,23 +9,24 @@ import { resetPassword, resetPasswordPage } from "../../../controllers/app/profi
 import { protect } from "../../../middleware/adminAuthMiddleware.js";
 import { renderWalletPage } from "../../../controllers/app/profile/wallet/index.js";
 import { renderReferalPage } from "../../../controllers/app/profile/referal/index.js";
+import { upload } from "../../../config/multerCofig.js";
 
 const route = express.Router()
 
-const uploadDir = './src/uploads/profile';
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// const uploadDir = './src/uploads/profile';
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir)
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-})
-const upload = multer({ storage: storage })
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, uploadDir)
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname)
+//   }
+// })
+// const upload = multer({ storage: storage })
 
 
 route.get(BASE_URL,protect,renderProfilePage)
