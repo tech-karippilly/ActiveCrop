@@ -1,6 +1,6 @@
 import {v2 as cloudinary} from 'cloudinary'
 import { config } from 'dotenv'
-
+import fs from 'fs';
 config()
 
 cloudinary.config({
@@ -14,6 +14,13 @@ const uploadImage = async (filePath,folder_name) =>{
         const result = await cloudinary.uploader.upload(filePath,{
             folder:folder_name
         })
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Error deleting file:", err);
+            } else {
+                console.log("File deleted from local storage:", filePath);
+            }
+        });
         return result
     } catch (error) {
         console.error("Error uploading image:", error);
