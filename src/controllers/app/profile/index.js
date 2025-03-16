@@ -41,7 +41,7 @@ export async function updateProfileDetails(req, res) {
 
                 if (req.file) {
                     try {
-                        const cloudinaryResponse = await uploadImage(req.file.path);
+                        const cloudinaryResponse = await uploadImage(req.file.path,'profile');
                         currentUser.profileImage = cloudinaryResponse.secure_url; 
                     } catch (error) {
                         console.error("Cloudinary upload failed:", error);

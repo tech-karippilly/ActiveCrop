@@ -4,12 +4,13 @@ import { Categoery } from '../../models/index.js'
 import dotenv from 'dotenv';
 import { ALERT_DANGER, ALERT_SUCCESS, ALERT_WARNING } from '../../utils/alert.js';
 import { ADMIN_CATAGOERY_BASE } from '../../constans/endpoints.js';
+import { deleteImageFromCloudinary, uploadImage } from '../../services/cloudinary.js';
 dotenv.config();
 
 
 
 export const catagoeryPage = (req, res) => {
-    res.status(200).render('admin/categoery/index', {activePage:"Categoery", alertMessage: '', alertType: '', redirectUrl: '', data: [] })
+    res.status(200).render('admin/categoery/index', { activePage: "Categoery", alertMessage: '', alertType: '', redirectUrl: '', data: [] })
 }
 
 const getCategoery = async (req, res) => {
@@ -38,24 +39,35 @@ const getCategoery = async (req, res) => {
 };
 
 export const createCatagoeryPage = (req, res) => {
-    renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'','','',[])
+    renderPage(ADMIN_CATAGOERY_CREATE_PAGE, res, HTTP_SUCCESS, '', '', '', [])
 }
 
 const createCategoery = async (req, res) => {
     try {
         const { cataName, description } = req.body
-        const cataDetails = await Categoery.findOne({ catagoery_name: {$regex: cataName,$options:'i'}})
+        const cataDetails = await Categoery.findOne({ catagoery_name: { $regex: cataName, $options: 'i' } })
         if (cataDetails) {
-            return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_CONFICT,'Categoery Already Exits',ALERT_WARNING,'',[])
+            return renderPage(ADMIN_CATAGOERY_CREATE_PAGE, res, HTTP_CONFICT, 'Categoery Already Exits', ALERT_WARNING, '', [])
         }
-        const filePath = JSON.parse(JSON.stringify(req.file))
-        const cleanedPath = filePath.path.replace(/^src\//, "");
-        const fileName = `${process.env.HOST_URL}/${cleanedPath}`
+
+        let fileName = ''
+        if (req.file) {
+            try {
+                const cloudinaryResponse = await uploadImage(req.file.path, 'categories');
+                fileName = cloudinaryResponse.secure_url;
+            } catch (error) {
+                console.error("Cloudinary upload failed:", error);
+                return res.status(500).json({ message: "Failed to upload image" });
+            }
+        }
         const catagoery = new Categoery({ catagoery_name: cataName, description: description, image: fileName })
+
+
+
         await catagoery.save()
-        return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SUCCESS,'Categoery Created Successfully',ALERT_SUCCESS,ADMIN_CATAGOERY_BASE,[])
+        return renderPage(ADMIN_CATAGOERY_CREATE_PAGE, res, HTTP_SUCCESS, 'Categoery Created Successfully', ALERT_SUCCESS, ADMIN_CATAGOERY_BASE, [])
     } catch (error) {
-        return renderPage(ADMIN_CATAGOERY_CREATE_PAGE,res,HTTP_SERVER_ERROR,'Internal Server error',ALERT_DANGER,'',[])
+        return renderPage(ADMIN_CATAGOERY_CREATE_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server error', ALERT_DANGER, '', [])
     }
 }
 
@@ -63,9 +75,9 @@ export const updateCatagoeryPage = async (req, res) => {
     try {
         const { id } = req.params
         const catagoery = await Categoery.findById({ _id: id })
-        return renderPage(ADMIN_CATAGOERY_EDIT_PAGE,res,HTTP_SUCCESS,'','','',catagoery)
+        return renderPage(ADMIN_CATAGOERY_EDIT_PAGE, res, HTTP_SUCCESS, '', '', '', catagoery)
     } catch (error) {
-        return renderPage(ADMIN_CATAGOERY_EDIT_PAGE,res,HTTP_SERVER_ERROR,'Internal server Error',ALERT_DANGER,"",{})
+        return renderPage(ADMIN_CATAGOERY_EDIT_PAGE, res, HTTP_SERVER_ERROR, 'Internal server Error', ALERT_DANGER, "", {})
     }
 }
 
@@ -75,18 +87,24 @@ const updateCategoery = async (req, res) => {
         const { cataName, description } = req.body
         const cataDetails = await Categoery.findById(cata_id);
         if (cataDetails) {
-            const filePath = JSON.parse(JSON.stringify(req.file))
-            const fileName = `${process.env.HOST_URL}/${filePath.path}`
+            if (req.file){
+                if (cataDetails.image){
+                    const publicId = cataDetails.image.split("/").pop().split(".")[0];
+                    await deleteImageFromCloudinary(`categories/${publicId}`);
+                    const cloudinaryResponse = await uploadImage(req.file.path, 'categories');
+                    cataDetails.image = cloudinaryResponse.secure_url;
+                }
+            }
+
             cataDetails.catagoery_name = cataName
             cataDetails.description = description
-            cataDetails.image = fileName
             await cataDetails.save()
-            return res.status(HTTP_SUCCESS).json({ message: 'Catagoery Updated Succssfully ',redirectUrl:ADMIN_CATAGOERY_BASE })
+            return res.status(HTTP_SUCCESS).json({ message: 'Catagoery Updated Succssfully ', redirectUrl: ADMIN_CATAGOERY_BASE })
         }
-      return  res.status(HTTP_NOT_FOUND).json({message:'Categoery Not  Found'})
+        return res.status(HTTP_NOT_FOUND).json({ message: 'Categoery Not  Found' })
     } catch (error) {
-        
-       return res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error",})
+
+        return res.status(HTTP_SERVER_ERROR).json({ message: "Internal Server Error", })
     }
 }
 
@@ -111,14 +129,14 @@ const searchCategoery = async (req, res) => {
     try {
         const { searchString } = req.query
         const catagoery = await Categoery.find({ catagoery_name: { $regex: searchString, $options: 'i' } })
-      return  renderPage(ADMIN_CATAGOERY_LIST_PAGE,res,HTTP_SUCCESS,'','','',catagoery)
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SUCCESS, '', '', '', catagoery)
     } catch (error) {
-       return renderPage(ADMIN_CATAGOERY_LIST_PAGE,res,HTTP_SERVER_ERROR,'Internal Server Error',ALERT_DANGER,'',[])
+        return renderPage(ADMIN_CATAGOERY_LIST_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', [])
     }
 }
 
 const renderPage = (pageName, res, status, alertMessage, alertType, redirectUrl, data) => {
-    res.status(status).render(pageName, {activePage:"Categoery", alertMessage, alertType, redirectUrl, data })
+    res.status(status).render(pageName, { activePage: "Categoery", alertMessage, alertType, redirectUrl, data })
 }
 
 export { createCategoery, getCategoery, updateCategoery, deletCategoery, searchCategoery }

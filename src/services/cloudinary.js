@@ -32,7 +32,16 @@ const getImageUrl = (publicId) =>{
     return cloudinary.url(publicId,{secure:true})
 }
 
+const deleteImageFromCloudinary = async (publicId) => {
+    try {
+      await cloudinary.uploader.destroy(publicId);
+    } catch (error) {
+      console.error("Failed to delete image from Cloudinary:", error);
+    }
+  };
+
 export {
     uploadImage,
-    getImageUrl
+    getImageUrl,
+    deleteImageFromCloudinary
 }
