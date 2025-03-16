@@ -1,6 +1,7 @@
 import { HTTP_BAD_REQUEST, HTTP_CONFICT, HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
 import { ADMIN_CATAGOERY_LIST_PAGE, ADMIN_PRODUCT_CREATE_PAGE, ADMIN_PRODUCT_EDIT_PAGE, ADMIN_PRODUCT_LIST_PAGE } from "../../constans/page.js"
 import { Categoery, Product } from "../../models/index.js"
+import { uploadImage } from "../../services/cloudinary.js"
 import { ALERT_DANGER, ALERT_SUCCESS, ALERT_WARNING } from "../../utils/alert.js"
 import { productFormValid } from "../../utils/formValidations.js"
 
@@ -81,8 +82,8 @@ export const createProducts = async (req, res) => {
 
         let product_images = {}
         for (var i = 0; i < req.files.length; i++) {
-            const filePath = req.files[i].path.replace('src/', '');
-            product_images[i] = filePath
+            const cloudinaryResponse = await uploadImage(req.files[i].path,'products');
+            product_images[i] =  cloudinaryResponse.secure_url
         }
         const category = await Categoery.findById({ _id: catagoery_id });
 
@@ -98,6 +99,7 @@ export const createProducts = async (req, res) => {
         }
         return renderPage(ADMIN_PRODUCT_CREATE_PAGE, res, HTTP_NOT_FOUND, 'Category not found', ALERT_WARNING, '', {})
     } catch (error) {
+        console.log(error.messag)
         const catagoerys = await Categoery.find({})
         return renderPage(ADMIN_PRODUCT_CREATE_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', catagoerys)
     }
@@ -137,8 +139,8 @@ export const updateProduct = async (req, res) => {
         let fileIndex = 0;
         for (let i = 0; i < 4; i++) {
             if (!product_images[i] && req.files[fileIndex]) {
-                const filePath = req.files[fileIndex].path.replace('src/', '');
-                product_images[i] = filePath;
+                const cloudinaryResponse = await uploadImage(req.files[fileIndex].path,'products');
+                product_images[i] =  cloudinaryResponse.secure_url
                 fileIndex++;
             }
         }
@@ -176,35 +178,49 @@ export const getProductByCatagoery = async (req, res) => {
 
 const removeImageFromProduct = async (req, res) => {
     try {
-        const { productId, imageIndex } = req.query
-        console.log(req.query)
-        const product = await Product.findById(productId)
-
+        const { productId, imageIndex } = req.query;
+        
+        const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not Found" })
+            return res.status(404).json({ message: "Product not Found" });
         }
 
         const index = Number(imageIndex);
-        if (isNaN(index) || index < 0 || index >= product.images.length) {
+        if (isNaN(index)) {
             return res.status(400).json({ message: "Invalid image index" });
         }
-        let imagesArray = Object.entries(product.images);
+
+        let imagesArray = Object.values(product.images);
+
+        if (index < 0 || index >= imagesArray.length) {
+            return res.status(400).json({ message: "Invalid image index" });
+        }
 
         if (imagesArray.length <= 2) {
             return res.status(400).json({ message: "A product must have at least 3 images." });
         }
-        console.log(product.images)
-        console.log('imageIndex', imageIndex)
-        delete product.images[imageIndex];
+
+        const imageToDelete = imagesArray[index];
+        const publicId = imageToDelete.publicId;
+
+        imagesArray.splice(index, 1);
+
+
+        product.images = Object.assign({}, imagesArray);
+
         product.markModified("images");
         await product.save();
-        console.log(product)
-        res.status(200).json({ message: 'Image removed', status: true })
+
+
+        if (publicId) {
+            await deleteImageFromCloudinary(publicId);
+        }
+
+        res.status(200).json({ message: "Image removed successfully", status: true });
     } catch (error) {
-        console.log(error.message)
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
-}
+};
 
 const blockProduct = async (req, res) => {
     try {

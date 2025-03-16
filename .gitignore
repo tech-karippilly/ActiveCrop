@@ -31,3 +31,4 @@ yarn.lock
 
 # Misc
 *.swp
+src/upload/
