@@ -1,6 +1,7 @@
 import { HTTP_BAD_REQUEST, HTTP_CONFICT, HTTP_NOT_FOUND, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constans/httpStatus.js"
 import { ADMIN_CATAGOERY_LIST_PAGE, ADMIN_PRODUCT_CREATE_PAGE, ADMIN_PRODUCT_EDIT_PAGE, ADMIN_PRODUCT_LIST_PAGE } from "../../constans/page.js"
 import { Categoery, Product } from "../../models/index.js"
+import { uploadImage } from "../../services/cloudinary.js"
 import { ALERT_DANGER, ALERT_SUCCESS, ALERT_WARNING } from "../../utils/alert.js"
 import { productFormValid } from "../../utils/formValidations.js"
 
@@ -81,8 +82,8 @@ export const createProducts = async (req, res) => {
 
         let product_images = {}
         for (var i = 0; i < req.files.length; i++) {
-            const filePath = req.files[i].path.replace('src/', '');
-            product_images[i] = filePath
+            const cloudinaryResponse = await uploadImage(req.files[i].path,'products');
+            product_images[i] =  cloudinaryResponse.secure_url
         }
         const category = await Categoery.findById({ _id: catagoery_id });
 
@@ -98,6 +99,7 @@ export const createProducts = async (req, res) => {
         }
         return renderPage(ADMIN_PRODUCT_CREATE_PAGE, res, HTTP_NOT_FOUND, 'Category not found', ALERT_WARNING, '', {})
     } catch (error) {
+        console.log(error.messag)
         const catagoerys = await Categoery.find({})
         return renderPage(ADMIN_PRODUCT_CREATE_PAGE, res, HTTP_SERVER_ERROR, 'Internal Server Error', ALERT_DANGER, '', catagoerys)
     }

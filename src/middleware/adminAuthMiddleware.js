@@ -59,7 +59,7 @@ export const protect = async (req, res, next) => {
             } catch (error) {
                 if (error.name === 'TokenExpiredError' && req.session.refreshToken) {
                     console.log('Access token expired, attempting refresh...');
-
+                    return res.redirect('/auth/login');
                     // Verify refresh token
                     const refreshToken = req.session.refreshToken;
                     const refreshDecoded = jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH_TOKEN);
