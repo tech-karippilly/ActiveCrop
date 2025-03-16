@@ -13,22 +13,6 @@ import { upload } from "../../../config/multerCofig.js";
 
 const route = express.Router()
 
-// const uploadDir = './src/uploads/profile';
-// if (!fs.existsSync(uploadDir)) {
-//   fs.mkdirSync(uploadDir, { recursive: true });
-// }
-
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, uploadDir)
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname)
-//   }
-// })
-// const upload = multer({ storage: storage })
-
-
 route.get(BASE_URL,protect,renderProfilePage)
 route.put(USER_PROFILE_EDIT,protect,upload.single('profile_image'),updateProfileDetails)
 
